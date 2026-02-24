@@ -19,13 +19,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: python -m pip install --upgrade pip folium
+        run: python -m pip install --upgrade pip folium shapely
 
       - name: Generate map HTML and prepare Pages artifact
         shell: bash
@@ -51,6 +54,7 @@ jobs:
           cp "${MAP_HTML}" public/locations_map.html
           cp "${MAP_HTML}" public/index.html
           cp "${MAP_HTML}" public/404.html
+          touch public/.nojekyll
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
