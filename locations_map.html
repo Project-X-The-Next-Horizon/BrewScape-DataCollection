@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_d39c2313aeb58bafcfbb9601d1559610 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_d39c2313aeb58bafcfbb9601d1559610" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_d39c2313aeb58bafcfbb9601d1559610 = L.map(
+                "map_d39c2313aeb58bafcfbb9601d1559610",
+                {
+                    center: [19.215159724, 99.015447974],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_da99046ffc8b8d82a12c87d1eaa2abec = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_da99046ffc8b8d82a12c87d1eaa2abec.addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+            var circle_marker_2b9f556922b08093983b98d9acfdb197 = L.circleMarker(
+                [19.9119399, 99.170249],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_f1ae3713966d6324a7cc4d4cc5f8a704 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_83f03a1591a251ad035a20b0787efd80 = $(`<div id="html_83f03a1591a251ad035a20b0787efd80" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Wara cafe and BISTRO</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>W56C+Q3H Rural Rd ชม 3059 San Sai, Fang District, Chiang Mai 50110, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>17</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿100–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 80 842 0185</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/profile.php?id=100083182038345&amp;mibextid=wwXIfr&amp;mibextid=wwXIfr</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJlfsuYgDT0DARK-1CbiVqHOg</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.911940, 99.170249</td></tr></table></div></div>`)[0];
+                popup_f1ae3713966d6324a7cc4d4cc5f8a704.setContent(html_83f03a1591a251ad035a20b0787efd80);
+            
+        
+
+        circle_marker_2b9f556922b08093983b98d9acfdb197.bindPopup(popup_f1ae3713966d6324a7cc4d4cc5f8a704)
+        ;
+
+        
+    
+    
+            var circle_marker_c477850baa58397736a38bd2cc56fd68 = L.circleMarker(
+                [20.0600944, 99.3629615],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_4e82bfa5a389d5ac6dd12a131720b208 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_eed0629fab1212762137475869596f95 = $(`<div id="html_eed0629fab1212762137475869596f95" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>ละออคาเฟ่ บ้านท่าตอน Laor Cafe Riverkok</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>209 ท่าตอน - ฝาง ถนน Tambon Malika, Mae Ai District, Chiang Mai 50280, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>16</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿100–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 86 197 7914</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJs8Eo3mYr1zARZkk83cKM1tA</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>20.060094, 99.362961</td></tr></table></div></div>`)[0];
+                popup_4e82bfa5a389d5ac6dd12a131720b208.setContent(html_eed0629fab1212762137475869596f95);
+            
+        
+
+        circle_marker_c477850baa58397736a38bd2cc56fd68.bindPopup(popup_4e82bfa5a389d5ac6dd12a131720b208)
+        ;
+
+        
+    
+    
+            var circle_marker_58fca8f4e39b95b829f07b1668137eaf = L.circleMarker(
+                [19.9183579, 99.2122474],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_b498ae7c05b060abb705749a29b5e1cf = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_2d5f8b93b07b71e8d168b485583a3b24 = $(`<div id="html_2d5f8b93b07b71e8d168b485583a3b24" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>REIKI Cafe (เรกิ คาเฟ่)</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>67/1 Chottana Rd, San Sai, Fang District, Chiang Mai 50110, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>5</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>20</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 84 296 3636</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/share/15Qi4EiRPz/?mibextid=wwXIfr</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJ3RuSOAAt1zARKOQ8mtGYyNg</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.918358, 99.212247</td></tr></table></div></div>`)[0];
+                popup_b498ae7c05b060abb705749a29b5e1cf.setContent(html_2d5f8b93b07b71e8d168b485583a3b24);
+            
+        
+
+        circle_marker_58fca8f4e39b95b829f07b1668137eaf.bindPopup(popup_b498ae7c05b060abb705749a29b5e1cf)
+        ;
+
+        
+    
+    
+            var circle_marker_36648556963b47a9787ba487d14e3875 = L.circleMarker(
+                [20.003043, 99.2609506],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_3b75bd573df177c12bb27b0cad863bea = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_797ebc5c5ed452307a99a9762913d7ff = $(`<div id="html_797ebc5c5ed452307a99a9762913d7ff" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Ai-oon Coffee &#x27;ไออุ่นคอฟฟี่&#x27;</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>66 ม.12, Mae Sao, Mae Ai District, Chiang Mai 50280, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.6</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>25</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–100</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 94 732 2462</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/charinthipAA</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJOQbToVYr1zARuvZYoW2l4VU</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>20.003043, 99.260951</td></tr></table></div></div>`)[0];
+                popup_3b75bd573df177c12bb27b0cad863bea.setContent(html_797ebc5c5ed452307a99a9762913d7ff);
+            
+        
+
+        circle_marker_36648556963b47a9787ba487d14e3875.bindPopup(popup_3b75bd573df177c12bb27b0cad863bea)
+        ;
+
+        
+    
+    
+            var circle_marker_f02cf71a3e2ad308a9dbae35f7e330c7 = L.circleMarker(
+                [20.0289169, 99.2858445],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_f3558dbce0650df1d7dee29f98733b42 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_3c7078f453067bb79ebae533902526f5 = $(`<div id="html_3c7078f453067bb79ebae533902526f5" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Lert coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>27HP+H89, Mae Ai, Mae Ai District, Chiang Mai 50280, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.7</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>3</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 91 859 5138</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/profile.php?id=100089589207311</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJ9zPwKUAp1zAR0e4GqNOjGwc</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>20.028917, 99.285844</td></tr></table></div></div>`)[0];
+                popup_f3558dbce0650df1d7dee29f98733b42.setContent(html_3c7078f453067bb79ebae533902526f5);
+            
+        
+
+        circle_marker_f02cf71a3e2ad308a9dbae35f7e330c7.bindPopup(popup_f3558dbce0650df1d7dee29f98733b42)
+        ;
+
+        
+    
+    
+            var circle_marker_f2e6e7ab43143b418ccf8d6a57b7cc0a = L.circleMarker(
+                [20.0288184, 99.2858167],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_1498f8d4067c236c8f6b8590e032a332 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_78aaa21fd4643d61d04f98649360c2d1 = $(`<div id="html_78aaa21fd4643d61d04f98649360c2d1" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Kafei cafe 咖啡</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>116 Mae Ai, Mae Ai District, Chiang Mai 50280, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>5</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>1</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJMxwVSQAp1zARvJn01QAu4QM</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>20.028818, 99.285817</td></tr></table></div></div>`)[0];
+                popup_1498f8d4067c236c8f6b8590e032a332.setContent(html_78aaa21fd4643d61d04f98649360c2d1);
+            
+        
+
+        circle_marker_f2e6e7ab43143b418ccf8d6a57b7cc0a.bindPopup(popup_1498f8d4067c236c8f6b8590e032a332)
+        ;
+
+        
+    
+    
+            var circle_marker_61ed08147d64ee564848836c046c8128 = L.circleMarker(
+                [20.0596977, 99.3612683],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_534b3c7ac9028dd0cc4ca93ec5c3f617 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_07012e6102de9612c2db40513717e009 = $(`<div id="html_07012e6102de9612c2db40513717e009" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>CHILL DAY slow bar coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>เลขที่ 133 Tha Ton, Mae Ai District, Chiang Mai 50280, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>5</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>2</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 85 546 8570</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/profile.php?id=100092872634486&amp;mibextid=ZbWKwL</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJfTP6n5Mp1zARFYbDt97yaRI</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>20.059698, 99.361268</td></tr></table></div></div>`)[0];
+                popup_534b3c7ac9028dd0cc4ca93ec5c3f617.setContent(html_07012e6102de9612c2db40513717e009);
+            
+        
+
+        circle_marker_61ed08147d64ee564848836c046c8128.bindPopup(popup_534b3c7ac9028dd0cc4ca93ec5c3f617)
+        ;
+
+        
+    
+    
+            var circle_marker_b4aa3802c3e0a9963ce6532c0eab686b = L.circleMarker(
+                [20.0602618, 99.3785593],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_ce507f0813025b82bffa43f1a1c63fa2 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_1ceb0a114a451ddeb4ff7b2e2117090b = $(`<div id="html_1ceb0a114a451ddeb4ff7b2e2117090b" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>ไร่ระเบียงส้ม - Fruits Terrace Garden Cafe.</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>33 หมู่ 4 ซอย 3 บ้าน ห้วยน้ำเย็น Tha Ton, Mae Ai District, Chiang Mai 50280, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.6</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>77</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿100–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 93 114 1135</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJLYFrH70n1zARdMxiFpSdzic</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>20.060262, 99.378559</td></tr></table></div></div>`)[0];
+                popup_ce507f0813025b82bffa43f1a1c63fa2.setContent(html_1ceb0a114a451ddeb4ff7b2e2117090b);
+            
+        
+
+        circle_marker_b4aa3802c3e0a9963ce6532c0eab686b.bindPopup(popup_ce507f0813025b82bffa43f1a1c63fa2)
+        ;
+
+        
+    
+    
+            var circle_marker_331207b5c93582d9dbaec6699e647f2c = L.circleMarker(
+                [19.7954097, 99.1677102],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_306cd3eee2e85bf8b37c72878c09ed6a = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_26ba5b499e452f44a83aa5ee6884321e = $(`<div id="html_26ba5b499e452f44a83aa5ee6884321e" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Büllfrog coffee roaster</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>71, Mae Ka, Fang District, Chiang Mai 50320, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>131</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 99 415 2455</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/Bullfrog.coffeeroaster?mibextid=ZbWKwL</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJ1-VNSjHL0DARX4eC3rhshf4</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.795410, 99.167710</td></tr></table></div></div>`)[0];
+                popup_306cd3eee2e85bf8b37c72878c09ed6a.setContent(html_26ba5b499e452f44a83aa5ee6884321e);
+            
+        
+
+        circle_marker_331207b5c93582d9dbaec6699e647f2c.bindPopup(popup_306cd3eee2e85bf8b37c72878c09ed6a)
+        ;
+
+        
+    
+    
+            var circle_marker_f967425eb7d91145ca3ec3f00ad0d8f1 = L.circleMarker(
+                [20.0472209, 99.4284585],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_73619d9302ff88f6c835a0d83a23a08d = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_638add6e3c1a884014661f6bb13bddd6 = $(`<div id="html_638add6e3c1a884014661f6bb13bddd6" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>คนฮัก Coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>2CWH+R6G ชม.3023 Mae Na Wang, Mae Ai District, Chiang Mai 50280, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>5</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>1</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 98 796 5556</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJx9mTdQAn1zARwpRCPLc1AG4</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>20.047221, 99.428459</td></tr></table></div></div>`)[0];
+                popup_73619d9302ff88f6c835a0d83a23a08d.setContent(html_638add6e3c1a884014661f6bb13bddd6);
+            
+        
+
+        circle_marker_f967425eb7d91145ca3ec3f00ad0d8f1.bindPopup(popup_73619d9302ff88f6c835a0d83a23a08d)
+        ;
+
+        
+    
+    
+            var circle_marker_368a5015ccd1ff22e81a4c62aa5e5727 = L.circleMarker(
+                [19.7414381, 98.9638225],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_4b1937dac65053d8db24133bf86d4be7 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_923ba057df86b3905190172d1372839b = $(`<div id="html_923ba057df86b3905190172d1372839b" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>XT Coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>574 ต Mueang Na, Chiang Dao District, Chiang Mai 50170, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>5</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>1</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 63 037 8466</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/profile.php?id=61557242013763&amp;mibextid=dGKdO6</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJKwG3OADH0DARTu_M7Jk7Dzw</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.741438, 98.963823</td></tr></table></div></div>`)[0];
+                popup_4b1937dac65053d8db24133bf86d4be7.setContent(html_923ba057df86b3905190172d1372839b);
+            
+        
+
+        circle_marker_368a5015ccd1ff22e81a4c62aa5e5727.bindPopup(popup_4b1937dac65053d8db24133bf86d4be7)
+        ;
+
+        
+    
+    
+            var circle_marker_903d39e0c4622fe78f2b6878a8eca1fe = L.circleMarker(
+                [20.0763965, 99.2689016],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_85d5857082bf1f3efa35c3ac5c25976b = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_2906bcc7ee230c47c9b97c5927fe1ffe = $(`<div id="html_2906bcc7ee230c47c9b97c5927fe1ffe" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Chae-Ger Coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>37G9+HH2 บ้านดอยแหลม Mae Ai, Mae Ai District, Chiang Mai 50280, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.4</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>23</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 83 068 2217</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/Chaegercoffee/</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJlde_50TV1jAReIzCFV6VNVc</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>20.076397, 99.268902</td></tr></table></div></div>`)[0];
+                popup_85d5857082bf1f3efa35c3ac5c25976b.setContent(html_2906bcc7ee230c47c9b97c5927fe1ffe);
+            
+        
+
+        circle_marker_903d39e0c4622fe78f2b6878a8eca1fe.bindPopup(popup_85d5857082bf1f3efa35c3ac5c25976b)
+        ;
+
+        
+    
+    
+            var circle_marker_2d63c0a74f89e533db64f504dd8ccd46 = L.circleMarker(
+                [18.7892678, 98.9879416],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_3beb8f9c19b554be53a1171fbf3cb63c = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_2502a10e7625c6d24b903732d51f0173 = $(`<div id="html_2502a10e7625c6d24b903732d51f0173" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>TWENTY MAR</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>Three Kings Monument, 216 Pra Pok Klao Rd Soi 1, Tambon Si Phum, Mueang Chiang Mai District, Chiang Mai 50200, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>2037</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.instagram.com/twentymar.cafe/</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJPV2PnD472jARTTjEyVNVfss</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.789268, 98.987942</td></tr></table></div></div>`)[0];
+                popup_3beb8f9c19b554be53a1171fbf3cb63c.setContent(html_2502a10e7625c6d24b903732d51f0173);
+            
+        
+
+        circle_marker_2d63c0a74f89e533db64f504dd8ccd46.bindPopup(popup_3beb8f9c19b554be53a1171fbf3cb63c)
+        ;
+
+        
+    
+    
+            var circle_marker_690b7c0a74de2011dd5409afbb683e0b = L.circleMarker(
+                [18.7989468, 98.9660114],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_1b724f3c82ba1e5b5d364af75ea13b76 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_40ed856bf57f0cf03d311cffc32a33f3 = $(`<div id="html_40ed856bf57f0cf03d311cffc32a33f3" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>ALL BLACK COFFEE</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>ซอย Suk Kasame Rd, Suthep, Mueang Chiang Mai District, Chiang Mai 50200, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>232</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 91 222 9729</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://linktr.ee/allblackcoffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJNS4v6f872jARr3EC6WYD1Rc</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.798947, 98.966011</td></tr></table></div></div>`)[0];
+                popup_1b724f3c82ba1e5b5d364af75ea13b76.setContent(html_40ed856bf57f0cf03d311cffc32a33f3);
+            
+        
+
+        circle_marker_690b7c0a74de2011dd5409afbb683e0b.bindPopup(popup_1b724f3c82ba1e5b5d364af75ea13b76)
+        ;
+
+        
+    
+    
+            var circle_marker_17eb1e18b9eddddb763200868ad177dd = L.circleMarker(
+                [18.7942614, 98.9899354],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_671e6bf273af8ce89b2a1bec116552a5 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_315f6fe31c810e65939abb8dce469822 = $(`<div id="html_315f6fe31c810e65939abb8dce469822" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Good Shot coffee bar</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>173, 2 Ratchapakhinai Rd, Mueang, Amphoe Mueang Chiang Mai, Chiang Mai 50200, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>229</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 81 884 8244</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJHa1eaT472jAROdnkNJ5bVnE</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.794261, 98.989935</td></tr></table></div></div>`)[0];
+                popup_671e6bf273af8ce89b2a1bec116552a5.setContent(html_315f6fe31c810e65939abb8dce469822);
+            
+        
+
+        circle_marker_17eb1e18b9eddddb763200868ad177dd.bindPopup(popup_671e6bf273af8ce89b2a1bec116552a5)
+        ;
+
+        
+    
+    
+            var circle_marker_f2b3d2aac169e21cbaae811c02a6ea55 = L.circleMarker(
+                [18.8109108, 98.9738082],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_b9ef653cf6b9f992a9c8f85bf280137a = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_d271429e9158c2306c2eed40ad927c67 = $(`<div id="html_d271429e9158c2306c2eed40ad927c67" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Beans of us Coffee Roaster</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>Photharam Rd, Chang Phueak, Mueang Chiang Mai District, Chiang Mai 50300, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>217</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 91 840 8848</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJO2BX6qE72jARAJfVI3eelSw</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.810911, 98.973808</td></tr></table></div></div>`)[0];
+                popup_b9ef653cf6b9f992a9c8f85bf280137a.setContent(html_d271429e9158c2306c2eed40ad927c67);
+            
+        
+
+        circle_marker_f2b3d2aac169e21cbaae811c02a6ea55.bindPopup(popup_b9ef653cf6b9f992a9c8f85bf280137a)
+        ;
+
+        
+    
+    
+            var circle_marker_1eaf2cffbd52f000f1b5a6adcc44156c = L.circleMarker(
+                [18.7886795, 98.9802303],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_7316661af24f03a080af3f269da537c7 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_86b00b8023a5d4403e027bc29ed4c57b = $(`<div id="html_86b00b8023a5d4403e027bc29ed4c57b" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>ทอฝัน Thor-Phan Coffee Roaster</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>เมือง, 109 Intrawarorot Rd, Mueang Chiang Mai District, Chiang Mai 50200, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>597</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 81 366 9944</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/ThorphanCoffeeRoaster</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJ2xEbNps62jARxAbglIN33S8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.788680, 98.980230</td></tr></table></div></div>`)[0];
+                popup_7316661af24f03a080af3f269da537c7.setContent(html_86b00b8023a5d4403e027bc29ed4c57b);
+            
+        
+
+        circle_marker_1eaf2cffbd52f000f1b5a6adcc44156c.bindPopup(popup_7316661af24f03a080af3f269da537c7)
+        ;
+
+        
+    
+    
+            var circle_marker_5a11a1d870664787df30ab1dec268e3c = L.circleMarker(
+                [18.7832489, 99.0030381],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_f9e74fb65f0d5d952a2016fd0f8d8391 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_4c7e737d36bbd043dcfcf60a817735ea = $(`<div id="html_4c7e737d36bbd043dcfcf60a817735ea" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Buncha’s slow bar</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>102 Charoen Prathet Rd, Tambon Chang Khlan, Mueang Chiang Mai District, Chiang Mai 50100, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>173</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 96 885 6985</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJES6VY1o72jARcHdwEsyeTbA</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.783249, 99.003038</td></tr></table></div></div>`)[0];
+                popup_f9e74fb65f0d5d952a2016fd0f8d8391.setContent(html_4c7e737d36bbd043dcfcf60a817735ea);
+            
+        
+
+        circle_marker_5a11a1d870664787df30ab1dec268e3c.bindPopup(popup_f9e74fb65f0d5d952a2016fd0f8d8391)
+        ;
+
+        
+    
+    
+            var circle_marker_215c629f2145e2a16dd36dbccd7397b7 = L.circleMarker(
+                [18.79413, 99.0252002],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_9d5636d4d4995d6b8706a11225229750 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_78251f8ff8089e297ec71bdb1f3f260f = $(`<div id="html_78251f8ff8089e297ec71bdb1f3f260f" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Not Just Coffee CNX</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>5 7, Nong Pa Khrang, Mueang Chiang Mai District, Chiang Mai 50000, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>45</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–100</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 84 809 6224</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJa5gxsokl2jARV2IqGroAi7A</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.794130, 99.025200</td></tr></table></div></div>`)[0];
+                popup_9d5636d4d4995d6b8706a11225229750.setContent(html_78251f8ff8089e297ec71bdb1f3f260f);
+            
+        
+
+        circle_marker_215c629f2145e2a16dd36dbccd7397b7.bindPopup(popup_9d5636d4d4995d6b8706a11225229750)
+        ;
+
+        
+    
+    
+            var circle_marker_0691228e449406a47a413f65db32c10c = L.circleMarker(
+                [18.7985883, 98.967479],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_c5fe56675e3b756e24be470fa8ac12d8 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_b736e5005c9275e5dbf7b59190b52330 = $(`<div id="html_b736e5005c9275e5dbf7b59190b52330" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Toffee Roasters</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>4, 2 Nimmanahaeminda Road, Suthep, Mueang Chiang Mai District, Chiang Mai 50200, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>460</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 64 998 9929</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.instagram.com/toffeeroasters</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJFWmjeaUx2jARrW4Kz6DOWLQ</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.798588, 98.967479</td></tr></table></div></div>`)[0];
+                popup_c5fe56675e3b756e24be470fa8ac12d8.setContent(html_b736e5005c9275e5dbf7b59190b52330);
+            
+        
+
+        circle_marker_0691228e449406a47a413f65db32c10c.bindPopup(popup_c5fe56675e3b756e24be470fa8ac12d8)
+        ;
+
+        
+    
+    
+            var circle_marker_baa8a00ae61842c61d7d8ecc9cbfa630 = L.circleMarker(
+                [18.7924482, 98.9558387],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_82a447c8ccce4beef420ece15b4f639c = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_20c266a75b36e96fd3bae86535a759c9 = $(`<div id="html_20c266a75b36e96fd3bae86535a759c9" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>LAW COFF &amp; CO ลอว์คอฟ แอนด์ โค หลังมช.</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>35 Suthep Rd, Tambon Su Thep, Mueang Chiang Mai District, Chiang Mai 50200, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>81</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 63 149 5192</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.instagram.com/lawcoff.official?igsh=YXY1M3pycHgxNzZk</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJWbaYDJs72jARDvh21DJn8EQ</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.792448, 98.955839</td></tr></table></div></div>`)[0];
+                popup_82a447c8ccce4beef420ece15b4f639c.setContent(html_20c266a75b36e96fd3bae86535a759c9);
+            
+        
+
+        circle_marker_baa8a00ae61842c61d7d8ecc9cbfa630.bindPopup(popup_82a447c8ccce4beef420ece15b4f639c)
+        ;
+
+        
+    
+    
+            var circle_marker_74767d9b21190837536c840def84d4f8 = L.circleMarker(
+                [18.7763274, 98.9860862],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_8b3c875c7917b67cd31872a03ad553d5 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_f0199a777c18e4dccd8db6b63a866d14 = $(`<div id="html_f0199a777c18e4dccd8db6b63a866d14" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Beam&amp;Col. coffee bar</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>12 8 Wua Lai Rd, Tambon Hai Ya, Mueang Chiang Mai District, Chiang Mai 50100, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.7</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>120</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿100–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/BeamandCol?mibextid=LQQJ4d</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJ7QFAccox2jARVVmcCm8rc3g</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.776327, 98.986086</td></tr></table></div></div>`)[0];
+                popup_8b3c875c7917b67cd31872a03ad553d5.setContent(html_f0199a777c18e4dccd8db6b63a866d14);
+            
+        
+
+        circle_marker_74767d9b21190837536c840def84d4f8.bindPopup(popup_8b3c875c7917b67cd31872a03ad553d5)
+        ;
+
+        
+    
+    
+            var circle_marker_7055dd4d8ff6f7fc2950c40bbfeb106f = L.circleMarker(
+                [18.8043933, 98.9872964],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_893813940066cff3dbed3c3f6fd59d48 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_0ebb3794b88c3b064558633c6b5a738d = $(`<div id="html_0ebb3794b88c3b064558633c6b5a738d" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Green Roasters Coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>18 5 ถนนกุลวงศ์อุทิศ Chang Phueak, Mueang Chiang Mai District, Chiang Mai 50300, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>156</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 89 998 9906</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/search/top?q=green%20roasters</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJyd4EcvQ72jARQ3DuaUOHABY</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.804393, 98.987296</td></tr></table></div></div>`)[0];
+                popup_893813940066cff3dbed3c3f6fd59d48.setContent(html_0ebb3794b88c3b064558633c6b5a738d);
+            
+        
+
+        circle_marker_7055dd4d8ff6f7fc2950c40bbfeb106f.bindPopup(popup_893813940066cff3dbed3c3f6fd59d48)
+        ;
+
+        
+    
+    
+            var circle_marker_bda1ed05ddea72afa7860177bca84d85 = L.circleMarker(
+                [18.7897881, 99.0015264],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_8c1f21cf72ad9575d1dcabc85c2e3572 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_ef94ffd21993799d20a122945d2b01a0 = $(`<div id="html_ef94ffd21993799d20a122945d2b01a0" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Maktub Coffee Roaster</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>81/1-2 Praisanee Rd, Chang Moi Sub-district, Amphoe Mueang Chiang Mai, Chiang Mai 50300, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>5</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>25</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.instagram.com/maktubcoffeeroaster?igsh=MW1mYXJzcHFxajkxdw==</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJ7YjTXXo72jARcwlgTUXO324</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.789788, 99.001526</td></tr></table></div></div>`)[0];
+                popup_8c1f21cf72ad9575d1dcabc85c2e3572.setContent(html_ef94ffd21993799d20a122945d2b01a0);
+            
+        
+
+        circle_marker_bda1ed05ddea72afa7860177bca84d85.bindPopup(popup_8c1f21cf72ad9575d1dcabc85c2e3572)
+        ;
+
+        
+    
+    
+            var circle_marker_4610074dcea1a8285641c45ae89419d5 = L.circleMarker(
+                [18.7878202, 98.9689413],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_984aa1b6c2803d15f9d05ca2de9991bf = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_6cbc3a2d3f97c946b697afd73f8503ed = $(`<div id="html_6cbc3a2d3f97c946b697afd73f8503ed" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Kyodo Coffee Roasters</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>2, 9 Suandok Rd, Suthep, Amphoe Mueang Chiang Mai, Chiang Mai 50200, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>5</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>41</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 86 336 3326</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://linktree.com/kyodocoffeeroasters</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJkeYGBws72jARulVx6eTRUtE</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.787820, 98.968941</td></tr></table></div></div>`)[0];
+                popup_984aa1b6c2803d15f9d05ca2de9991bf.setContent(html_6cbc3a2d3f97c946b697afd73f8503ed);
+            
+        
+
+        circle_marker_4610074dcea1a8285641c45ae89419d5.bindPopup(popup_984aa1b6c2803d15f9d05ca2de9991bf)
+        ;
+
+        
+    
+    
+            var circle_marker_6032aa5c66d51bf355971ab41e9e3f8d = L.circleMarker(
+                [18.7776294, 98.9538033],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_bd0fa0f13f644bd95244aa001c48ccfe = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_48effc65e90134a7d98762c8e3d51fc6 = $(`<div id="html_48effc65e90134a7d98762c8e3d51fc6" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Beanbag coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>89, 9, Suthep, Mueang Chiang Mai District, Chiang Mai 50200, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>418</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 81 146 8446</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJ4Rsh1WYx2jARckZaBy3EaUk</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.777629, 98.953803</td></tr></table></div></div>`)[0];
+                popup_bd0fa0f13f644bd95244aa001c48ccfe.setContent(html_48effc65e90134a7d98762c8e3d51fc6);
+            
+        
+
+        circle_marker_6032aa5c66d51bf355971ab41e9e3f8d.bindPopup(popup_bd0fa0f13f644bd95244aa001c48ccfe)
+        ;
+
+        
+    
+    
+            var circle_marker_3aefdd8420f419092dcaff9378ea1886 = L.circleMarker(
+                [18.7876762, 98.9799653],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_cf334305a483b8bb104ef7d673d07012 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_a9864c4c0f0d4fdd5932eb3d5ddb0a74 = $(`<div id="html_a9864c4c0f0d4fdd5932eb3d5ddb0a74" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Fresh Brewed Coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>29 7-8 Samlan Rd Soi 1, Si Phum, Mueang Chiang Mai District, Chiang Mai 50200, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>61</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 62 641 0243</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJBTgRLgA72jARTXYJrU8N7lo</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.787676, 98.979965</td></tr></table></div></div>`)[0];
+                popup_cf334305a483b8bb104ef7d673d07012.setContent(html_a9864c4c0f0d4fdd5932eb3d5ddb0a74);
+            
+        
+
+        circle_marker_3aefdd8420f419092dcaff9378ea1886.bindPopup(popup_cf334305a483b8bb104ef7d673d07012)
+        ;
+
+        
+    
+    
+            var circle_marker_54e91290410169e0af3d003b107e2f65 = L.circleMarker(
+                [18.7928369, 98.9914198],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_2a36d3f3d4c7908d6f16ade3904c0942 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_87ee7360505f20c8f8baf2f98523348f = $(`<div id="html_87ee7360505f20c8f8baf2f98523348f" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Phin &amp; Feta - Coffee &amp; Sourdough</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>23 Moon Muang Rd Lane 7, Si Phum, Mueang Chiang Mai District, Chiang Mai 50200, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>124</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 88 255 3324</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJi9HpTpY72jARBxAcL9G08Fk</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.792837, 98.991420</td></tr></table></div></div>`)[0];
+                popup_2a36d3f3d4c7908d6f16ade3904c0942.setContent(html_87ee7360505f20c8f8baf2f98523348f);
+            
+        
+
+        circle_marker_54e91290410169e0af3d003b107e2f65.bindPopup(popup_2a36d3f3d4c7908d6f16ade3904c0942)
+        ;
+
+        
+    
+    
+            var circle_marker_fba1e5a85ccbc20442bf8dbc079b0d67 = L.circleMarker(
+                [18.7917054, 98.9987428],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_c911d960b227cc8ba368cadb2f675c8d = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_43669de7ef0c17ebb920be34ce2827b0 = $(`<div id="html_43669de7ef0c17ebb920be34ce2827b0" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Nomad Coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>94, 96 Ratchawong Rd, Chang Moi Sub-district, Mueang Chiang Mai District, Chiang Mai 50300, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>5</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>36</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–100</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/BicycleAndCoffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJL9GIVwA72jARDheC5RPObrc</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.791705, 98.998743</td></tr></table></div></div>`)[0];
+                popup_c911d960b227cc8ba368cadb2f675c8d.setContent(html_43669de7ef0c17ebb920be34ce2827b0);
+            
+        
+
+        circle_marker_fba1e5a85ccbc20442bf8dbc079b0d67.bindPopup(popup_c911d960b227cc8ba368cadb2f675c8d)
+        ;
+
+        
+    
+    
+            var circle_marker_255162a5ecaa4a2ac4be32b6492ef053 = L.circleMarker(
+                [18.7985075, 98.9682351],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_6d29f4bdb2edc357ad15f4c44607664e = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_5463c8d0884ab554b6449c31c6aca779 = $(`<div id="html_5463c8d0884ab554b6449c31c6aca779" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Diciotto SlowBar Coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>12 Nimmana Haeminda Rd Lane 5, Tambon Su Thep, Mueang Chiang Mai District, Chiang Mai 50200, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.7</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>257</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 61 801 0008</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://m.facebook.com/DiciottoCoffee/</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJe3jQfL472jAR7SBy8Tb4M94</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.798507, 98.968235</td></tr></table></div></div>`)[0];
+                popup_6d29f4bdb2edc357ad15f4c44607664e.setContent(html_5463c8d0884ab554b6449c31c6aca779);
+            
+        
+
+        circle_marker_255162a5ecaa4a2ac4be32b6492ef053.bindPopup(popup_6d29f4bdb2edc357ad15f4c44607664e)
+        ;
+
+        
+    
+    
+            var circle_marker_cc77bcbfd7dea007933afdc2a2a1394c = L.circleMarker(
+                [18.9443426, 98.9277222],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_b52f4f37de4efe1882b4f32630b8e838 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_979e3b19fb17f82fa4bdd10b295f10d7 = $(`<div id="html_979e3b19fb17f82fa4bdd10b295f10d7" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Thingamajiggy Coffee Roaster</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>Rural Road 3009, Huai Sai, Mae Rim District, Chiang Mai 50180, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>254</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 94 535 1996</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/profile.php?id=100093983744566&amp;mibextid=LQQJ4d</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJNW2olwI92jAR8KKP6tN7KH4</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.944343, 98.927722</td></tr></table></div></div>`)[0];
+                popup_b52f4f37de4efe1882b4f32630b8e838.setContent(html_979e3b19fb17f82fa4bdd10b295f10d7);
+            
+        
+
+        circle_marker_cc77bcbfd7dea007933afdc2a2a1394c.bindPopup(popup_b52f4f37de4efe1882b4f32630b8e838)
+        ;
+
+        
+    
+    
+            var circle_marker_48fde472fb1aa3b2f495c99acf4b458e = L.circleMarker(
+                [19.3665874, 99.186875],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_db73b0f17e45775444c1ec05a0b69024 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_12fbc34996793609c8d4f80607b662fe = $(`<div id="html_12fbc34996793609c8d4f80607b662fe" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>ลุง Coffee &amp; Slow bar</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>958P+JPQ, 1150, Tambon Ban Pong, Phrao District, Chiang Mai 50190, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>32</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–100</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 95 159 8151</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://m.facebook.com/story.php?story_fbid=5008152792578567&amp;id=100001516887858</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJMeqa98Cr0DAROJOPRUxFcwI</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.366587, 99.186875</td></tr></table></div></div>`)[0];
+                popup_db73b0f17e45775444c1ec05a0b69024.setContent(html_12fbc34996793609c8d4f80607b662fe);
+            
+        
+
+        circle_marker_48fde472fb1aa3b2f495c99acf4b458e.bindPopup(popup_db73b0f17e45775444c1ec05a0b69024)
+        ;
+
+        
+    
+    
+            var circle_marker_efd138e7f647f4de3569a0e8f130a702 = L.circleMarker(
+                [19.430591, 99.2952903],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_77bcf8f4236af72363dd6bd46d951083 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_7770affaa8bfa2765d507de7173dc291 = $(`<div id="html_7770affaa8bfa2765d507de7173dc291" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>AMO Coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>หมู่บ้านอาบอลา​ (ดอยม่อนล้าน Pa Tum, Phrao District, Chiang Mai 50190, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>10</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 83 321 8313</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJb7oWZTlR1zARP7YvRh0aHdU</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.430591, 99.295290</td></tr></table></div></div>`)[0];
+                popup_77bcf8f4236af72363dd6bd46d951083.setContent(html_7770affaa8bfa2765d507de7173dc291);
+            
+        
+
+        circle_marker_efd138e7f647f4de3569a0e8f130a702.bindPopup(popup_77bcf8f4236af72363dd6bd46d951083)
+        ;
+
+        
+    
+    
+            var circle_marker_c98ff596228004c1e9853e81b123debb = L.circleMarker(
+                [19.3682951, 99.2094961],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_584e9174d70366826a51b3e2d9ae819c = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_376985f178afd18d1498c81fff171cd9 = $(`<div id="html_376985f178afd18d1498c81fff171cd9" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>ดอยม่อนล้าน AKHA Coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>198 Wiang, Phrao District, Chiang Mai 50190, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>39</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–100</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 97 994 6339</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJiZGZkC1V1zARypAA_WNkeTE</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.368295, 99.209496</td></tr></table></div></div>`)[0];
+                popup_584e9174d70366826a51b3e2d9ae819c.setContent(html_376985f178afd18d1498c81fff171cd9);
+            
+        
+
+        circle_marker_c98ff596228004c1e9853e81b123debb.bindPopup(popup_584e9174d70366826a51b3e2d9ae819c)
+        ;
+
+        
+    
+    
+            var circle_marker_50edcbbc563f25a9dad9e4d77d8c03e5 = L.circleMarker(
+                [19.3005625, 99.1856875],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_3211234f146b90125ba2d23b5668164e = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_d9d2441d4449be6ec0f21f49d05e4877 = $(`<div id="html_d9d2441d4449be6ec0f21f49d05e4877" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>บาริชต้า BARICHTA 168</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>บ้านหนองบัว ซอย3 Mae Waen, Phrao District, Chiang Mai 50190, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>62</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 98 250 4139</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/profile.php?id=100072247492626&amp;mibextid=LQQJ4d</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJ5e6w16oB2jARXf9b_Scn-y0</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.300563, 99.185688</td></tr></table></div></div>`)[0];
+                popup_3211234f146b90125ba2d23b5668164e.setContent(html_d9d2441d4449be6ec0f21f49d05e4877);
+            
+        
+
+        circle_marker_50edcbbc563f25a9dad9e4d77d8c03e5.bindPopup(popup_3211234f146b90125ba2d23b5668164e)
+        ;
+
+        
+    
+    
+            var circle_marker_5f63c52ad86f4c21e1e17b68f1000210 = L.circleMarker(
+                [19.3684172, 99.2029126],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_c54178279d09df2bbd13da1fcd0d4a17 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_31d59499cf10a89451288a8a93cdf90f = $(`<div id="html_31d59499cf10a89451288a8a93cdf90f" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>No.50 - บ้านเลขที่ห้าสิบ</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>50, Wiang, Phrao District, Chiang Mai 50190, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>15</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/No50-%E0%B8%9A%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B9%80%E0%B8%A5%E0%B8%82%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%AB%E0%B9%89%E0%B8%B2%E0%B8%AA%E0%B8%B4%E0%B8%9A-110152708022843/</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJp7r0_yZV1zARBOrbeQZ_nlE</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.368417, 99.202913</td></tr></table></div></div>`)[0];
+                popup_c54178279d09df2bbd13da1fcd0d4a17.setContent(html_31d59499cf10a89451288a8a93cdf90f);
+            
+        
+
+        circle_marker_5f63c52ad86f4c21e1e17b68f1000210.bindPopup(popup_c54178279d09df2bbd13da1fcd0d4a17)
+        ;
+
+        
+    
+    
+            var circle_marker_4f23fce6e5fb5720eb3bbac3a9dc033c = L.circleMarker(
+                [19.459761, 98.9650206],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_73e9a9d59551925527c57f126d8c318a = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_92f193af81b492c1950eaa046ded88ed = $(`<div id="html_92f193af81b492c1950eaa046ded88ed" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Tribe Coffee - PT Gas Station (ไทร์บบ คอฟฟี่ - สาขาปั้มพีที เมืองงาย)</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>ในปั๊ม PT Mueang Ngai, Chiang Dao District, Chiang Mai 50170, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>14</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 84 406 0944</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/TribecoffeePT</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJBeUhefGl0DARrLbbk9YkRLw</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.459761, 98.965021</td></tr></table></div></div>`)[0];
+                popup_73e9a9d59551925527c57f126d8c318a.setContent(html_92f193af81b492c1950eaa046ded88ed);
+            
+        
+
+        circle_marker_4f23fce6e5fb5720eb3bbac3a9dc033c.bindPopup(popup_73e9a9d59551925527c57f126d8c318a)
+        ;
+
+        
+    
+    
+            var circle_marker_5522270927751f9d4552b20f67980f21 = L.circleMarker(
+                [19.329109, 98.953345],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_a51e837e197b1f60a8d74b32fcd626e9 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_0dcb701ec172adada05fb4515d61d2cd = $(`<div id="html_0dcb701ec172adada05fb4515d61d2cd" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Tribe coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>107, Mae Na, Chiang Dao District, Chiang Mai 50170, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>174</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 82 209 0585</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://m.facebook.com/pages/category/Food---beverage/Tribe-Coffee-2085644391678845/</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJq9EEkRAJ2jARpBcRYZVy0hE</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.329109, 98.953345</td></tr></table></div></div>`)[0];
+                popup_a51e837e197b1f60a8d74b32fcd626e9.setContent(html_0dcb701ec172adada05fb4515d61d2cd);
+            
+        
+
+        circle_marker_5522270927751f9d4552b20f67980f21.bindPopup(popup_a51e837e197b1f60a8d74b32fcd626e9)
+        ;
+
+        
+    
+    
+            var circle_marker_f74106f518d4865f32131fc6d8515c61 = L.circleMarker(
+                [19.4278797, 98.9534886],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_154db233720e1dc242b5f0223d42ece5 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_5f7eca16e860344b8087afe3211c617f = $(`<div id="html_5f7eca16e860344b8087afe3211c617f" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>ชงเอง - Chong Ayng × Slow bar</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>Mueang Ngai, Chiang Dao District, Chiang Mai 50170, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>210</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 92 015 9920</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJ789lKUmn0DAREHWZVI_dG7Q</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.427880, 98.953489</td></tr></table></div></div>`)[0];
+                popup_154db233720e1dc242b5f0223d42ece5.setContent(html_5f7eca16e860344b8087afe3211c617f);
+            
+        
+
+        circle_marker_f74106f518d4865f32131fc6d8515c61.bindPopup(popup_154db233720e1dc242b5f0223d42ece5)
+        ;
+
+        
+    
+    
+            var circle_marker_14d644a7b8d33e443c38df5bffa22ff0 = L.circleMarker(
+                [19.353734, 98.9632335],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_feb4fb629b62dfe438e8b2ef91351964 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_cf94457b56d41582de93836cb25cad62 = $(`<div id="html_cf94457b56d41582de93836cb25cad62" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Minimal coffee เชียงดาว</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>511 ถนน เชียงใหม่ 3, Chiang Dao, Chiang Dao District, Chiang Mai 50170, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>39</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 91 063 7960</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/Minimal.coffee.CD</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJE2gt-sWn0DARkcK0EVMZYG8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.353734, 98.963234</td></tr></table></div></div>`)[0];
+                popup_feb4fb629b62dfe438e8b2ef91351964.setContent(html_cf94457b56d41582de93836cb25cad62);
+            
+        
+
+        circle_marker_14d644a7b8d33e443c38df5bffa22ff0.bindPopup(popup_feb4fb629b62dfe438e8b2ef91351964)
+        ;
+
+        
+    
+    
+            var circle_marker_23a42b406bd66a105477c31bc27df744 = L.circleMarker(
+                [19.3764242, 98.9547643],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_571169df25e7d3c7779aa9dd6e68bfbc = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_421bd69882b300b56caf18572e429525 = $(`<div id="html_421bd69882b300b56caf18572e429525" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Tribe coffee rongwua</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>9XG3+CR8, Chiang Dao, Chiang Dao District, Chiang Mai 50170, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>34</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJ7bN1bgCn0DARFqmyyssYNcY</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.376424, 98.954764</td></tr></table></div></div>`)[0];
+                popup_571169df25e7d3c7779aa9dd6e68bfbc.setContent(html_421bd69882b300b56caf18572e429525);
+            
+        
+
+        circle_marker_23a42b406bd66a105477c31bc27df744.bindPopup(popup_571169df25e7d3c7779aa9dd6e68bfbc)
+        ;
+
+        
+    
+    
+            var circle_marker_b7be0000171f141f28821ea14df2b9a5 = L.circleMarker(
+                [19.3616966, 98.9656524],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_2c7dbc2b1947be65753c5a6c7453f8bb = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_b39b9f4b7ad049e4f720a9713618b936 = $(`<div id="html_b39b9f4b7ad049e4f720a9713618b936" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>MonMo Cafe&#x27; @Chiangdao</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>505, Chiang Dao, Chiang Dao District, Chiang Mai 50170, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>83</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 86 413 6322</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJv-dEm2Kn0DARdXQ9TOX4cLM</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.361697, 98.965652</td></tr></table></div></div>`)[0];
+                popup_2c7dbc2b1947be65753c5a6c7453f8bb.setContent(html_b39b9f4b7ad049e4f720a9713618b936);
+            
+        
+
+        circle_marker_b7be0000171f141f28821ea14df2b9a5.bindPopup(popup_2c7dbc2b1947be65753c5a6c7453f8bb)
+        ;
+
+        
+    
+    
+            var circle_marker_a792af6a4f5835cbb9fb0eab26ca4e2c = L.circleMarker(
+                [19.459594, 98.9626095],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_836b92d0c61913508c589f68dcbf0cf7 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_e0e50e342cbc37fdb3b932fcea1882d2 = $(`<div id="html_e0e50e342cbc37fdb3b932fcea1882d2" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>419.homecafe</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>419 ต Mueang Ngai, Chiang Dao District, Chiang Mai 50170, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>163</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 98 909 0397</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.instagram.com/419.homecafe?igsh=ejhtcTB0dmliYnkw</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJBT-KsZOl0DARK3Mckxo8TCk</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.459594, 98.962609</td></tr></table></div></div>`)[0];
+                popup_836b92d0c61913508c589f68dcbf0cf7.setContent(html_e0e50e342cbc37fdb3b932fcea1882d2);
+            
+        
+
+        circle_marker_a792af6a4f5835cbb9fb0eab26ca4e2c.bindPopup(popup_836b92d0c61913508c589f68dcbf0cf7)
+        ;
+
+        
+    
+    
+            var circle_marker_215caff7b099730f2202084d708a2130 = L.circleMarker(
+                [19.3682673, 98.9666421],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_ab449a13003df01c2c71d1e32be7fd58 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_9f4f564c5dd24e74a12878ff54edcba7 = $(`<div id="html_9f4f564c5dd24e74a12878ff54edcba7" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Don&#x27;t cry coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>435 Chiang Dao, Chiang Dao District, Chiang Mai 50170, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>5</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>3</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 83 484 1963</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/share/1BGLTmAxWH/</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJR6738Ban0DAR9JZhKeEH0xQ</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.368267, 98.966642</td></tr></table></div></div>`)[0];
+                popup_ab449a13003df01c2c71d1e32be7fd58.setContent(html_9f4f564c5dd24e74a12878ff54edcba7);
+            
+        
+
+        circle_marker_215caff7b099730f2202084d708a2130.bindPopup(popup_ab449a13003df01c2c71d1e32be7fd58)
+        ;
+
+        
+    
+    
+            var circle_marker_1d05884b432154cc939d0ee1d94cb0dd = L.circleMarker(
+                [19.3737424, 98.9661691],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_a237b5eb07c724e709c8a2148cfc267a = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_935644849c2bccdd75dd104cfb758ce8 = $(`<div id="html_935644849c2bccdd75dd104cfb758ce8" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Coffee Bar</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>9XF8+FFV, Chiang Dao, Chiang Dao District, Chiang Mai 50170, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>10</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 98 881 5336</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJk0Q2YgCn0DARsay8zD7jM2c</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>19.373742, 98.966169</td></tr></table></div></div>`)[0];
+                popup_a237b5eb07c724e709c8a2148cfc267a.setContent(html_935644849c2bccdd75dd104cfb758ce8);
+            
+        
+
+        circle_marker_1d05884b432154cc939d0ee1d94cb0dd.bindPopup(popup_a237b5eb07c724e709c8a2148cfc267a)
+        ;
+
+        
+    
+    
+            var circle_marker_0fdcfdcd8d51e281abca9d29361ff3ab = L.circleMarker(
+                [18.5431544, 98.52286],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_b5dd69645144a6ec158e242c30b93fcb = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_e91919b58d7c74fd73aebb8dfba68c48 = $(`<div id="html_e91919b58d7c74fd73aebb8dfba68c48" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>The Garden Inthanon Cafe&#x27;</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>339 บ้านหลวง Tambon Ban Luang, Chom Thong District, Chiang Mai 50160, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.9</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>77</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 52 005 236</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.thegarden-th.com/</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJnTtZ3Pax2zARq614wsTj5nw</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.543154, 98.522860</td></tr></table></div></div>`)[0];
+                popup_b5dd69645144a6ec158e242c30b93fcb.setContent(html_e91919b58d7c74fd73aebb8dfba68c48);
+            
+        
+
+        circle_marker_0fdcfdcd8d51e281abca9d29361ff3ab.bindPopup(popup_b5dd69645144a6ec158e242c30b93fcb)
+        ;
+
+        
+    
+    
+            var circle_marker_f5a12e06463ce3bb27998df5e1e236bc = L.circleMarker(
+                [18.4943771, 98.3748627],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_b0ecef0186a7e32b81ef9377442a3e2c = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_79e0b32ce52469bb150c4979ef145bf5 = $(`<div id="html_79e0b32ce52469bb150c4979ef145bf5" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Payak Coffee</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>ข้างพงษ์ศรารีสอร์ท เลขที่125 ช่างเคิ่ง Tambon, Chang Khoeng, Mae Chaem District, Chiang Mai 50270, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>14</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 80 675 8838</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJudRwVwAF2zARtlgWWpZl4WE</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.494377, 98.374863</td></tr></table></div></div>`)[0];
+                popup_b0ecef0186a7e32b81ef9377442a3e2c.setContent(html_79e0b32ce52469bb150c4979ef145bf5);
+            
+        
+
+        circle_marker_f5a12e06463ce3bb27998df5e1e236bc.bindPopup(popup_b0ecef0186a7e32b81ef9377442a3e2c)
+        ;
+
+        
+    
+    
+            var circle_marker_498e288530c3f65e49a50fb57661afbd = L.circleMarker(
+                [18.5459114, 98.5217656],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_c724c4625f722d36cb5dd9528cdc98e5 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_e01eae0d1eab346adda75b3328d766c5 = $(`<div id="html_e01eae0d1eab346adda75b3328d766c5" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Coffee place</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>GGWC+9P6, 1, Ban Luang, Chom Thong District, Chiang Mai 50160, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.6</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>17</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 98 885 9968</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJff02JQCr2zARWfVMgIX45Nk</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.545911, 98.521766</td></tr></table></div></div>`)[0];
+                popup_c724c4625f722d36cb5dd9528cdc98e5.setContent(html_e01eae0d1eab346adda75b3328d766c5);
+            
+        
+
+        circle_marker_498e288530c3f65e49a50fb57661afbd.bindPopup(popup_c724c4625f722d36cb5dd9528cdc98e5)
+        ;
+
+        
+    
+    
+            var circle_marker_2d5a6b5725f435d18c952411254974fe = L.circleMarker(
+                [18.5179324, 98.3295984],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_719b3f3f73b1a7ea894967554e55f8dc = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_ddbae18157d1cb6da54fb47877ead7bd = $(`<div id="html_ddbae18157d1cb6da54fb47877ead7bd" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>ฮักแคมป์ คาเฟ่ ร้านอาหาร แม่แจ่ม Hug Camp Café Mae Chaem - Coffee &amp; Thai Food | Mountain View</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>ฮักแคมป์ คาเฟ่ บ้านบนนา Tambon Chang Khoeng, Mae Chaem District, Chiang Mai 50270, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>5</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>171</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–200</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 61 212 2868</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/hugcampcafe</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJ5dPNYzUF2zARRESNikIlzOI</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.517932, 98.329598</td></tr></table></div></div>`)[0];
+                popup_719b3f3f73b1a7ea894967554e55f8dc.setContent(html_ddbae18157d1cb6da54fb47877ead7bd);
+            
+        
+
+        circle_marker_2d5a6b5725f435d18c952411254974fe.bindPopup(popup_719b3f3f73b1a7ea894967554e55f8dc)
+        ;
+
+        
+    
+    
+            var circle_marker_d89310c44be633c4a914bf22f33215c0 = L.circleMarker(
+                [18.3788456, 98.5321136],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3, "stroke": true, "weight": 1}
+            ).addTo(map_d39c2313aeb58bafcfbb9601d1559610);
+        
+    
+        var popup_0ccb5fcdc6169e050eabe9b6afb0fd65 = L.popup({
+  "maxWidth": 420,
+});
+
+        
+            
+                var html_c3fbb6db854aba753c82aa7de93a4769 = $(`<div id="html_c3fbb6db854aba753c82aa7de93a4769" style="width: 100.0%; height: 100.0%;"><div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'><table><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Name</th><td style='padding:2px 0;'>Khun Pho Coffee and House</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Category</th><td style='padding:2px 0;'>Coffee shop</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Address</th><td style='padding:2px 0;'>9GHJ+GRQ ถนน บ้านห้วยส้มป่อย Doi Kaeo, Chom Thong District, Chiang Mai 50160, Thailand</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Rating</th><td style='padding:2px 0;'>4.8</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Reviews</th><td style='padding:2px 0;'>49</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Price</th><td style='padding:2px 0;'>฿1–100</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Phone</th><td style='padding:2px 0;'>+66 95 802 1998</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Website</th><td style='padding:2px 0;'>https://www.facebook.com/profile.php?id=100056363271670&amp;mibextid=ZbWKwL</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Place ID</th><td style='padding:2px 0;'>ChIJdddEMUOn2zARh2q7cj7MCss</td></tr><tr><th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Coordinates</th><td style='padding:2px 0;'>18.378846, 98.532114</td></tr></table></div></div>`)[0];
+                popup_0ccb5fcdc6169e050eabe9b6afb0fd65.setContent(html_c3fbb6db854aba753c82aa7de93a4769);
+            
+        
+
+        circle_marker_d89310c44be633c4a914bf22f33215c0.bindPopup(popup_0ccb5fcdc6169e050eabe9b6afb0fd65)
+        ;
+
+        
+    
+    
+            map_d39c2313aeb58bafcfbb9601d1559610.fitBounds(
+                [[18.3788456, 98.3295984], [20.0763965, 99.4284585]],
+                {}
+            );
+        
+</script>
+</html>
