@@ -44,15 +44,33 @@ CHANG_PHUEAK_WEST_1000_MAX_LNG = 98.952
 
 RADIUS_500 = 500.0
 RADIUS_1000 = 1000.0
-SPACING_500 = 600.0
-SPACING_1000 = 1200.0
 COVERAGE_STEP = 100.0
+EXACT_BUFFER_RESOLUTION = 64
+EXACT_COVERAGE_TOLERANCE_M2 = 1.0
 
 SHIFT_STEP = 100.0
 SHIFT_MAX_DISTANCE = 2000.0
 SHIFT_ANGLES = 16
 MAX_AUTO_FIX_ADDITIONS = 2000
+MAX_EXACT_PATCH = 20
 EPS = 1e-9
+
+COARSE_SPACING500_MIN = 700
+COARSE_SPACING500_MAX = 900
+COARSE_SPACING500_STEP = 25
+COARSE_SPACING1000_MIN = 1400
+COARSE_SPACING1000_MAX = 1800
+COARSE_SPACING1000_STEP = 25
+
+SPACING500_MIN = 650
+SPACING500_MAX = 950
+SPACING1000_MIN = 1300
+SPACING1000_MAX = 1900
+
+FINE_SPACING500_DELTA = 25
+FINE_SPACING500_STEP = 5
+FINE_SPACING1000_DELTA = 50
+FINE_SPACING1000_STEP = 25
 
 
 def _fatal(message: str) -> "None":
@@ -95,6 +113,18 @@ class LocalProjection:
 
     def geom_to_lng_lat(self, geom: BaseGeometry) -> BaseGeometry:
         return transform(self._inverse, geom)
+
+
+@dataclass
+class CandidateResult:
+    spacing500: int
+    spacing1000: int
+    records: list[dict[str, Any]]
+    count500: int
+    count1000: int
+    sample_auto_added: int
+    exact_patch_added: int
+    exact_missing_area: float
 
 
 def _load_border_geometry(path: Path) -> BaseGeometry:
@@ -366,6 +396,33 @@ def _center_key_xy(center: tuple[float, float], radius: float) -> tuple[float, f
     return (round(center[0], 3), round(center[1], 3), int(radius))
 
 
+def _circles_from_centers(
+    centers500: list[tuple[float, float]],
+    centers1000: list[tuple[float, float]],
+) -> list[tuple[float, float, float]]:
+    circles: list[tuple[float, float, float]] = [(*center, RADIUS_500) for center in centers500]
+    circles.extend([(*center, RADIUS_1000) for center in centers1000])
+    return circles
+
+
+def _circles_to_coverage_geometry(circles: list[tuple[float, float, float]]) -> BaseGeometry:
+    if not circles:
+        return Point(0.0, 0.0).buffer(0.0)
+    disk_geometries = [
+        Point(center_x, center_y).buffer(radius, resolution=EXACT_BUFFER_RESOLUTION)
+        for center_x, center_y, radius in circles
+    ]
+    return unary_union(disk_geometries)
+
+
+def _exact_missing_geometry(
+    merged_border_xy: BaseGeometry,
+    circles: list[tuple[float, float, float]],
+) -> BaseGeometry:
+    coverage = _circles_to_coverage_geometry(circles)
+    return merged_border_xy.difference(coverage)
+
+
 def _auto_fix_coverage(
     merged_border_xy: BaseGeometry,
     zone500_xy: BaseGeometry,
@@ -443,6 +500,80 @@ def _auto_fix_coverage(
             _fatal("coverage auto-fix found gaps but could not add circles")
 
 
+def _auto_fix_exact_coverage(
+    merged_border_xy: BaseGeometry,
+    zone500_xy: BaseGeometry,
+    zone1000_xy: BaseGeometry,
+    centers500: list[tuple[float, float]],
+    centers1000: list[tuple[float, float]],
+) -> tuple[list[tuple[float, float]], list[tuple[float, float]], int, float]:
+    zone500_buffer_xy = zone500_xy.buffer(RADIUS_500)
+    zone1000_buffer_xy = zone1000_xy.buffer(RADIUS_1000)
+    keys = {_center_key_xy(center, RADIUS_500) for center in centers500}
+    keys.update({_center_key_xy(center, RADIUS_1000) for center in centers1000})
+
+    added_total = 0
+    for _ in range(MAX_EXACT_PATCH + 1):
+        circles = _circles_from_centers(centers500, centers1000)
+        missing = _exact_missing_geometry(merged_border_xy, circles)
+        missing_area = float(missing.area)
+        if missing_area <= EXACT_COVERAGE_TOLERANCE_M2 + EPS:
+            return centers500, centers1000, added_total, missing_area
+
+        if added_total >= MAX_EXACT_PATCH:
+            break
+
+        parts = [part for part in _iter_polygon_parts(missing) if part.area > EPS]
+        if not parts:
+            break
+
+        parts.sort(key=lambda geom: geom.area, reverse=True)
+        added_this_round = False
+        for part in parts:
+            representative = part.representative_point()
+            center = (float(representative.x), float(representative.y))
+            if zone500_buffer_xy.covers(representative):
+                key500 = _center_key_xy(center, RADIUS_500)
+                if key500 in keys:
+                    continue
+                centers500.append(center)
+                keys.add(key500)
+                added_total += 1
+                added_this_round = True
+                break
+
+            shifted = _try_shifted_1000_center(
+                center,
+                zone1000_buffer_xy=zone1000_buffer_xy,
+                zone500_xy=zone500_xy,
+                centers500=centers500,
+            )
+            if shifted is not None:
+                key1000 = _center_key_xy(shifted, RADIUS_1000)
+                if key1000 not in keys:
+                    centers1000.append(shifted)
+                    keys.add(key1000)
+                    added_total += 1
+                    added_this_round = True
+                    break
+
+            key500 = _center_key_xy(center, RADIUS_500)
+            if key500 in keys:
+                continue
+            centers500.append(center)
+            keys.add(key500)
+            added_total += 1
+            added_this_round = True
+            break
+
+        if not added_this_round:
+            break
+
+    circles = _circles_from_centers(centers500, centers1000)
+    missing_area = float(_exact_missing_geometry(merged_border_xy, circles).area)
+    return centers500, centers1000, added_total, missing_area
+
+
 def _records_from_centers(
     projection: LocalProjection,
     centers500: list[tuple[float, float]],
@@ -506,14 +637,157 @@ def _validate_coverage_strict(
     merged_border_xy: BaseGeometry,
     projection: LocalProjection,
 ) -> int:
-    circles: list[tuple[float, float, float]] = []
-    for row in records:
-        x, y = projection.to_xy(float(row["lng"]), float(row["lat"]))
-        circles.append((x, y, float(row["radius"])))
+    circles = _circles_from_records(records, projection)
 
     samples = _build_coverage_samples(merged_border_xy, COVERAGE_STEP)
     uncovered = _find_uncovered_samples(samples, circles)
     return len(uncovered)
+
+
+def _circles_from_records(
+    records: list[dict[str, Any]],
+    projection: LocalProjection,
+) -> list[tuple[float, float, float]]:
+    circles: list[tuple[float, float, float]] = []
+    for row in records:
+        x, y = projection.to_xy(float(row["lng"]), float(row["lat"]))
+        circles.append((x, y, float(row["radius"])))
+    return circles
+
+
+def _validate_exact_coverage(
+    records: list[dict[str, Any]],
+    merged_border_xy: BaseGeometry,
+    projection: LocalProjection,
+) -> float:
+    circles = _circles_from_records(records, projection)
+    missing = _exact_missing_geometry(merged_border_xy, circles)
+    return float(missing.area)
+
+
+def _iter_spacing_values(minimum: int, maximum: int, step: int) -> list[int]:
+    return list(range(minimum, maximum + 1, step))
+
+
+def _candidate_sort_key(candidate: CandidateResult) -> tuple[Any, ...]:
+    return (
+        len(candidate.records),
+        candidate.exact_patch_added,
+        candidate.count500,
+        -candidate.spacing500,
+        -candidate.spacing1000,
+        candidate.spacing500,
+        candidate.spacing1000,
+    )
+
+
+def _is_better_candidate(candidate: CandidateResult, best: CandidateResult | None) -> bool:
+    if best is None:
+        return True
+    return _candidate_sort_key(candidate) < _candidate_sort_key(best)
+
+
+def _evaluate_spacing_candidate(
+    spacing500: int,
+    spacing1000: int,
+    merged_border_xy: BaseGeometry,
+    zone500_xy: BaseGeometry,
+    zone1000_xy: BaseGeometry,
+    projection: LocalProjection,
+) -> CandidateResult | None:
+    centers500 = _generate_zone_centers(
+        zone500_xy,
+        spacing=float(spacing500),
+        radius=RADIUS_500,
+    )
+    centers1000_candidates = _generate_zone_centers(
+        zone1000_xy,
+        spacing=float(spacing1000),
+        radius=RADIUS_1000,
+    )
+    centers1000 = _filter_1000_centers(
+        centers1000_candidates,
+        zone1000_buffer_xy=zone1000_xy.buffer(RADIUS_1000),
+        zone500_xy=zone500_xy,
+        centers500=centers500,
+    )
+
+    centers500, centers1000, sample_auto_added = _auto_fix_coverage(
+        merged_border_xy=merged_border_xy,
+        zone500_xy=zone500_xy,
+        zone1000_xy=zone1000_xy,
+        centers500=centers500,
+        centers1000=centers1000,
+    )
+
+    centers500, centers1000, exact_patch_added, exact_missing_area = _auto_fix_exact_coverage(
+        merged_border_xy=merged_border_xy,
+        zone500_xy=zone500_xy,
+        zone1000_xy=zone1000_xy,
+        centers500=centers500,
+        centers1000=centers1000,
+    )
+    if exact_missing_area > EXACT_COVERAGE_TOLERANCE_M2 + EPS:
+        return None
+
+    records = _records_from_centers(projection, centers500, centers1000)
+    count500 = sum(1 for row in records if int(row["radius"]) == 500)
+    count1000 = sum(1 for row in records if int(row["radius"]) == 1000)
+
+    violations = _validate_no_full_swallow(records, projection)
+    if violations:
+        return None
+
+    uncovered_count = _validate_coverage_strict(records, merged_border_xy, projection)
+    if uncovered_count:
+        return None
+
+    exact_missing_after_rounding = _validate_exact_coverage(records, merged_border_xy, projection)
+    if exact_missing_after_rounding > EXACT_COVERAGE_TOLERANCE_M2 + EPS:
+        return None
+
+    return CandidateResult(
+        spacing500=spacing500,
+        spacing1000=spacing1000,
+        records=records,
+        count500=count500,
+        count1000=count1000,
+        sample_auto_added=sample_auto_added,
+        exact_patch_added=exact_patch_added,
+        exact_missing_area=exact_missing_after_rounding,
+    )
+
+
+def _search_best_candidate(
+    spacing500_values: list[int],
+    spacing1000_values: list[int],
+    merged_border_xy: BaseGeometry,
+    zone500_xy: BaseGeometry,
+    zone1000_xy: BaseGeometry,
+    projection: LocalProjection,
+) -> tuple[CandidateResult | None, int, int]:
+    best: CandidateResult | None = None
+    tested = 0
+    valid = 0
+
+    for spacing500 in spacing500_values:
+        for spacing1000 in spacing1000_values:
+            tested += 1
+            candidate = _evaluate_spacing_candidate(
+                spacing500=spacing500,
+                spacing1000=spacing1000,
+                merged_border_xy=merged_border_xy,
+                zone500_xy=zone500_xy,
+                zone1000_xy=zone1000_xy,
+                projection=projection,
+            )
+            if candidate is None:
+                continue
+            valid += 1
+            if _is_better_candidate(candidate, best):
+                best = candidate
+
+    return best, tested, valid
 
 
 def main() -> int:
@@ -546,28 +820,53 @@ def main() -> int:
     zone500_xy = projection.geom_to_xy(zone500_lng_lat)
     zone1000_xy = projection.geom_to_xy(zone1000_lng_lat)
 
-    centers500 = _generate_zone_centers(zone500_xy, spacing=SPACING_500, radius=RADIUS_500)
-    centers1000_candidates = _generate_zone_centers(
-        zone1000_xy,
-        spacing=SPACING_1000,
-        radius=RADIUS_1000,
+    coarse500_values = _iter_spacing_values(
+        COARSE_SPACING500_MIN,
+        COARSE_SPACING500_MAX,
+        COARSE_SPACING500_STEP,
     )
-    centers1000 = _filter_1000_centers(
-        centers1000_candidates,
-        zone1000_buffer_xy=zone1000_xy.buffer(RADIUS_1000),
-        zone500_xy=zone500_xy,
-        centers500=centers500,
+    coarse1000_values = _iter_spacing_values(
+        COARSE_SPACING1000_MIN,
+        COARSE_SPACING1000_MAX,
+        COARSE_SPACING1000_STEP,
     )
 
-    centers500, centers1000, auto_added = _auto_fix_coverage(
+    coarse_best, coarse_tested, coarse_valid = _search_best_candidate(
+        spacing500_values=coarse500_values,
+        spacing1000_values=coarse1000_values,
         merged_border_xy=merged_border_xy,
         zone500_xy=zone500_xy,
         zone1000_xy=zone1000_xy,
-        centers500=centers500,
-        centers1000=centers1000,
+        projection=projection,
+    )
+    if coarse_best is None:
+        _fatal(
+            "auto-tuning failed: no valid candidate in coarse search "
+            f"({coarse_tested} tested)"
+        )
+
+    fine500_min = max(SPACING500_MIN, coarse_best.spacing500 - FINE_SPACING500_DELTA)
+    fine500_max = min(SPACING500_MAX, coarse_best.spacing500 + FINE_SPACING500_DELTA)
+    fine1000_min = max(SPACING1000_MIN, coarse_best.spacing1000 - FINE_SPACING1000_DELTA)
+    fine1000_max = min(SPACING1000_MAX, coarse_best.spacing1000 + FINE_SPACING1000_DELTA)
+
+    fine500_values = _iter_spacing_values(fine500_min, fine500_max, FINE_SPACING500_STEP)
+    fine1000_values = _iter_spacing_values(fine1000_min, fine1000_max, FINE_SPACING1000_STEP)
+
+    fine_best, fine_tested, fine_valid = _search_best_candidate(
+        spacing500_values=fine500_values,
+        spacing1000_values=fine1000_values,
+        merged_border_xy=merged_border_xy,
+        zone500_xy=zone500_xy,
+        zone1000_xy=zone1000_xy,
+        projection=projection,
     )
 
-    records = _records_from_centers(projection, centers500, centers1000)
+    best_candidate = coarse_best
+    if fine_best is not None and _is_better_candidate(fine_best, best_candidate):
+        best_candidate = fine_best
+
+    records = best_candidate.records
     violations = _validate_no_full_swallow(records, projection)
     if violations:
         _fatal(f"no-full-swallow validation failed: {violations} violating 500m centers")
@@ -576,14 +875,29 @@ def main() -> int:
     if uncovered_count:
         _fatal(f"coverage validation failed: {uncovered_count} uncovered strict-grid samples")
 
+    exact_missing_area = _validate_exact_coverage(records, merged_border_xy, projection)
+    if exact_missing_area > EXACT_COVERAGE_TOLERANCE_M2 + EPS:
+        _fatal(
+            "exact coverage validation failed: "
+            f"missing area {exact_missing_area:.6f} m^2 exceeds tolerance "
+            f"{EXACT_COVERAGE_TOLERANCE_M2:.6f} m^2"
+        )
+
     OUTPUT_PATH.write_text(json.dumps(records, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
 
-    count500 = sum(1 for row in records if int(row["radius"]) == 500)
-    count1000 = sum(1 for row in records if int(row["radius"]) == 1000)
+    count500 = best_candidate.count500
+    count1000 = best_candidate.count1000
     print(
         f"Generated {len(records)} circles | "
         f"500m: {count500} | 1000m: {count1000} | "
-        f"auto-added: {auto_added} | output: {OUTPUT_PATH}"
+        f"spacing500: {best_candidate.spacing500} | "
+        f"spacing1000: {best_candidate.spacing1000} | "
+        f"sample-auto-added: {best_candidate.sample_auto_added} | "
+        f"exact-patch-added: {best_candidate.exact_patch_added} | "
+        f"exact-missing-area-m2: {best_candidate.exact_missing_area:.6f} | "
+        f"coarse-tested: {coarse_tested} ({coarse_valid} valid) | "
+        f"fine-tested: {fine_tested} ({fine_valid} valid) | "
+        f"output: {OUTPUT_PATH}"
     )
     return 0
 
