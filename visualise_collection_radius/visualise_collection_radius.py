@@ -3,7 +3,7 @@
 Generate a map of collection circles from lat_lng_radius.json.
 
 Dependency:
-    pip install folium
+    pip install folium shapely
 """
 
 from __future__ import annotations
@@ -24,17 +24,37 @@ except ImportError:  # pragma: no cover
     )
     raise SystemExit(1)
 
+try:
+    from shapely.geometry import Point, mapping, shape
+    from shapely.ops import unary_union
+except ImportError:  # pragma: no cover
+    print(
+        "Error: 'shapely' is not installed. Install it with: pip install shapely",
+        file=sys.stderr,
+    )
+    raise SystemExit(1)
+
 
 REPO_ROOT = Path(__file__).resolve().parent
 INPUT_PATH = REPO_ROOT / "lat_lng_radius.json"
 OUTPUT_PATH = REPO_ROOT / "collection_radius_map.html"
-BORDER_CACHE_PATH = REPO_ROOT / "chiang_mai_main_area_border.geojson"
+BORDER_CACHE_PATH = REPO_ROOT / "chiang_mai_main_area_merged_border.geojson"
 
 NOT_COLLECTED_COLOR = "#1f77b4"
 COLLECTED_COLOR = "#2ca02c"
 CHIANG_MAI_BORDER_COLOR = "#ff4d4d"
-CHIANG_MAI_MAIN_AREA_NAME = "Mueang Chiang Mai District"
-CHIANG_MAI_OSM_RELATION_ID = "R19033670"
+CHIANG_MAI_MAIN_AREA_NAME = "Chiang Mai Main Area (City + Suthep + Chang Phueak)"
+CHIANG_MAI_OSM_RELATION_IDS = ("R18271830", "R19975357", "R19033670")
+CHIANG_MAI_SUPPLEMENT_RELATION_ID = "R19033670"
+CHIANG_MAI_SUPPLEMENT_ANCHOR_POINTS = (
+    # lng, lat inside Chang Phueak area to capture only the missing district piece.
+    (98.9674, 18.8108),
+)
+CHIANG_MAI_SOURCE_NAMES = {
+    "R18271830": "Chiang Mai City Municipality",
+    "R19975357": "Suthep Town Municipality",
+    "R19033670": "Mueang Chiang Mai District",
+}
 NOMINATIM_USER_AGENT = "BrewScape-DataCollection/1.0 (+local-map-script)"
 
 
@@ -82,15 +102,25 @@ def _load_records(path: Path) -> list[Any]:
 def _validate_geojson_like(data: Any) -> bool:
     if not isinstance(data, dict):
         return False
-    geo_type = data.get("type")
-    return geo_type in {"Feature", "FeatureCollection", "Polygon", "MultiPolygon"}
+    if data.get("type") != "FeatureCollection":
+        return False
+    features = data.get("features")
+    if not isinstance(features, list) or not features:
+        return False
+    first_feature = features[0]
+    if not isinstance(first_feature, dict):
+        return False
+    geometry = first_feature.get("geometry")
+    if not isinstance(geometry, dict):
+        return False
+    return geometry.get("type") in {"Polygon", "MultiPolygon"}
 
 
 def _fetch_chiang_mai_main_area_geojson() -> dict[str, Any]:
     query = parse.urlencode(
         {
             "format": "jsonv2",
-            "osm_ids": CHIANG_MAI_OSM_RELATION_ID,
+            "osm_ids": ",".join(CHIANG_MAI_OSM_RELATION_IDS),
             "polygon_geojson": 1,
             "namedetails": 1,
         }
@@ -115,15 +145,91 @@ def _fetch_chiang_mai_main_area_geojson() -> dict[str, Any]:
         print("Error: Chiang Mai main-area border service returned no results.", file=sys.stderr)
         raise SystemExit(1)
 
-    border_row = data[0]
-    if not isinstance(border_row, dict):
-        print("Error: Chiang Mai main-area border service returned an invalid record.", file=sys.stderr)
+    rows_by_relation: dict[str, dict[str, Any]] = {}
+    for row in data:
+        if not isinstance(row, dict):
+            continue
+        if row.get("osm_type") != "relation":
+            continue
+        osm_id = row.get("osm_id")
+        if not isinstance(osm_id, int):
+            continue
+        relation_id = f"R{osm_id}"
+        rows_by_relation[relation_id] = row
+
+    missing_relations = [rid for rid in CHIANG_MAI_OSM_RELATION_IDS if rid not in rows_by_relation]
+    if missing_relations:
+        print(
+            "Error: missing required Chiang Mai boundary relation(s): "
+            f"{', '.join(missing_relations)}",
+            file=sys.stderr,
+        )
         raise SystemExit(1)
 
-    geometry = border_row.get("geojson")
-    if not isinstance(geometry, dict):
-        print("Error: Chiang Mai main-area border geometry is missing.", file=sys.stderr)
+    geometries_by_relation: dict[str, Any] = {}
+    for relation_id in CHIANG_MAI_OSM_RELATION_IDS:
+        row = rows_by_relation[relation_id]
+        geometry = row.get("geojson")
+        if not isinstance(geometry, dict):
+            print(
+                f"Error: geometry missing for required relation {relation_id}.",
+                file=sys.stderr,
+            )
+            raise SystemExit(1)
+        if geometry.get("type") not in {"Polygon", "MultiPolygon"}:
+            print(
+                f"Error: relation {relation_id} has unsupported geometry type "
+                f"{geometry.get('type')!r}.",
+                file=sys.stderr,
+            )
+            raise SystemExit(1)
+        geometries_by_relation[relation_id] = shape(geometry)
+
+    base_geometries = [
+        geometries_by_relation["R18271830"],
+        geometries_by_relation["R19975357"],
+    ]
+    dissolved = unary_union(base_geometries)
+
+    supplement = geometries_by_relation[CHIANG_MAI_SUPPLEMENT_RELATION_ID]
+    supplement_missing = supplement.difference(dissolved)
+    supplement_parts = []
+    if supplement_missing.geom_type == "Polygon":
+        supplement_parts = [supplement_missing]
+    elif supplement_missing.geom_type == "MultiPolygon":
+        supplement_parts = list(supplement_missing.geoms)
+    elif supplement_missing.geom_type == "GeometryCollection":
+        supplement_parts = [
+            geom for geom in supplement_missing.geoms if geom.geom_type in {"Polygon", "MultiPolygon"}
+        ]
+
+    selected_supplement_parts = []
+    for part in supplement_parts:
+        if part.is_empty:
+            continue
+        if any(part.covers(Point(lng, lat)) for lng, lat in CHIANG_MAI_SUPPLEMENT_ANCHOR_POINTS):
+            selected_supplement_parts.append(part)
+
+    if selected_supplement_parts:
+        dissolved = unary_union([dissolved, *selected_supplement_parts])
+
+    if dissolved.is_empty:
+        print("Error: dissolved Chiang Mai main-area geometry is empty.", file=sys.stderr)
         raise SystemExit(1)
+
+    if dissolved.geom_type == "GeometryCollection":
+        polygon_parts = [
+            geom
+            for geom in dissolved.geoms
+            if geom.geom_type in {"Polygon", "MultiPolygon"} and not geom.is_empty
+        ]
+        if not polygon_parts:
+            print(
+                "Error: dissolved Chiang Mai geometry has no polygonal components.",
+                file=sys.stderr,
+            )
+            raise SystemExit(1)
+        dissolved = unary_union(polygon_parts)
 
     feature_collection = {
         "type": "FeatureCollection",
@@ -132,11 +238,15 @@ def _fetch_chiang_mai_main_area_geojson() -> dict[str, Any]:
                 "type": "Feature",
                 "properties": {
                     "name": CHIANG_MAI_MAIN_AREA_NAME,
-                    "osm_id": border_row.get("osm_id"),
-                    "osm_type": border_row.get("osm_type"),
                     "source": "OpenStreetMap Nominatim",
+                    "source_relations": list(CHIANG_MAI_OSM_RELATION_IDS),
+                    "source_relation_names": [
+                        CHIANG_MAI_SOURCE_NAMES[rid] for rid in CHIANG_MAI_OSM_RELATION_IDS
+                    ],
+                    "supplement_relation": CHIANG_MAI_SUPPLEMENT_RELATION_ID,
+                    "supplement_anchor_points_lng_lat": list(CHIANG_MAI_SUPPLEMENT_ANCHOR_POINTS),
                 },
-                "geometry": geometry,
+                "geometry": mapping(dissolved),
             }
         ],
     }
@@ -152,7 +262,19 @@ def _load_chiang_mai_main_area_geojson(path: Path) -> dict[str, Any]:
             print(f"Error: invalid cached border JSON in {path}: {exc}", file=sys.stderr)
             raise SystemExit(1)
         if _validate_geojson_like(cached):
-            return cached
+            feature = cached["features"][0]
+            properties = feature.get("properties", {})
+            if not isinstance(properties, dict):
+                properties = {}
+
+            cached_relations = tuple(properties.get("source_relations", []))
+            cached_supplement = properties.get("supplement_relation")
+
+            if (
+                cached_relations == CHIANG_MAI_OSM_RELATION_IDS
+                and cached_supplement == CHIANG_MAI_SUPPLEMENT_RELATION_ID
+            ):
+                return cached
 
     downloaded = _fetch_chiang_mai_main_area_geojson()
     try:
@@ -305,15 +427,27 @@ def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) 
             fill_opacity=1.0,
         ).add_to(point_map)
 
+    # Draw a white halo first for contrast, then the red dotted border on top.
+    folium.GeoJson(
+        chiang_mai_border,
+        name=f"{CHIANG_MAI_MAIN_AREA_NAME} Border Halo",
+        style_function=lambda _feature: {
+            "color": "#ffffff",
+            "weight": 7,
+            "fill": False,
+            "opacity": 1.0,
+        },
+    ).add_to(point_map)
+
     folium.GeoJson(
         chiang_mai_border,
         name=f"{CHIANG_MAI_MAIN_AREA_NAME} Border",
         style_function=lambda _feature: {
             "color": CHIANG_MAI_BORDER_COLOR,
-            "weight": 2,
+            "weight": 3,
             "fill": False,
             "dashArray": "4, 4",
-            "opacity": 0.95,
+            "opacity": 1.0,
         },
         tooltip=f"{CHIANG_MAI_MAIN_AREA_NAME} Border",
     ).add_to(point_map)
