@@ -33,7 +33,9 @@ jobs:
       - name: Prepare Pages artifact
         run: |
           mkdir -p public
+          cp locations_map.html public/locations_map.html
           cp locations_map.html public/index.html
+          cp locations_map.html public/404.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
