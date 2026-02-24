@@ -28,12 +28,13 @@ except ImportError:  # pragma: no cover
 REPO_ROOT = Path(__file__).resolve().parent
 INPUT_PATH = REPO_ROOT / "lat_lng_radius.json"
 OUTPUT_PATH = REPO_ROOT / "collection_radius_map.html"
-BORDER_CACHE_PATH = REPO_ROOT / "chiang_mai_province_border.geojson"
+BORDER_CACHE_PATH = REPO_ROOT / "chiang_mai_main_area_border.geojson"
 
 NOT_COLLECTED_COLOR = "#1f77b4"
 COLLECTED_COLOR = "#2ca02c"
-CHIANG_MAI_BORDER_COLOR = "#d62728"
-CHIANG_MAI_OSM_RELATION_ID = "R1908771"
+CHIANG_MAI_BORDER_COLOR = "#ff4d4d"
+CHIANG_MAI_MAIN_AREA_NAME = "Mueang Chiang Mai District"
+CHIANG_MAI_OSM_RELATION_ID = "R19033670"
 NOMINATIM_USER_AGENT = "BrewScape-DataCollection/1.0 (+local-map-script)"
 
 
@@ -85,7 +86,7 @@ def _validate_geojson_like(data: Any) -> bool:
     return geo_type in {"Feature", "FeatureCollection", "Polygon", "MultiPolygon"}
 
 
-def _fetch_chiang_mai_province_geojson() -> dict[str, Any]:
+def _fetch_chiang_mai_main_area_geojson() -> dict[str, Any]:
     query = parse.urlencode(
         {
             "format": "jsonv2",
@@ -101,7 +102,7 @@ def _fetch_chiang_mai_province_geojson() -> dict[str, Any]:
         with request.urlopen(req, timeout=30) as response:
             payload = response.read().decode("utf-8")
     except (error.URLError, TimeoutError) as exc:
-        print(f"Error: unable to download Chiang Mai border: {exc}", file=sys.stderr)
+        print(f"Error: unable to download Chiang Mai main-area border: {exc}", file=sys.stderr)
         raise SystemExit(1)
 
     try:
@@ -111,17 +112,17 @@ def _fetch_chiang_mai_province_geojson() -> dict[str, Any]:
         raise SystemExit(1)
 
     if not isinstance(data, list) or not data:
-        print("Error: Chiang Mai border service returned no results.", file=sys.stderr)
+        print("Error: Chiang Mai main-area border service returned no results.", file=sys.stderr)
         raise SystemExit(1)
 
     border_row = data[0]
     if not isinstance(border_row, dict):
-        print("Error: Chiang Mai border service returned an invalid record.", file=sys.stderr)
+        print("Error: Chiang Mai main-area border service returned an invalid record.", file=sys.stderr)
         raise SystemExit(1)
 
     geometry = border_row.get("geojson")
     if not isinstance(geometry, dict):
-        print("Error: Chiang Mai border geometry is missing.", file=sys.stderr)
+        print("Error: Chiang Mai main-area border geometry is missing.", file=sys.stderr)
         raise SystemExit(1)
 
     feature_collection = {
@@ -130,7 +131,7 @@ def _fetch_chiang_mai_province_geojson() -> dict[str, Any]:
             {
                 "type": "Feature",
                 "properties": {
-                    "name": "Chiang Mai Province",
+                    "name": CHIANG_MAI_MAIN_AREA_NAME,
                     "osm_id": border_row.get("osm_id"),
                     "osm_type": border_row.get("osm_type"),
                     "source": "OpenStreetMap Nominatim",
@@ -142,7 +143,7 @@ def _fetch_chiang_mai_province_geojson() -> dict[str, Any]:
     return feature_collection
 
 
-def _load_chiang_mai_province_geojson(path: Path) -> dict[str, Any]:
+def _load_chiang_mai_main_area_geojson(path: Path) -> dict[str, Any]:
     if path.exists():
         try:
             with path.open("r", encoding="utf-8") as file:
@@ -153,12 +154,15 @@ def _load_chiang_mai_province_geojson(path: Path) -> dict[str, Any]:
         if _validate_geojson_like(cached):
             return cached
 
-    downloaded = _fetch_chiang_mai_province_geojson()
+    downloaded = _fetch_chiang_mai_main_area_geojson()
     try:
         with path.open("w", encoding="utf-8") as file:
             json.dump(downloaded, file, ensure_ascii=True, indent=2)
     except OSError as exc:
-        print(f"Warning: unable to cache Chiang Mai border to {path}: {exc}", file=sys.stderr)
+        print(
+            f"Warning: unable to cache Chiang Mai main-area border to {path}: {exc}",
+            file=sys.stderr,
+        )
     return downloaded
 
 
@@ -303,13 +307,15 @@ def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) 
 
     folium.GeoJson(
         chiang_mai_border,
-        name="Chiang Mai Province Border",
+        name=f"{CHIANG_MAI_MAIN_AREA_NAME} Border",
         style_function=lambda _feature: {
             "color": CHIANG_MAI_BORDER_COLOR,
             "weight": 2,
             "fill": False,
+            "dashArray": "4, 4",
+            "opacity": 0.95,
         },
-        tooltip="Chiang Mai Province Border",
+        tooltip=f"{CHIANG_MAI_MAIN_AREA_NAME} Border",
     ).add_to(point_map)
 
     border_bounds = _geojson_bounds(chiang_mai_border)
@@ -324,7 +330,7 @@ def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) 
 def main() -> int:
     records = _load_records(INPUT_PATH)
     points, skipped = _extract_points(records)
-    chiang_mai_border = _load_chiang_mai_province_geojson(BORDER_CACHE_PATH)
+    chiang_mai_border = _load_chiang_mai_main_area_geojson(BORDER_CACHE_PATH)
 
     if not points:
         print(
