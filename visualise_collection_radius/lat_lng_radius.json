@@ -1,1741 +1,1315 @@
 [
   {
     "lat": 18.756898,
-    "lng": 98.994356,
+    "lng": 98.997684,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.756898,
-    "lng": 99.00005,
+    "lng": 99.003378,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.756898,
-    "lng": 99.005744,
+    "lng": 99.009071,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.756898,
-    "lng": 99.011437,
+    "lng": 99.014765,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.756898,
-    "lng": 99.017131,
+    "lng": 99.020458,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.761566,
-    "lng": 98.985816,
+    "lng": 98.989144,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.761566,
-    "lng": 98.99151,
+    "lng": 98.994837,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.761566,
-    "lng": 98.997203,
+    "lng": 99.000531,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.761566,
-    "lng": 99.002897,
+    "lng": 99.006224,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.761566,
-    "lng": 99.00859,
+    "lng": 99.011918,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.761566,
-    "lng": 99.014284,
+    "lng": 99.017612,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.761566,
-    "lng": 99.019978,
+    "lng": 99.023305,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.761566,
-    "lng": 99.025671,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.761566,
-    "lng": 99.031365,
+    "lng": 99.028999,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.766233,
-    "lng": 98.977276,
+    "lng": 98.97491,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.766233,
-    "lng": 98.982969,
+    "lng": 98.980603,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.766233,
-    "lng": 98.988663,
+    "lng": 98.986297,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.766233,
-    "lng": 98.994356,
+    "lng": 98.99199,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.766233,
-    "lng": 99.00005,
+    "lng": 98.997684,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.766233,
-    "lng": 99.005744,
+    "lng": 99.003378,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.766233,
-    "lng": 99.011437,
+    "lng": 99.009071,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.766233,
-    "lng": 99.017131,
+    "lng": 99.014765,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.766233,
-    "lng": 99.022824,
+    "lng": 99.020458,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.766233,
-    "lng": 99.028518,
+    "lng": 99.026152,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.766233,
-    "lng": 99.034212,
+    "lng": 99.031846,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.770901,
-    "lng": 98.968735,
+    "lng": 98.966369,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.770901,
-    "lng": 98.974429,
+    "lng": 98.972063,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.770901,
-    "lng": 98.980122,
+    "lng": 98.977756,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.770901,
-    "lng": 98.985816,
+    "lng": 98.98345,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.770901,
-    "lng": 98.99151,
+    "lng": 98.989144,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.770901,
-    "lng": 98.997203,
+    "lng": 98.994837,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.770901,
-    "lng": 99.002897,
+    "lng": 99.000531,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.770901,
-    "lng": 99.00859,
+    "lng": 99.006224,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.770901,
-    "lng": 99.014284,
+    "lng": 99.011918,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.770901,
-    "lng": 99.019978,
+    "lng": 99.017612,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.770901,
-    "lng": 99.025671,
+    "lng": 99.023305,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.770901,
-    "lng": 99.031365,
+    "lng": 99.028999,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.775569,
-    "lng": 98.971582,
+    "lng": 98.969216,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.775569,
-    "lng": 98.977276,
+    "lng": 98.97491,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.775569,
-    "lng": 98.982969,
+    "lng": 98.980603,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.775569,
-    "lng": 98.988663,
+    "lng": 98.986297,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.775569,
-    "lng": 98.994356,
+    "lng": 98.99199,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.775569,
-    "lng": 99.00005,
+    "lng": 98.997684,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.775569,
-    "lng": 99.005744,
+    "lng": 99.003378,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.775569,
-    "lng": 99.011437,
+    "lng": 99.009071,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.775569,
-    "lng": 99.017131,
+    "lng": 99.014765,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.775569,
-    "lng": 99.022824,
+    "lng": 99.020458,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.775569,
-    "lng": 99.028518,
+    "lng": 99.026152,
+    "radius": 500,
+    "collected": false
+  },
+  {
+    "lat": 18.775569,
+    "lng": 99.031846,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.780237,
-    "lng": 98.963042,
+    "lng": 98.966369,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.780237,
-    "lng": 98.968735,
+    "lng": 98.972063,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.780237,
-    "lng": 98.974429,
+    "lng": 98.977756,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.780237,
-    "lng": 98.980122,
+    "lng": 98.98345,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.780237,
-    "lng": 98.985816,
+    "lng": 98.989144,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.780237,
-    "lng": 98.99151,
+    "lng": 98.994837,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.780237,
-    "lng": 98.997203,
+    "lng": 99.000531,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.780237,
-    "lng": 99.002897,
+    "lng": 99.006224,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.780237,
-    "lng": 99.00859,
+    "lng": 99.011918,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.780237,
-    "lng": 99.014284,
+    "lng": 99.017612,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.780237,
-    "lng": 99.019978,
+    "lng": 99.023305,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.780237,
-    "lng": 99.025671,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.780237,
-    "lng": 99.031365,
+    "lng": 99.028999,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 98.960195,
+    "lng": 98.957829,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 98.965888,
+    "lng": 98.963522,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 98.971582,
+    "lng": 98.969216,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 98.977276,
+    "lng": 98.97491,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 98.982969,
+    "lng": 98.980603,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 98.988663,
+    "lng": 98.986297,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 98.994356,
+    "lng": 98.99199,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 99.00005,
+    "lng": 98.997684,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 99.005744,
+    "lng": 99.003378,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 99.011437,
+    "lng": 99.009071,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 99.017131,
+    "lng": 99.014765,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 99.022824,
+    "lng": 99.020458,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.784904,
-    "lng": 99.028518,
+    "lng": 99.026152,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 98.951654,
+    "lng": 98.954982,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 98.957348,
+    "lng": 98.960676,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 98.963042,
+    "lng": 98.966369,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 98.968735,
+    "lng": 98.972063,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 98.974429,
+    "lng": 98.977756,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 98.980122,
+    "lng": 98.98345,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 98.985816,
+    "lng": 98.989144,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 98.99151,
+    "lng": 98.994837,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 98.997203,
+    "lng": 99.000531,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 99.002897,
+    "lng": 99.006224,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 99.00859,
+    "lng": 99.011918,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 99.014284,
+    "lng": 99.017612,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 99.019978,
+    "lng": 99.023305,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.789572,
-    "lng": 99.025671,
+    "lng": 99.028999,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 98.943114,
+    "lng": 98.940748,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 98.948807,
+    "lng": 98.946442,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 98.954501,
+    "lng": 98.952135,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 98.960195,
+    "lng": 98.957829,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 98.965888,
+    "lng": 98.963522,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 98.971582,
+    "lng": 98.969216,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 98.977276,
+    "lng": 98.97491,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 98.982969,
+    "lng": 98.980603,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 98.988663,
+    "lng": 98.986297,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 98.994356,
+    "lng": 98.99199,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 99.00005,
+    "lng": 98.997684,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 99.005744,
+    "lng": 99.003378,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 99.011437,
+    "lng": 99.009071,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 99.017131,
+    "lng": 99.014765,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.79424,
-    "lng": 99.022824,
+    "lng": 99.020458,
+    "radius": 500,
+    "collected": false
+  },
+  {
+    "lat": 18.79424,
+    "lng": 99.026152,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 98.940267,
+    "lng": 98.943595,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 98.945961,
+    "lng": 98.949288,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 98.951654,
+    "lng": 98.954982,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 98.957348,
+    "lng": 98.960676,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 98.963042,
+    "lng": 98.966369,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 98.968735,
+    "lng": 98.972063,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 98.974429,
+    "lng": 98.977756,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 98.980122,
+    "lng": 98.98345,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 98.985816,
+    "lng": 98.989144,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 98.99151,
+    "lng": 98.994837,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 98.997203,
+    "lng": 99.000531,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 99.002897,
+    "lng": 99.006224,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 99.00859,
+    "lng": 99.011918,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 99.014284,
+    "lng": 99.017612,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.798908,
-    "lng": 99.019978,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.798908,
-    "lng": 99.025671,
+    "lng": 99.023305,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 98.943114,
+    "lng": 98.940748,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 98.948807,
+    "lng": 98.946442,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 98.954501,
+    "lng": 98.952135,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 98.960195,
+    "lng": 98.957829,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 98.965888,
+    "lng": 98.963522,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 98.971582,
+    "lng": 98.969216,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 98.977276,
+    "lng": 98.97491,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 98.982969,
+    "lng": 98.980603,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 98.988663,
+    "lng": 98.986297,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 98.994356,
+    "lng": 98.99199,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 99.00005,
+    "lng": 98.997684,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 99.005744,
+    "lng": 99.003378,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 99.011437,
+    "lng": 99.009071,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 99.017131,
+    "lng": 99.014765,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.803575,
-    "lng": 99.022824,
+    "lng": 99.020458,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 98.934573,
+    "lng": 98.943595,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 98.945961,
+    "lng": 98.949288,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 98.951654,
+    "lng": 98.954982,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 98.957348,
+    "lng": 98.960676,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 98.963042,
+    "lng": 98.966369,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 98.968735,
+    "lng": 98.972063,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 98.974429,
+    "lng": 98.977756,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 98.980122,
+    "lng": 98.98345,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 98.985816,
+    "lng": 98.989144,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 98.99151,
+    "lng": 98.994837,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 98.997203,
+    "lng": 99.000531,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 99.002897,
+    "lng": 99.006224,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 99.00859,
+    "lng": 99.011918,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.808243,
-    "lng": 99.014284,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.808243,
-    "lng": 99.019978,
+    "lng": 99.017612,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.897565,
+    "lng": 98.946442,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.903259,
+    "lng": 98.952135,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.908952,
+    "lng": 98.957829,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.914646,
+    "lng": 98.963522,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.920339,
+    "lng": 98.969216,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.926033,
+    "lng": 98.97491,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.931727,
+    "lng": 98.980603,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.93742,
+    "lng": 98.986297,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.943114,
+    "lng": 98.99199,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.948807,
+    "lng": 98.997684,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.954501,
+    "lng": 99.003378,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.960195,
+    "lng": 99.009071,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.812911,
-    "lng": 98.965888,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.812911,
-    "lng": 98.971582,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.812911,
-    "lng": 98.977276,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.812911,
-    "lng": 98.982969,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.812911,
-    "lng": 98.988663,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.812911,
-    "lng": 98.994356,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.812911,
-    "lng": 99.00005,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.812911,
-    "lng": 99.005744,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.812911,
-    "lng": 99.011437,
+    "lng": 99.014765,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.817579,
-    "lng": 98.889025,
+    "lng": 98.949288,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.817579,
-    "lng": 98.894718,
+    "lng": 98.954982,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.817579,
-    "lng": 98.900412,
+    "lng": 98.960676,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.817579,
-    "lng": 98.906105,
+    "lng": 98.966369,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.817579,
-    "lng": 98.911799,
+    "lng": 98.972063,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.817579,
-    "lng": 98.917493,
+    "lng": 98.977756,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.817579,
-    "lng": 98.923186,
+    "lng": 98.98345,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.817579,
-    "lng": 98.92888,
+    "lng": 98.989144,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.817579,
-    "lng": 98.934573,
+    "lng": 98.994837,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.817579,
-    "lng": 98.940267,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.817579,
-    "lng": 98.945961,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.817579,
-    "lng": 98.951654,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.817579,
-    "lng": 98.957348,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.817579,
-    "lng": 98.963042,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.817579,
-    "lng": 98.968735,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.817579,
-    "lng": 98.974429,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.817579,
-    "lng": 98.980122,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.817579,
-    "lng": 98.985816,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.817579,
-    "lng": 98.99151,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.817579,
-    "lng": 98.997203,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.817579,
-    "lng": 99.002897,
+    "lng": 99.000531,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.822246,
-    "lng": 98.891871,
+    "lng": 98.952135,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.822246,
-    "lng": 98.897565,
+    "lng": 98.957829,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.822246,
-    "lng": 98.903259,
+    "lng": 98.963522,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.822246,
-    "lng": 98.908952,
+    "lng": 98.969216,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.822246,
-    "lng": 98.914646,
+    "lng": 98.97491,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.822246,
-    "lng": 98.920339,
+    "lng": 98.980603,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.822246,
-    "lng": 98.926033,
+    "lng": 98.986297,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.822246,
-    "lng": 98.931727,
+    "lng": 98.99199,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.822246,
-    "lng": 98.93742,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.822246,
-    "lng": 98.943114,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.822246,
-    "lng": 98.948807,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.822246,
-    "lng": 98.954501,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.822246,
-    "lng": 98.960195,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.822246,
-    "lng": 98.965888,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.822246,
-    "lng": 98.971582,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.822246,
-    "lng": 98.977276,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.822246,
-    "lng": 98.982969,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.822246,
-    "lng": 98.988663,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.822246,
-    "lng": 98.994356,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.822246,
-    "lng": 99.00005,
+    "lng": 98.997684,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.826914,
-    "lng": 98.889025,
+    "lng": 98.949288,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.826914,
-    "lng": 98.894718,
+    "lng": 98.954982,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.826914,
-    "lng": 98.900412,
+    "lng": 98.960676,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.826914,
-    "lng": 98.906105,
+    "lng": 98.966369,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.826914,
-    "lng": 98.911799,
+    "lng": 98.972063,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.826914,
-    "lng": 98.917493,
+    "lng": 98.977756,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.826914,
-    "lng": 98.923186,
+    "lng": 98.98345,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.826914,
-    "lng": 98.92888,
+    "lng": 98.989144,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.826914,
-    "lng": 98.934573,
+    "lng": 98.994837,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.826914,
-    "lng": 98.940267,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.826914,
-    "lng": 98.945961,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.826914,
-    "lng": 98.951654,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.826914,
-    "lng": 98.957348,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.826914,
-    "lng": 98.963042,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.826914,
-    "lng": 98.968735,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.826914,
-    "lng": 98.974429,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.826914,
-    "lng": 98.980122,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.826914,
-    "lng": 98.985816,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.826914,
-    "lng": 98.99151,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.826914,
-    "lng": 98.997203,
+    "lng": 99.000531,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.831582,
-    "lng": 98.886178,
+    "lng": 98.952135,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.831582,
-    "lng": 98.891871,
+    "lng": 98.957829,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.831582,
-    "lng": 98.897565,
+    "lng": 98.963522,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.831582,
-    "lng": 98.903259,
+    "lng": 98.969216,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.831582,
-    "lng": 98.908952,
+    "lng": 98.97491,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.831582,
-    "lng": 98.914646,
+    "lng": 98.980603,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.831582,
-    "lng": 98.920339,
+    "lng": 98.986297,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.831582,
-    "lng": 98.926033,
+    "lng": 98.99199,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.831582,
-    "lng": 98.931727,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.831582,
-    "lng": 98.93742,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.831582,
-    "lng": 98.943114,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.831582,
-    "lng": 98.948807,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.831582,
-    "lng": 98.954501,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.831582,
-    "lng": 98.960195,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.831582,
-    "lng": 98.965888,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.831582,
-    "lng": 98.971582,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.831582,
-    "lng": 98.977276,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.831582,
-    "lng": 98.982969,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.831582,
-    "lng": 98.988663,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.831582,
-    "lng": 98.994356,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.831582,
-    "lng": 99.00005,
+    "lng": 98.997684,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.83625,
-    "lng": 98.889025,
+    "lng": 98.949288,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.83625,
-    "lng": 98.894718,
+    "lng": 98.954982,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.83625,
-    "lng": 98.900412,
+    "lng": 98.960676,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.83625,
-    "lng": 98.906105,
+    "lng": 98.966369,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.83625,
-    "lng": 98.911799,
+    "lng": 98.972063,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.83625,
-    "lng": 98.917493,
+    "lng": 98.977756,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.83625,
-    "lng": 98.923186,
+    "lng": 98.98345,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.83625,
-    "lng": 98.92888,
+    "lng": 98.989144,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.83625,
-    "lng": 98.934573,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.83625,
-    "lng": 98.940267,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.83625,
-    "lng": 98.945961,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.83625,
-    "lng": 98.951654,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.83625,
-    "lng": 98.957348,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.83625,
-    "lng": 98.963042,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.83625,
-    "lng": 98.968735,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.83625,
-    "lng": 98.974429,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.83625,
-    "lng": 98.980122,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.83625,
-    "lng": 98.985816,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.83625,
-    "lng": 98.99151,
+    "lng": 98.994837,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.840918,
-    "lng": 98.897565,
+    "lng": 98.952135,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.840918,
-    "lng": 98.914646,
+    "lng": 98.957829,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.840918,
-    "lng": 98.920339,
+    "lng": 98.963522,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.840918,
-    "lng": 98.926033,
+    "lng": 98.969216,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.840918,
-    "lng": 98.931727,
+    "lng": 98.97491,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.840918,
-    "lng": 98.93742,
+    "lng": 98.980603,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.840918,
-    "lng": 98.943114,
+    "lng": 98.986297,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.840918,
-    "lng": 98.948807,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.840918,
-    "lng": 98.954501,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.840918,
-    "lng": 98.965888,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.840918,
-    "lng": 98.971582,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.840918,
-    "lng": 98.977276,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.840918,
-    "lng": 98.982969,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.840918,
-    "lng": 98.988663,
+    "lng": 98.99199,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.845585,
-    "lng": 98.940267,
+    "lng": 98.972063,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.845585,
-    "lng": 98.968735,
+    "lng": 98.977756,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.845585,
-    "lng": 98.974429,
+    "lng": 98.98345,
     "radius": 500,
     "collected": false
   },
   {
     "lat": 18.845585,
-    "lng": 98.980122,
-    "radius": 500,
-    "collected": false
-  },
-  {
-    "lat": 18.845585,
-    "lng": 98.985816,
+    "lng": 98.989144,
     "radius": 500,
     "collected": false
   },
@@ -1854,6 +1428,12 @@
     "collected": false
   },
   {
+    "lat": 18.78143,
+    "lng": 98.954641,
+    "radius": 1000,
+    "collected": false
+  },
+  {
     "lat": 18.783071,
     "lng": 98.874952,
     "radius": 1000,
@@ -1896,8 +1476,14 @@
     "collected": false
   },
   {
-    "lat": 18.783071,
-    "lng": 98.954662,
+    "lat": 18.789514,
+    "lng": 98.949896,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.790413,
+    "lng": 98.93756,
     "radius": 1000,
     "collected": false
   },
@@ -1944,12 +1530,6 @@
     "collected": false
   },
   {
-    "lat": 18.792407,
-    "lng": 98.937582,
-    "radius": 1000,
-    "collected": false
-  },
-  {
     "lat": 18.801742,
     "lng": 98.863565,
     "radius": 1000,
@@ -1992,12 +1572,6 @@
     "collected": false
   },
   {
-    "lat": 18.807481,
-    "lng": 98.939458,
-    "radius": 1000,
-    "collected": false
-  },
-  {
     "lat": 18.811078,
     "lng": 98.857871,
     "radius": 1000,
@@ -2022,6 +1596,30 @@
     "collected": false
   },
   {
+    "lat": 18.811078,
+    "lng": 98.90342,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.811078,
+    "lng": 98.914807,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.811078,
+    "lng": 98.926194,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.811078,
+    "lng": 98.937582,
+    "radius": 1000,
+    "collected": false
+  },
+  {
     "lat": 18.820413,
     "lng": 98.863565,
     "radius": 1000,
@@ -2034,8 +1632,38 @@
     "collected": false
   },
   {
-    "lat": 18.820955,
-    "lng": 98.885369,
+    "lat": 18.820413,
+    "lng": 98.886339,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.820413,
+    "lng": 98.897726,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.820413,
+    "lng": 98.909114,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.820413,
+    "lng": 98.920501,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.820413,
+    "lng": 98.931888,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.820413,
+    "lng": 98.943275,
     "radius": 1000,
     "collected": false
   },
@@ -2058,6 +1686,36 @@
     "collected": false
   },
   {
+    "lat": 18.829749,
+    "lng": 98.892033,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.829749,
+    "lng": 98.90342,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.829749,
+    "lng": 98.914807,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.829749,
+    "lng": 98.926194,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.829749,
+    "lng": 98.937582,
+    "radius": 1000,
+    "collected": false
+  },
+  {
     "lat": 18.839084,
     "lng": 98.863565,
     "radius": 1000,
@@ -2066,6 +1724,54 @@
   {
     "lat": 18.839084,
     "lng": 98.874952,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.839084,
+    "lng": 98.886339,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.839084,
+    "lng": 98.897726,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.839084,
+    "lng": 98.909114,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.839084,
+    "lng": 98.920501,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.839084,
+    "lng": 98.931888,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.839084,
+    "lng": 98.943275,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.84842,
+    "lng": 98.937582,
+    "radius": 1000,
+    "collected": false
+  },
+  {
+    "lat": 18.84842,
+    "lng": 98.948969,
     "radius": 1000,
     "collected": false
   }
