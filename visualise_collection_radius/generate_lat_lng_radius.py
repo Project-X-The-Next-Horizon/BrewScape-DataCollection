@@ -17,7 +17,7 @@ from typing import Any
 from urllib import error, parse, request
 
 try:
-    from shapely.geometry import Point, shape
+    from shapely.geometry import Point, box, shape
     from shapely.geometry.base import BaseGeometry
     from shapely.ops import transform, unary_union
 except ImportError:  # pragma: no cover
@@ -38,6 +38,9 @@ CITY_RELATION_ID = "R18271830"
 SUTHEP_RELATION_ID = "R19975357"
 DISTRICT_RELATION_ID = "R19033670"
 SUPPLEMENT_ANCHOR = (98.9674, 18.8108)  # lng, lat
+
+# West/left side of Chang Phueak supplement uses 1000m; east/right side stays 500m.
+CHANG_PHUEAK_WEST_1000_MAX_LNG = 98.952
 
 RADIUS_500 = 500.0
 RADIUS_1000 = 1000.0
@@ -190,7 +193,9 @@ def _iter_polygon_parts(geom: BaseGeometry) -> list[BaseGeometry]:
     return []
 
 
-def _build_zone500(geometries: dict[str, BaseGeometry]) -> BaseGeometry:
+def _build_zone500_with_supplement(
+    geometries: dict[str, BaseGeometry],
+) -> tuple[BaseGeometry, BaseGeometry]:
     city = geometries[CITY_RELATION_ID]
     suthep = geometries[SUTHEP_RELATION_ID]
     district = geometries[DISTRICT_RELATION_ID]
@@ -205,7 +210,9 @@ def _build_zone500(geometries: dict[str, BaseGeometry]) -> BaseGeometry:
     if not selected_parts:
         _fatal("unable to find Chang Phueak supplement piece using anchor point")
 
-    return unary_union([city, *selected_parts])
+    supplement_piece = unary_union(selected_parts)
+    zone500 = unary_union([city, supplement_piece])
+    return zone500, supplement_piece
 
 
 def _build_projection(geom_lng_lat: BaseGeometry) -> LocalProjection:
@@ -513,9 +520,22 @@ def main() -> int:
     merged_border_lng_lat = _load_border_geometry(MERGED_BORDER_PATH)
     relation_geometries = _fetch_relation_geometries()
 
-    zone500_lng_lat = _build_zone500(relation_geometries).intersection(merged_border_lng_lat)
+    zone500_base_lng_lat, chang_phueak_supplement_lng_lat = _build_zone500_with_supplement(
+        relation_geometries
+    )
+    zone500_lng_lat = zone500_base_lng_lat.intersection(merged_border_lng_lat)
     if zone500_lng_lat.is_empty:
         _fatal("zone500 is empty after clipping with merged border")
+
+    # Move only west/left side of Chang Phueak supplement to 1000m zone.
+    west_mask = box(-180.0, -90.0, CHANG_PHUEAK_WEST_1000_MAX_LNG, 90.0)
+    west_chang_phueak_override = (
+        chang_phueak_supplement_lng_lat.intersection(west_mask).intersection(merged_border_lng_lat)
+    )
+    if not west_chang_phueak_override.is_empty:
+        zone500_lng_lat = zone500_lng_lat.difference(west_chang_phueak_override)
+        if zone500_lng_lat.is_empty:
+            _fatal("zone500 became empty after applying west Chang Phueak 1000m override")
 
     zone1000_lng_lat = merged_border_lng_lat.difference(zone500_lng_lat)
     if zone1000_lng_lat.is_empty:
