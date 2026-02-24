@@ -14,6 +14,7 @@ from html import escape
 from pathlib import Path
 from typing import Any
 
+
 try:
     import folium
 except ImportError:  # pragma: no cover
