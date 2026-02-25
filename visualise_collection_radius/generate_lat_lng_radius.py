@@ -8,6 +8,7 @@ Dependencies:
 
 from __future__ import annotations
 
+import argparse
 import json
 import math
 import sys
@@ -71,6 +72,8 @@ FINE_SPACING500_DELTA = 25
 FINE_SPACING500_STEP = 5
 FINE_SPACING1000_DELTA = 50
 FINE_SPACING1000_STEP = 25
+FAST_LOCAL_500_DELTA = 25
+FAST_LOCAL_1000_DELTA = 25
 
 
 def _fatal(message: str) -> "None":
@@ -125,6 +128,41 @@ class CandidateResult:
     sample_auto_added: int
     exact_patch_added: int
     exact_missing_area: float
+
+
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Generate lat_lng_radius.json. Default uses a fast hex-spacing "
+            "approximation; use --auto for full auto-tuning."
+        )
+    )
+    mode_group = parser.add_mutually_exclusive_group()
+    mode_group.add_argument(
+        "--fast",
+        action="store_true",
+        help=(
+            "Use mathematically derived spacing (sqrt(3) * radius). "
+            "This is already the default."
+        ),
+    )
+    mode_group.add_argument(
+        "--auto",
+        action="store_true",
+        help="Use full coarse+fine auto-tuning search (slower).",
+    )
+    parser.add_argument(
+        "--fast-local",
+        action="store_true",
+        help=(
+            "In fast mode, evaluate a small local neighborhood (up to 9 "
+            "combinations) around derived spacing."
+        ),
+    )
+    args = parser.parse_args(argv)
+    if args.fast_local and args.auto:
+        parser.error("--fast-local cannot be combined with --auto")
+    return args
 
 
 def _load_border_geometry(path: Path) -> BaseGeometry:
@@ -669,6 +707,21 @@ def _iter_spacing_values(minimum: int, maximum: int, step: int) -> list[int]:
     return list(range(minimum, maximum + 1, step))
 
 
+def _derive_hex_spacing(radius: float, minimum: int, maximum: int, step: int) -> int:
+    if step <= 0:
+        _fatal("spacing step must be positive")
+    target = math.sqrt(3.0) * radius
+    snapped = int(round(target / step) * step)
+    return max(minimum, min(maximum, snapped))
+
+
+def _fast_local_values(base: int, minimum: int, maximum: int, delta: int) -> list[int]:
+    values = [base]
+    if delta > 0:
+        values.extend([base - delta, base + delta])
+    return sorted({value for value in values if minimum <= value <= maximum})
+
+
 def _candidate_sort_key(candidate: CandidateResult) -> tuple[Any, ...]:
     return (
         len(candidate.records),
@@ -790,7 +843,9 @@ def _search_best_candidate(
     return best, tested, valid
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    args = _parse_args(argv)
+    use_fast = not args.auto
     merged_border_lng_lat = _load_border_geometry(MERGED_BORDER_PATH)
     relation_geometries = _fetch_relation_geometries()
 
@@ -820,51 +875,104 @@ def main() -> int:
     zone500_xy = projection.geom_to_xy(zone500_lng_lat)
     zone1000_xy = projection.geom_to_xy(zone1000_lng_lat)
 
-    coarse500_values = _iter_spacing_values(
-        COARSE_SPACING500_MIN,
-        COARSE_SPACING500_MAX,
-        COARSE_SPACING500_STEP,
-    )
-    coarse1000_values = _iter_spacing_values(
-        COARSE_SPACING1000_MIN,
-        COARSE_SPACING1000_MAX,
-        COARSE_SPACING1000_STEP,
-    )
+    search_mode = "fast"
+    coarse_tested = 0
+    coarse_valid = 0
+    fine_tested = 0
+    fine_valid = 0
 
-    coarse_best, coarse_tested, coarse_valid = _search_best_candidate(
-        spacing500_values=coarse500_values,
-        spacing1000_values=coarse1000_values,
-        merged_border_xy=merged_border_xy,
-        zone500_xy=zone500_xy,
-        zone1000_xy=zone1000_xy,
-        projection=projection,
-    )
-    if coarse_best is None:
-        _fatal(
-            "auto-tuning failed: no valid candidate in coarse search "
-            f"({coarse_tested} tested)"
+    if use_fast:
+        search_mode = "fast-local" if args.fast_local else "fast"
+        fast500 = _derive_hex_spacing(
+            radius=RADIUS_500,
+            minimum=SPACING500_MIN,
+            maximum=SPACING500_MAX,
+            step=FINE_SPACING500_STEP,
+        )
+        fast1000 = _derive_hex_spacing(
+            radius=RADIUS_1000,
+            minimum=SPACING1000_MIN,
+            maximum=SPACING1000_MAX,
+            step=FINE_SPACING1000_STEP,
         )
 
-    fine500_min = max(SPACING500_MIN, coarse_best.spacing500 - FINE_SPACING500_DELTA)
-    fine500_max = min(SPACING500_MAX, coarse_best.spacing500 + FINE_SPACING500_DELTA)
-    fine1000_min = max(SPACING1000_MIN, coarse_best.spacing1000 - FINE_SPACING1000_DELTA)
-    fine1000_max = min(SPACING1000_MAX, coarse_best.spacing1000 + FINE_SPACING1000_DELTA)
+        if args.fast_local:
+            fast500_values = _fast_local_values(
+                base=fast500,
+                minimum=SPACING500_MIN,
+                maximum=SPACING500_MAX,
+                delta=FAST_LOCAL_500_DELTA,
+            )
+            fast1000_values = _fast_local_values(
+                base=fast1000,
+                minimum=SPACING1000_MIN,
+                maximum=SPACING1000_MAX,
+                delta=FAST_LOCAL_1000_DELTA,
+            )
+        else:
+            fast500_values = [fast500]
+            fast1000_values = [fast1000]
 
-    fine500_values = _iter_spacing_values(fine500_min, fine500_max, FINE_SPACING500_STEP)
-    fine1000_values = _iter_spacing_values(fine1000_min, fine1000_max, FINE_SPACING1000_STEP)
+        best_candidate, coarse_tested, coarse_valid = _search_best_candidate(
+            spacing500_values=fast500_values,
+            spacing1000_values=fast1000_values,
+            merged_border_xy=merged_border_xy,
+            zone500_xy=zone500_xy,
+            zone1000_xy=zone1000_xy,
+            projection=projection,
+        )
+        if best_candidate is None:
+            _fatal(
+                "auto-tuning failed: no valid candidate in fast search "
+                f"({coarse_tested} tested)"
+            )
+    else:
+        search_mode = "auto"
+        coarse500_values = _iter_spacing_values(
+            COARSE_SPACING500_MIN,
+            COARSE_SPACING500_MAX,
+            COARSE_SPACING500_STEP,
+        )
+        coarse1000_values = _iter_spacing_values(
+            COARSE_SPACING1000_MIN,
+            COARSE_SPACING1000_MAX,
+            COARSE_SPACING1000_STEP,
+        )
 
-    fine_best, fine_tested, fine_valid = _search_best_candidate(
-        spacing500_values=fine500_values,
-        spacing1000_values=fine1000_values,
-        merged_border_xy=merged_border_xy,
-        zone500_xy=zone500_xy,
-        zone1000_xy=zone1000_xy,
-        projection=projection,
-    )
+        coarse_best, coarse_tested, coarse_valid = _search_best_candidate(
+            spacing500_values=coarse500_values,
+            spacing1000_values=coarse1000_values,
+            merged_border_xy=merged_border_xy,
+            zone500_xy=zone500_xy,
+            zone1000_xy=zone1000_xy,
+            projection=projection,
+        )
+        if coarse_best is None:
+            _fatal(
+                "auto-tuning failed: no valid candidate in coarse search "
+                f"({coarse_tested} tested)"
+            )
 
-    best_candidate = coarse_best
-    if fine_best is not None and _is_better_candidate(fine_best, best_candidate):
-        best_candidate = fine_best
+        fine500_min = max(SPACING500_MIN, coarse_best.spacing500 - FINE_SPACING500_DELTA)
+        fine500_max = min(SPACING500_MAX, coarse_best.spacing500 + FINE_SPACING500_DELTA)
+        fine1000_min = max(SPACING1000_MIN, coarse_best.spacing1000 - FINE_SPACING1000_DELTA)
+        fine1000_max = min(SPACING1000_MAX, coarse_best.spacing1000 + FINE_SPACING1000_DELTA)
+
+        fine500_values = _iter_spacing_values(fine500_min, fine500_max, FINE_SPACING500_STEP)
+        fine1000_values = _iter_spacing_values(fine1000_min, fine1000_max, FINE_SPACING1000_STEP)
+
+        fine_best, fine_tested, fine_valid = _search_best_candidate(
+            spacing500_values=fine500_values,
+            spacing1000_values=fine1000_values,
+            merged_border_xy=merged_border_xy,
+            zone500_xy=zone500_xy,
+            zone1000_xy=zone1000_xy,
+            projection=projection,
+        )
+
+        best_candidate = coarse_best
+        if fine_best is not None and _is_better_candidate(fine_best, best_candidate):
+            best_candidate = fine_best
 
     records = best_candidate.records
     violations = _validate_no_full_swallow(records, projection)
@@ -889,6 +997,7 @@ def main() -> int:
     count1000 = best_candidate.count1000
     print(
         f"Generated {len(records)} circles | "
+        f"mode: {search_mode} | "
         f"500m: {count500} | 1000m: {count1000} | "
         f"spacing500: {best_candidate.spacing500} | "
         f"spacing1000: {best_candidate.spacing1000} | "
