@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Plot all locations from data.json onto an interactive HTML map.
+Plot all locations from coffee_shops_with_reviews.csv onto an interactive HTML map.
 
 Dependency:
     pip install folium
@@ -8,7 +8,7 @@ Dependency:
 
 from __future__ import annotations
 
-import json
+import csv
 import sys
 from html import escape
 from pathlib import Path
@@ -26,7 +26,7 @@ except ImportError:  # pragma: no cover
 
 
 REPO_ROOT = Path(__file__).resolve().parent
-INPUT_PATH = REPO_ROOT / "data.json"
+INPUT_PATH = REPO_ROOT.parent / "collect_location_data" / "coffee_shops_with_reviews.csv"
 OUTPUT_PATH = REPO_ROOT / "locations_map.html"
 
 
@@ -57,43 +57,40 @@ def _to_text(value: Any) -> str | None:
     return None
 
 
-def _load_records(path: Path) -> list[Any]:
+def _load_records(path: Path) -> list[dict[str, str]]:
     try:
-        with path.open("r", encoding="utf-8") as f:
-            data = json.load(f)
-    except json.JSONDecodeError as exc:
-        print(f"Error: invalid JSON in {path}: {exc}", file=sys.stderr)
+        with path.open("r", encoding="utf-8-sig", newline="") as f:
+            reader = csv.DictReader(f)
+            if reader.fieldnames is None:
+                print(f"Error: CSV file has no header row: {path}", file=sys.stderr)
+                raise SystemExit(1)
+            rows = [dict(row) for row in reader]
+    except csv.Error as exc:
+        print(f"Error: invalid CSV in {path}: {exc}", file=sys.stderr)
         raise SystemExit(1)
 
-    if not isinstance(data, list):
-        print(f"Error: expected a JSON array in {path}.", file=sys.stderr)
+    required = {"lat", "lon"}
+    missing = [column for column in required if column not in (reader.fieldnames or [])]
+    if missing:
+        print(
+            f"Error: CSV is missing required columns: {', '.join(sorted(missing))}",
+            file=sys.stderr,
+        )
         raise SystemExit(1)
 
-    return data
+    return rows
 
 
 def _build_popup_html(record: dict[str, Any], lat: float, lng: float) -> str:
-    address = _to_text(record.get("address"))
-    if address is None:
-        address_parts = [
-            _to_text(record.get("street")),
-            _to_text(record.get("city")),
-            _to_text(record.get("state")),
-            _to_text(record.get("postalCode")),
-            _to_text(record.get("countryCode")),
-        ]
-        address = ", ".join(part for part in address_parts if part)
-
     rows = [
-        ("Name", _to_text(record.get("title"))),
-        ("Category", _to_text(record.get("categoryName"))),
-        ("Address", address or None),
-        ("Rating", _to_text(record.get("totalScore"))),
-        ("Reviews", _to_text(record.get("reviewsCount"))),
-        ("Price", _to_text(record.get("price"))),
-        ("Phone", _to_text(record.get("phone"))),
-        ("Website", _to_text(record.get("website"))),
-        ("Place ID", _to_text(record.get("placeId"))),
+        ("Name", _to_text(record.get("name"))),
+        ("Place ID", _to_text(record.get("place_id"))),
+        ("Average Rating", _to_text(record.get("average_rating"))),
+        ("Total Review Count", _to_text(record.get("total_review_count"))),
+        (
+            "Earliest Available Review Date",
+            _to_text(record.get("earliest_available_review_date")),
+        ),
         ("Coordinates", f"{lat:.6f}, {lng:.6f}"),
     ]
 
@@ -105,6 +102,17 @@ def _build_popup_html(record: dict[str, Any], lat: float, lng: float) -> str:
             "<tr>"
             f"<th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>{escape(label)}</th>"
             f"<td style='padding:2px 0;'>{escape(value)}</td>"
+            "</tr>"
+        )
+
+    for i in range(1, 6):
+        review_text = _to_text(record.get(f"review_{i}_text"))
+        if review_text is None:
+            continue
+        rendered_rows.append(
+            "<tr>"
+            f"<th style='text-align:left; padding:2px 8px 2px 0; white-space:nowrap;'>Review {i}</th>"
+            f"<td style='padding:2px 0;'>{escape(review_text)}</td>"
             "</tr>"
         )
 
@@ -122,14 +130,8 @@ def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
     skipped = 0
 
     for record in records:
-        lat = None
-        lng = None
-
-        if isinstance(record, dict):
-            location = record.get("location")
-            if isinstance(location, dict):
-                lat = _to_float(location.get("lat"))
-                lng = _to_float(location.get("lng"))
+        lat = _to_float(record.get("lat"))
+        lng = _to_float(record.get("lon"))
 
         if lat is None or lng is None:
             skipped += 1
@@ -183,8 +185,8 @@ def main() -> int:
 
     if not points:
         print(
-            "Error: found zero valid coordinates in data.json. "
-            "Expected location.lat and location.lng values.",
+            "Error: found zero valid coordinates in coffee_shops_with_reviews.csv. "
+            "Expected lat and lon columns.",
             file=sys.stderr,
         )
         return 1

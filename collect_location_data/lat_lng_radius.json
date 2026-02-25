@@ -1,0 +1,772 @@
+[
+  {
+    "lat": 18.75674,
+    "lng": 98.995242,
+    "radius": 625,
+    "collected": false,
+    "population_density": 3971.619289
+  },
+  {
+    "lat": 18.75674,
+    "lng": 99.005137,
+    "radius": 625,
+    "collected": false,
+    "population_density": 4043.040126
+  },
+  {
+    "lat": 18.75674,
+    "lng": 99.015031,
+    "radius": 650,
+    "collected": false,
+    "population_density": 3487.119904
+  },
+  {
+    "lat": 18.75703,
+    "lng": 98.969093,
+    "radius": 725,
+    "collected": false,
+    "population_density": 2889.800965
+  },
+  {
+    "lat": 18.75732,
+    "lng": 98.957078,
+    "radius": 900,
+    "collected": false,
+    "population_density": 1608.660604
+  },
+  {
+    "lat": 18.757609,
+    "lng": 98.939409,
+    "radius": 1050,
+    "collected": false,
+    "population_density": 1001.640384
+  },
+  {
+    "lat": 18.758478,
+    "lng": 98.925981,
+    "radius": 1300,
+    "collected": false,
+    "population_density": 446.45388
+  },
+  {
+    "lat": 18.759927,
+    "lng": 98.899831,
+    "radius": 1800,
+    "collected": false,
+    "population_density": 86.773503
+  },
+  {
+    "lat": 18.763403,
+    "lng": 98.980401,
+    "radius": 600,
+    "collected": false,
+    "population_density": 4310.718171
+  },
+  {
+    "lat": 18.764852,
+    "lng": 98.970506,
+    "radius": 675,
+    "collected": false,
+    "population_density": 3397.468041
+  },
+  {
+    "lat": 18.764852,
+    "lng": 98.990295,
+    "radius": 625,
+    "collected": false,
+    "population_density": 4076.744973
+  },
+  {
+    "lat": 18.764852,
+    "lng": 99.00019,
+    "radius": 625,
+    "collected": false,
+    "population_density": 4039.290498
+  },
+  {
+    "lat": 18.764852,
+    "lng": 99.010084,
+    "radius": 625,
+    "collected": false,
+    "population_density": 3806.164435
+  },
+  {
+    "lat": 18.7663,
+    "lng": 99.019979,
+    "radius": 750,
+    "collected": false,
+    "population_density": 2527.711418
+  },
+  {
+    "lat": 18.7663,
+    "lng": 99.031287,
+    "radius": 725,
+    "collected": false,
+    "population_density": 2830.283032
+  },
+  {
+    "lat": 18.767749,
+    "lng": 98.950717,
+    "radius": 950,
+    "collected": false,
+    "population_density": 1367.712045
+  },
+  {
+    "lat": 18.767749,
+    "lng": 98.963439,
+    "radius": 825,
+    "collected": false,
+    "population_density": 2077.783155
+  },
+  {
+    "lat": 18.769197,
+    "lng": 98.946477,
+    "radius": 1000,
+    "collected": false,
+    "population_density": 1141.204936
+  },
+  {
+    "lat": 18.770356,
+    "lng": 98.97616,
+    "radius": 575,
+    "collected": false,
+    "population_density": 4762.979589
+  },
+  {
+    "lat": 18.770356,
+    "lng": 98.984641,
+    "radius": 575,
+    "collected": false,
+    "population_density": 4609.745949
+  },
+  {
+    "lat": 18.772964,
+    "lng": 98.995242,
+    "radius": 625,
+    "collected": false,
+    "population_density": 3873.198306
+  },
+  {
+    "lat": 18.772964,
+    "lng": 99.005137,
+    "radius": 625,
+    "collected": false,
+    "population_density": 3771.658045
+  },
+  {
+    "lat": 18.772964,
+    "lng": 99.015031,
+    "radius": 750,
+    "collected": false,
+    "population_density": 2722.941343
+  },
+  {
+    "lat": 18.772964,
+    "lng": 99.024926,
+    "radius": 725,
+    "collected": false,
+    "population_density": 2794.399256
+  },
+  {
+    "lat": 18.773543,
+    "lng": 98.988882,
+    "radius": 550,
+    "collected": false,
+    "population_density": 5046.573606
+  },
+  {
+    "lat": 18.775571,
+    "lng": 98.969093,
+    "radius": 750,
+    "collected": false,
+    "population_density": 2686.182725
+  },
+  {
+    "lat": 18.777309,
+    "lng": 98.980401,
+    "radius": 550,
+    "collected": false,
+    "population_density": 4988.152889
+  },
+  {
+    "lat": 18.777309,
+    "lng": 99.005844,
+    "radius": 625,
+    "collected": false,
+    "population_density": 4031.588426
+  },
+  {
+    "lat": 18.778178,
+    "lng": 98.957078,
+    "radius": 900,
+    "collected": false,
+    "population_density": 1630.200336
+  },
+  {
+    "lat": 18.779337,
+    "lng": 98.933755,
+    "radius": 1525,
+    "collected": false,
+    "population_density": 213.340728
+  },
+  {
+    "lat": 18.779337,
+    "lng": 98.985348,
+    "radius": 500,
+    "collected": false,
+    "population_density": 6734.036141
+  },
+  {
+    "lat": 18.779337,
+    "lng": 98.992415,
+    "radius": 500,
+    "collected": false,
+    "population_density": 6360.824789
+  },
+  {
+    "lat": 18.779337,
+    "lng": 98.999483,
+    "radius": 525,
+    "collected": false,
+    "population_density": 5462.044306
+  },
+  {
+    "lat": 18.780786,
+    "lng": 98.912553,
+    "radius": 1800,
+    "collected": false,
+    "population_density": 88.678546
+  },
+  {
+    "lat": 18.781075,
+    "lng": 98.960612,
+    "radius": 825,
+    "collected": false,
+    "population_density": 2064.587059
+  },
+  {
+    "lat": 18.781075,
+    "lng": 98.970506,
+    "radius": 750,
+    "collected": false,
+    "population_density": 2592.971374
+  },
+  {
+    "lat": 18.781075,
+    "lng": 99.010084,
+    "radius": 650,
+    "collected": false,
+    "population_density": 3618.751255
+  },
+  {
+    "lat": 18.781075,
+    "lng": 99.019979,
+    "radius": 650,
+    "collected": false,
+    "population_density": 3752.870109
+  },
+  {
+    "lat": 18.782234,
+    "lng": 98.888523,
+    "radius": 1875,
+    "collected": false,
+    "population_density": 72.365806
+  },
+  {
+    "lat": 18.783393,
+    "lng": 98.947183,
+    "radius": 1075,
+    "collected": false,
+    "population_density": 920.090249
+  },
+  {
+    "lat": 18.784262,
+    "lng": 98.97616,
+    "radius": 550,
+    "collected": false,
+    "population_density": 5020.741438
+  },
+  {
+    "lat": 18.784262,
+    "lng": 99.010084,
+    "radius": 575,
+    "collected": false,
+    "population_density": 4516.71483
+  },
+  {
+    "lat": 18.784262,
+    "lng": 99.018565,
+    "radius": 600,
+    "collected": false,
+    "population_density": 4228.039051
+  },
+  {
+    "lat": 18.784262,
+    "lng": 99.027046,
+    "radius": 625,
+    "collected": false,
+    "population_density": 3960.225985
+  },
+  {
+    "lat": 18.785131,
+    "lng": 98.981814,
+    "radius": 500,
+    "collected": false,
+    "population_density": 6208.369522
+  },
+  {
+    "lat": 18.785131,
+    "lng": 98.988882,
+    "radius": 500,
+    "collected": false,
+    "population_density": 7159.045856
+  },
+  {
+    "lat": 18.785131,
+    "lng": 98.995949,
+    "radius": 500,
+    "collected": false,
+    "population_density": 7488.434241
+  },
+  {
+    "lat": 18.785131,
+    "lng": 99.003017,
+    "radius": 500,
+    "collected": false,
+    "population_density": 6199.209507
+  },
+  {
+    "lat": 18.789187,
+    "lng": 98.955664,
+    "radius": 750,
+    "collected": false,
+    "population_density": 2586.86414
+  },
+  {
+    "lat": 18.789187,
+    "lng": 98.965559,
+    "radius": 625,
+    "collected": false,
+    "population_density": 3804.430018
+  },
+  {
+    "lat": 18.790925,
+    "lng": 98.97828,
+    "radius": 500,
+    "collected": false,
+    "population_density": 6040.803786
+  },
+  {
+    "lat": 18.790925,
+    "lng": 98.985348,
+    "radius": 500,
+    "collected": false,
+    "population_density": 6815.773179
+  },
+  {
+    "lat": 18.790925,
+    "lng": 98.992415,
+    "radius": 500,
+    "collected": false,
+    "population_density": 7346.907442
+  },
+  {
+    "lat": 18.790925,
+    "lng": 98.999483,
+    "radius": 500,
+    "collected": false,
+    "population_density": 6613.287516
+  },
+  {
+    "lat": 18.791215,
+    "lng": 98.97192,
+    "radius": 550,
+    "collected": false,
+    "population_density": 4795.871586
+  },
+  {
+    "lat": 18.791215,
+    "lng": 99.005844,
+    "radius": 525,
+    "collected": false,
+    "population_density": 5325.959628
+  },
+  {
+    "lat": 18.791215,
+    "lng": 99.014325,
+    "radius": 600,
+    "collected": false,
+    "population_density": 4201.435728
+  },
+  {
+    "lat": 18.791215,
+    "lng": 99.022806,
+    "radius": 600,
+    "collected": false,
+    "population_density": 4262.465558
+  },
+  {
+    "lat": 18.793822,
+    "lng": 98.935875,
+    "radius": 1475,
+    "collected": false,
+    "population_density": 259.592096
+  },
+  {
+    "lat": 18.79643,
+    "lng": 98.918207,
+    "radius": 1575,
+    "collected": false,
+    "population_density": 188.452929
+  },
+  {
+    "lat": 18.796719,
+    "lng": 98.981814,
+    "radius": 500,
+    "collected": false,
+    "population_density": 6217.992201
+  },
+  {
+    "lat": 18.796719,
+    "lng": 98.988882,
+    "radius": 500,
+    "collected": false,
+    "population_density": 6780.64195
+  },
+  {
+    "lat": 18.796719,
+    "lng": 98.995949,
+    "radius": 500,
+    "collected": false,
+    "population_density": 6656.415009
+  },
+  {
+    "lat": 18.797299,
+    "lng": 98.960612,
+    "radius": 650,
+    "collected": false,
+    "population_density": 3572.072764
+  },
+  {
+    "lat": 18.797299,
+    "lng": 99.010084,
+    "radius": 625,
+    "collected": false,
+    "population_density": 3860.977436
+  },
+  {
+    "lat": 18.797299,
+    "lng": 99.019979,
+    "radius": 625,
+    "collected": false,
+    "population_density": 4079.759236
+  },
+  {
+    "lat": 18.798168,
+    "lng": 98.967679,
+    "radius": 575,
+    "collected": false,
+    "population_density": 4493.673423
+  },
+  {
+    "lat": 18.798168,
+    "lng": 98.97616,
+    "radius": 525,
+    "collected": false,
+    "population_density": 5513.144656
+  },
+  {
+    "lat": 18.798168,
+    "lng": 99.001603,
+    "radius": 525,
+    "collected": false,
+    "population_density": 5589.913789
+  },
+  {
+    "lat": 18.799037,
+    "lng": 98.897711,
+    "radius": 1575,
+    "collected": false,
+    "population_density": 181.519955
+  },
+  {
+    "lat": 18.799906,
+    "lng": 98.946477,
+    "radius": 975,
+    "collected": false,
+    "population_density": 1283.693405
+  },
+  {
+    "lat": 18.802514,
+    "lng": 98.985348,
+    "radius": 500,
+    "collected": false,
+    "population_density": 5934.507948
+  },
+  {
+    "lat": 18.802514,
+    "lng": 98.992415,
+    "radius": 525,
+    "collected": false,
+    "population_density": 5522.90966
+  },
+  {
+    "lat": 18.804252,
+    "lng": 98.875095,
+    "radius": 1900,
+    "collected": false,
+    "population_density": 64.698297
+  },
+  {
+    "lat": 18.805121,
+    "lng": 98.963439,
+    "radius": 600,
+    "collected": false,
+    "population_density": 4217.43762
+  },
+  {
+    "lat": 18.805121,
+    "lng": 98.97192,
+    "radius": 550,
+    "collected": false,
+    "population_density": 4848.665964
+  },
+  {
+    "lat": 18.805121,
+    "lng": 98.980401,
+    "radius": 525,
+    "collected": false,
+    "population_density": 5516.569251
+  },
+  {
+    "lat": 18.805121,
+    "lng": 98.997363,
+    "radius": 550,
+    "collected": false,
+    "population_density": 4960.538312
+  },
+  {
+    "lat": 18.805121,
+    "lng": 99.005844,
+    "radius": 575,
+    "collected": false,
+    "population_density": 4570.561761
+  },
+  {
+    "lat": 18.805411,
+    "lng": 98.955664,
+    "radius": 725,
+    "collected": false,
+    "population_density": 2782.905759
+  },
+  {
+    "lat": 18.805411,
+    "lng": 99.015031,
+    "radius": 625,
+    "collected": false,
+    "population_density": 3850.13895
+  },
+  {
+    "lat": 18.808308,
+    "lng": 98.988882,
+    "radius": 525,
+    "collected": false,
+    "population_density": 5444.697478
+  },
+  {
+    "lat": 18.811205,
+    "lng": 98.904072,
+    "radius": 1650,
+    "collected": false,
+    "population_density": 142.211273
+  },
+  {
+    "lat": 18.812074,
+    "lng": 98.97616,
+    "radius": 600,
+    "collected": false,
+    "population_density": 4368.406016
+  },
+  {
+    "lat": 18.812074,
+    "lng": 98.984641,
+    "radius": 525,
+    "collected": false,
+    "population_density": 5605.976592
+  },
+  {
+    "lat": 18.812074,
+    "lng": 98.993122,
+    "radius": 600,
+    "collected": false,
+    "population_density": 4231.790198
+  },
+  {
+    "lat": 18.812074,
+    "lng": 99.001603,
+    "radius": 600,
+    "collected": false,
+    "population_density": 4300.006357
+  },
+  {
+    "lat": 18.812074,
+    "lng": 99.010084,
+    "radius": 600,
+    "collected": false,
+    "population_density": 4185.255989
+  },
+  {
+    "lat": 18.813522,
+    "lng": 98.960612,
+    "radius": 700,
+    "collected": false,
+    "population_density": 3146.412688
+  },
+  {
+    "lat": 18.813522,
+    "lng": 98.970506,
+    "radius": 650,
+    "collected": false,
+    "population_density": 3522.110729
+  },
+  {
+    "lat": 18.814971,
+    "lng": 98.929515,
+    "radius": 1625,
+    "collected": false,
+    "population_density": 160.421831
+  },
+  {
+    "lat": 18.818737,
+    "lng": 98.944356,
+    "radius": 1325,
+    "collected": false,
+    "population_density": 421.263396
+  },
+  {
+    "lat": 18.819027,
+    "lng": 98.980401,
+    "radius": 725,
+    "collected": false,
+    "population_density": 2900.262308
+  },
+  {
+    "lat": 18.819027,
+    "lng": 98.988882,
+    "radius": 725,
+    "collected": false,
+    "population_density": 2801.624213
+  },
+  {
+    "lat": 18.821924,
+    "lng": 98.963439,
+    "radius": 825,
+    "collected": false,
+    "population_density": 2053.291305
+  },
+  {
+    "lat": 18.821924,
+    "lng": 98.974747,
+    "radius": 800,
+    "collected": false,
+    "population_density": 2257.167659
+  },
+  {
+    "lat": 18.821924,
+    "lng": 98.986055,
+    "radius": 775,
+    "collected": false,
+    "population_density": 2348.168271
+  },
+  {
+    "lat": 18.821924,
+    "lng": 98.997363,
+    "radius": 800,
+    "collected": false,
+    "population_density": 2253.064942
+  },
+  {
+    "lat": 18.826269,
+    "lng": 98.861667,
+    "radius": 1900,
+    "collected": false,
+    "population_density": 42.405758
+  },
+  {
+    "lat": 18.826269,
+    "lng": 98.888523,
+    "radius": 1900,
+    "collected": false,
+    "population_density": 60.246584
+  },
+  {
+    "lat": 18.826269,
+    "lng": 98.91538,
+    "radius": 1850,
+    "collected": false,
+    "population_density": 78.657017
+  },
+  {
+    "lat": 18.827139,
+    "lng": 98.953544,
+    "radius": 1100,
+    "collected": false,
+    "population_density": 885.017682
+  },
+  {
+    "lat": 18.827139,
+    "lng": 98.967679,
+    "radius": 925,
+    "collected": false,
+    "population_density": 1491.676265
+  },
+  {
+    "lat": 18.830325,
+    "lng": 98.97616,
+    "radius": 825,
+    "collected": false,
+    "population_density": 2131.730303
+  },
+  {
+    "lat": 18.830325,
+    "lng": 98.988882,
+    "radius": 850,
+    "collected": false,
+    "population_density": 1893.631997
+  },
+  {
+    "lat": 18.830325,
+    "lng": 99.001603,
+    "radius": 875,
+    "collected": false,
+    "population_density": 1746.159518
+  },
+  {
+    "lat": 18.833512,
+    "lng": 98.940823,
+    "radius": 1575,
+    "collected": false,
+    "population_density": 184.139287
+  },
+  {
+    "lat": 18.834381,
+    "lng": 98.962732,
+    "radius": 875,
+    "collected": false,
+    "population_density": 1714.963867
+  },
+  {
+    "lat": 18.840465,
+    "lng": 98.974747,
+    "radius": 775,
+    "collected": false,
+    "population_density": 2428.108915
+  },
+  {
+    "lat": 18.840465,
+    "lng": 98.986055,
+    "radius": 800,
+    "collected": false,
+    "population_density": 2300.006902
+  }
+]
