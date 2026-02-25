@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """
-Plot all locations from coffee_shops_with_reviews.csv onto an interactive HTML map.
+Render an interactive map from the collected coffee-shop CSV dataset.
+
+Data flow (high level):
+1) Load CSV rows from collect_location_data/coffee_shops_with_reviews.csv.
+2) Validate and extract latitude/longitude for each row.
+3) Build a popup per valid point with place metadata and up to 5 review snippets.
+4) Render the points on a Folium map and save locations_map.html.
 
 Dependency:
     pip install folium
@@ -31,6 +37,11 @@ OUTPUT_PATH = REPO_ROOT / "locations_map.html"
 
 
 def _to_float(value: Any) -> float | None:
+    """Best-effort float coercion for CSV values.
+
+    Returns None for empty strings, booleans, and non-numeric values so callers can
+    treat those records as invalid coordinates or optional fields.
+    """
     if isinstance(value, bool):
         return None
     if isinstance(value, (int, float)):
@@ -47,6 +58,7 @@ def _to_float(value: Any) -> float | None:
 
 
 def _to_text(value: Any) -> str | None:
+    """Normalize values to user-facing text for popup display."""
     if value is None or isinstance(value, bool):
         return None
     if isinstance(value, str):
@@ -58,6 +70,11 @@ def _to_text(value: Any) -> str | None:
 
 
 def _load_records(path: Path) -> list[dict[str, str]]:
+    """Load the input CSV and enforce required coordinate columns.
+
+    Side effects:
+    - Exits the script with a descriptive error message when the file is invalid.
+    """
     try:
         with path.open("r", encoding="utf-8-sig", newline="") as f:
             reader = csv.DictReader(f)
@@ -69,6 +86,7 @@ def _load_records(path: Path) -> list[dict[str, str]]:
         print(f"Error: invalid CSV in {path}: {exc}", file=sys.stderr)
         raise SystemExit(1)
 
+    # Coordinates are the only strict requirement for mapping.
     required = {"lat", "lon"}
     missing = [column for column in required if column not in (reader.fieldnames or [])]
     if missing:
@@ -82,6 +100,8 @@ def _load_records(path: Path) -> list[dict[str, str]]:
 
 
 def _build_popup_html(record: dict[str, Any], lat: float, lng: float) -> str:
+    """Build compact table-style HTML for a marker popup."""
+    # Keep primary metadata at the top for fast scanning on click.
     rows = [
         ("Name", _to_text(record.get("name"))),
         ("Place ID", _to_text(record.get("place_id"))),
@@ -105,6 +125,7 @@ def _build_popup_html(record: dict[str, Any], lat: float, lng: float) -> str:
             "</tr>"
         )
 
+    # Add review text rows only when present to avoid verbose empty popups.
     for i in range(1, 6):
         review_text = _to_text(record.get(f"review_{i}_text"))
         if review_text is None:
@@ -126,10 +147,15 @@ def _build_popup_html(record: dict[str, Any], lat: float, lng: float) -> str:
 
 
 def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
+    """Extract valid map points and count skipped rows.
+
+    A row is skipped when coordinates are missing or out of world bounds.
+    """
     points: list[dict[str, Any]] = []
     skipped = 0
 
     for record in records:
+        # CSV stores coordinates in `lat` and `lon` columns.
         lat = _to_float(record.get("lat"))
         lng = _to_float(record.get("lon"))
 
@@ -153,10 +179,12 @@ def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
 
 
 def _build_map(points: list[dict[str, Any]]) -> folium.Map:
+    """Create a Folium map, place all markers, and fit camera bounds to data."""
     lats = [point["lat"] for point in points]
     lngs = [point["lng"] for point in points]
     center = [sum(lats) / len(lats), sum(lngs) / len(lngs)]
 
+    # Use OpenStreetMap tiles for a lightweight default base layer.
     point_map = folium.Map(location=center, tiles="OpenStreetMap", zoom_start=10)
 
     for point in points:
@@ -176,6 +204,7 @@ def _build_map(points: list[dict[str, Any]]) -> folium.Map:
 
 
 def main() -> int:
+    """Entrypoint for generating locations_map.html from the CSV input."""
     if not INPUT_PATH.exists():
         print(f"Error: input file not found: {INPUT_PATH}", file=sys.stderr)
         return 1

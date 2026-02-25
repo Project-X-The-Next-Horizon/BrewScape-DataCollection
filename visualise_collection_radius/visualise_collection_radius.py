@@ -4,6 +4,11 @@ Generate a map of collection circles from lat_lng_radius.json.
 
 Dependency:
     pip install folium shapely
+
+Pipeline:
+1) Load candidate collection circles from lat_lng_radius.json.
+2) Load/calculate Chiang Mai border GeoJSON (with local cache).
+3) Draw circles, center markers, and municipal border overlay in Folium.
 """
 
 from __future__ import annotations
@@ -36,6 +41,7 @@ except ImportError:  # pragma: no cover
 
 
 REPO_ROOT = Path(__file__).resolve().parent
+# Input/output paths.
 INPUT_PATH = REPO_ROOT / "lat_lng_radius.json"
 OUTPUT_PATH = REPO_ROOT / "collection_radius_map.html"
 BORDER_CACHE_PATH = REPO_ROOT / "chiang_mai_main_area_merged_border.geojson"
@@ -59,6 +65,7 @@ NOMINATIM_USER_AGENT = "BrewScape-DataCollection/1.0 (+local-map-script)"
 
 
 def _to_float(value: Any) -> float | None:
+    """Best-effort conversion helper used for permissive JSON parsing."""
     if isinstance(value, bool):
         return None
     if isinstance(value, (int, float)):
@@ -75,12 +82,14 @@ def _to_float(value: Any) -> float | None:
 
 
 def _to_bool(value: Any) -> bool | None:
+    """Strict bool parser: accepts only real booleans, not truthy values."""
     if isinstance(value, bool):
         return value
     return None
 
 
 def _load_records(path: Path) -> list[Any]:
+    """Load circle records from JSON and enforce list top-level shape."""
     if not path.exists():
         print(f"Error: input file not found: {path}", file=sys.stderr)
         raise SystemExit(1)
@@ -100,6 +109,7 @@ def _load_records(path: Path) -> list[Any]:
 
 
 def _validate_geojson_like(data: Any) -> bool:
+    """Cheap structural check for cached FeatureCollection border data."""
     if not isinstance(data, dict):
         return False
     if data.get("type") != "FeatureCollection":
@@ -117,6 +127,11 @@ def _validate_geojson_like(data: Any) -> bool:
 
 
 def _fetch_chiang_mai_main_area_geojson() -> dict[str, Any]:
+    """Fetch and merge Chiang Mai boundary relations from Nominatim.
+
+    The script combines city + Suthep boundaries and then optionally adds only
+    selected polygon parts from a supplement relation using anchor points.
+    """
     query = parse.urlencode(
         {
             "format": "jsonv2",
@@ -166,6 +181,7 @@ def _fetch_chiang_mai_main_area_geojson() -> dict[str, Any]:
         )
         raise SystemExit(1)
 
+    # Parse relation geometries into shapely objects for robust merge operations.
     geometries_by_relation: dict[str, Any] = {}
     for relation_id in CHIANG_MAI_OSM_RELATION_IDS:
         row = rows_by_relation[relation_id]
@@ -185,12 +201,14 @@ def _fetch_chiang_mai_main_area_geojson() -> dict[str, Any]:
             raise SystemExit(1)
         geometries_by_relation[relation_id] = shape(geometry)
 
+    # Base footprint: Chiang Mai city + Suthep.
     base_geometries = [
         geometries_by_relation["R18271830"],
         geometries_by_relation["R19975357"],
     ]
     dissolved = unary_union(base_geometries)
 
+    # Supplement relation may contain extra area; keep only anchored missing pieces.
     supplement = geometries_by_relation[CHIANG_MAI_SUPPLEMENT_RELATION_ID]
     supplement_missing = supplement.difference(dissolved)
     supplement_parts = []
@@ -254,6 +272,7 @@ def _fetch_chiang_mai_main_area_geojson() -> dict[str, Any]:
 
 
 def _load_chiang_mai_main_area_geojson(path: Path) -> dict[str, Any]:
+    """Load cached border when compatible; otherwise re-fetch and refresh cache."""
     if path.exists():
         try:
             with path.open("r", encoding="utf-8") as file:
@@ -270,6 +289,7 @@ def _load_chiang_mai_main_area_geojson(path: Path) -> dict[str, Any]:
             cached_relations = tuple(properties.get("source_relations", []))
             cached_supplement = properties.get("supplement_relation")
 
+            # Reuse cache only when relation metadata matches current config.
             if (
                 cached_relations == CHIANG_MAI_OSM_RELATION_IDS
                 and cached_supplement == CHIANG_MAI_SUPPLEMENT_RELATION_ID
@@ -289,6 +309,7 @@ def _load_chiang_mai_main_area_geojson(path: Path) -> dict[str, Any]:
 
 
 def _iter_lng_lat_pairs(value: Any):
+    """Yield flat (lng, lat) tuples from arbitrarily nested coordinate arrays."""
     if isinstance(value, (list, tuple)):
         if len(value) == 2 and all(isinstance(v, (int, float)) for v in value):
             yield float(value[0]), float(value[1])
@@ -298,6 +319,7 @@ def _iter_lng_lat_pairs(value: Any):
 
 
 def _iter_geojson_lng_lat_pairs(geojson: Any):
+    """Walk common GeoJSON container types and yield all coordinate tuples."""
     if not isinstance(geojson, dict):
         return
 
@@ -322,6 +344,7 @@ def _iter_geojson_lng_lat_pairs(geojson: Any):
 
 
 def _geojson_bounds(geojson: Any) -> list[list[float]] | None:
+    """Compute map fit bounds [[min_lat,min_lng],[max_lat,max_lng]] from GeoJSON."""
     lng_lat_pairs = list(_iter_geojson_lng_lat_pairs(geojson))
     if not lng_lat_pairs:
         return None
@@ -340,6 +363,7 @@ def _geojson_bounds(geojson: Any) -> list[list[float]] | None:
 
 
 def _build_popup_html(lat: float, lng: float, radius: float, collected: bool) -> str:
+    """Build popup HTML describing one collection circle."""
     collection_status = "Collected" if collected else "Not collected"
     return (
         "<div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'>"
@@ -356,6 +380,7 @@ def _build_popup_html(lat: float, lng: float, radius: float, collected: bool) ->
 
 
 def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
+    """Normalize valid circle rows and count skipped/invalid entries."""
     points: list[dict[str, Any]] = []
     skipped = 0
 
@@ -381,6 +406,7 @@ def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
             skipped += 1
             continue
 
+        # Color semantics are tied to collection state for quick visual scanning.
         color = COLLECTED_COLOR if collected else NOT_COLLECTED_COLOR
 
         points.append(
@@ -398,6 +424,7 @@ def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
 
 
 def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) -> folium.Map:
+    """Render circles + border overlay and fit the map viewport."""
     lats = [point["lat"] for point in points]
     lngs = [point["lng"] for point in points]
     center = [sum(lats) / len(lats), sum(lngs) / len(lngs)]
@@ -452,6 +479,7 @@ def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) 
         tooltip=f"{CHIANG_MAI_MAIN_AREA_NAME} Border",
     ).add_to(point_map)
 
+    # Prefer fitting to border geometry so the map always frames target area.
     border_bounds = _geojson_bounds(chiang_mai_border)
     if border_bounds is not None:
         point_map.fit_bounds(border_bounds)
@@ -462,6 +490,7 @@ def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) 
 
 
 def main() -> int:
+    """Entrypoint for generating collection_radius_map.html."""
     records = _load_records(INPUT_PATH)
     points, skipped = _extract_points(records)
     chiang_mai_border = _load_chiang_mai_main_area_geojson(BORDER_CACHE_PATH)

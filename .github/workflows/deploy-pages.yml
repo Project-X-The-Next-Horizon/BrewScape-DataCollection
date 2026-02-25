@@ -1,35 +1,47 @@
+# Publish the generated map to GitHub Pages whenever main changes
+# (or when triggered manually from the Actions tab).
 name: Deploy map to GitHub Pages
 
 on:
+  # Auto-deploy on pushes to the primary branch.
   push:
     branches:
       - main
+  # Allow manual re-runs without pushing new commits.
   workflow_dispatch:
 
 permissions:
+  # Least-privilege access needed for Pages deployment.
   contents: read
   pages: write
   id-token: write
 
 jobs:
+  # Build the map artifact that will be served by Pages.
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # Fetch repository files.
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Initialize GitHub Pages environment for this workflow run.
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      # The map scripts are Python-based.
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
+      # Install only dependencies needed to run map generation scripts.
       - name: Install dependencies
         run: python -m pip install --upgrade pip folium shapely
 
+      # Build the HTML map, then stage a minimal static site in `public/`.
+      # The script path fallback supports either repo-root or subfolder layouts.
       - name: Generate map HTML and prepare Pages artifact
         shell: bash
         run: |
@@ -56,11 +68,13 @@ jobs:
           cp "${MAP_HTML}" public/404.html
           touch public/.nojekyll
 
+      # Upload the prepared static folder for the deploy job.
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
 
+  # Publish the uploaded artifact to the github-pages environment.
   deploy:
     needs: build
     runs-on: ubuntu-latest
