@@ -1,15 +1,19 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Route unresolved paths back to the generated map in this folder. -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BrewScape Map</title>
+    <!-- Static-host fallback redirect. -->
     <meta http-equiv="refresh" content="0; url=./locations_map.html" />
     <script>
+      // JS redirect backup for user agents that ignore meta refresh.
       window.location.replace("./locations_map.html");
     </script>
   </head>
   <body>
+    <!-- Always provide a clickable fallback for manual navigation. -->
     <p>Redirecting to the map...</p>
     <p><a href="./locations_map.html">Open map</a></p>
   </body>

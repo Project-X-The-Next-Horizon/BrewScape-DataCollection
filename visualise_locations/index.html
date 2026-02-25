@@ -1,15 +1,19 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Local entrypoint inside visualise_locations; redirects to generated map file. -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BrewScape Map</title>
+    <!-- Zero-delay redirect for non-JS clients that support meta refresh. -->
     <meta http-equiv="refresh" content="0; url=./locations_map.html" />
     <script>
+      // JavaScript fallback redirect.
       window.location.replace("./locations_map.html");
     </script>
   </head>
   <body>
+    <!-- Manual fallback link for accessibility and no-script browsing. -->
     <p>Redirecting to the map...</p>
     <p><a href="./locations_map.html">Open map</a></p>
   </body>

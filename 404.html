@@ -1,15 +1,19 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Keep 404 traffic on the interactive map experience. -->
     <meta charset="utf-8" />
+    <!-- Fast redirect when this file is used by static hosts as a fallback route. -->
     <meta http-equiv="refresh" content="0; url=./visualise_locations/locations_map.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BrewScape Map</title>
     <script>
+      // JS redirect backup path mirrors the meta refresh target.
       window.location.replace("./visualise_locations/locations_map.html");
     </script>
   </head>
   <body>
+    <!-- Accessible fallback if automatic redirect does not fire. -->
     <p>
       Redirecting to map:
       <a href="./visualise_locations/locations_map.html">Open map</a>

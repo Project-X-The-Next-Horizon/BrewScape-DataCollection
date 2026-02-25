@@ -8,6 +8,13 @@ Outputs:
 
 Dependencies:
     pip install folium shapely tifffile imagecodecs numpy branca
+
+Pipeline:
+1) Read Chiang Mai border geometry from GeoJSON.
+2) Read georeferenced raster data (population density per cell).
+3) Convert border bounds to raster row/col window.
+4) Keep only cells whose centers fall inside the border.
+5) Export filtered cells to CSV and render a heat-style map.
 """
 
 from __future__ import annotations
@@ -27,13 +34,16 @@ from shapely.geometry import Point, mapping, shape
 
 
 REPO_ROOT = Path(__file__).resolve().parent
+# Source data inputs.
 RASTER_PATH = REPO_ROOT / "thailand_2020_population_data.tif"
 BORDER_PATH = REPO_ROOT / "chiang_mai_main_area_merged_border.geojson"
+# Generated outputs.
 OUTPUT_CSV_PATH = REPO_ROOT / "chiang_mai_population_density_cells.csv"
 OUTPUT_HTML_PATH = REPO_ROOT / "chiang_mai_population_density_map.html"
 
 
 def _load_border_geometry(path: Path):
+    """Load and validate the Chiang Mai border polygon from GeoJSON."""
     if not path.exists():
         print(f"Error: border file not found: {path}", file=sys.stderr)
         raise SystemExit(1)
@@ -72,6 +82,7 @@ def _load_border_geometry(path: Path):
 
 
 def _parse_nodata(tag_value: Any) -> float | None:
+    """Parse GDAL_NODATA tag values that can arrive in multiple scalar formats."""
     if tag_value is None:
         return None
 
@@ -100,6 +111,14 @@ def _parse_nodata(tag_value: Any) -> float | None:
 
 
 def _load_raster(path: Path) -> tuple[np.ndarray, float | None, float, float, float, float]:
+    """Load the first GeoTIFF band and required georeferencing metadata.
+
+    Returns:
+    - raster array
+    - nodata sentinel (if defined)
+    - raster origin lon/lat
+    - pixel width/height in degrees
+    """
     if not path.exists():
         print(f"Error: raster file not found: {path}", file=sys.stderr)
         raise SystemExit(1)
@@ -116,6 +135,7 @@ def _load_raster(path: Path) -> tuple[np.ndarray, float | None, float, float, fl
             print(f"Error: unable to read raster pixels from {path}: {exc}", file=sys.stderr)
             raise SystemExit(1)
 
+        # GeoTIFF georeferencing comes from pixel scale + tiepoint tags.
         scale_tag = page.tags.get("ModelPixelScaleTag")
         tie_tag = page.tags.get("ModelTiepointTag")
         if scale_tag is None or tie_tag is None:
@@ -143,6 +163,7 @@ def _load_raster(path: Path) -> tuple[np.ndarray, float | None, float, float, fl
             print("Error: unexpected non-positive pixel scale in raster.", file=sys.stderr)
             raise SystemExit(1)
 
+        # Nodata means "no valid population value" and should be skipped later.
         nodata_tag = page.tags.get("GDAL_NODATA")
         nodata_value = _parse_nodata(None if nodata_tag is None else nodata_tag.value)
 
@@ -158,13 +179,16 @@ def _compute_window(
     pixel_width: float,
     pixel_height: float,
 ) -> tuple[int, int, int, int]:
+    """Convert border lon/lat bounds to clamped raster row/col bounds."""
     min_lon, min_lat, max_lon, max_lat = border_bounds
 
+    # Transform world coordinates into raster indices.
     col_min = math.floor((min_lon - origin_lon) / pixel_width)
     col_max = math.ceil((max_lon - origin_lon) / pixel_width) - 1
     row_min = math.floor((origin_lat - max_lat) / pixel_height)
     row_max = math.ceil((origin_lat - min_lat) / pixel_height) - 1
 
+    # Clamp the computed window to raster dimensions.
     col_min = max(0, col_min)
     row_min = max(0, row_min)
     col_max = min(raster_width - 1, col_max)
@@ -189,6 +213,7 @@ def _extract_cells(
     pixel_width: float,
     pixel_height: float,
 ) -> list[dict[str, float | int]]:
+    """Extract valid raster cells whose centers fall inside the border polygon."""
     if raster.ndim != 2:
         print(
             f"Error: expected a single-band raster, but got shape {raster.shape!r}.",
@@ -210,6 +235,7 @@ def _extract_cells(
     records: list[dict[str, float | int]] = []
 
     for row in range(row_min, row_max + 1):
+        # Convert row index back to geographic coordinates for this pixel band.
         lat_top = origin_lat - (row * pixel_height)
         lat_bottom = lat_top - pixel_height
         lat_center = (lat_top + lat_bottom) / 2.0
@@ -221,10 +247,12 @@ def _extract_cells(
             if nodata_value is not None and value == nodata_value:
                 continue
 
+            # Compute cell bounds/center in lon-lat.
             lon_left = origin_lon + (col * pixel_width)
             lon_right = lon_left + pixel_width
             lon_center = (lon_left + lon_right) / 2.0
 
+            # Center-point inclusion keeps selection deterministic at borders.
             if not border_geometry.covers(Point(lon_center, lat_center)):
                 continue
 
@@ -246,6 +274,7 @@ def _extract_cells(
 
 
 def _write_csv(path: Path, records: list[dict[str, float | int]]) -> None:
+    """Write filtered cells to CSV using stable numeric formatting."""
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
         writer.writerow(
@@ -278,10 +307,12 @@ def _write_csv(path: Path, records: list[dict[str, float | int]]) -> None:
 
 
 def _build_map(records: list[dict[str, float | int]], border_geometry) -> folium.Map:
+    """Render a choropleth-like rectangle grid over Chiang Mai border."""
     densities = [float(record["population_density"]) for record in records]
     min_density = min(densities)
     max_density = max(densities)
 
+    # Clip the color scale to robust percentiles to reduce outlier dominance.
     if len(densities) >= 5:
         percentile_low = float(np.percentile(densities, 2))
         percentile_high = float(np.percentile(densities, 98))
@@ -295,6 +326,7 @@ def _build_map(records: list[dict[str, float | int]], border_geometry) -> folium
         scale_min = min_density
         scale_max = max_density
 
+    # Avoid degenerate colormap ranges in near-constant data.
     if math.isclose(scale_min, scale_max):
         scale_min = min_density
         scale_max = min_density + 1.0
@@ -318,6 +350,7 @@ def _build_map(records: list[dict[str, float | int]], border_geometry) -> folium
             f"Cell center: {float(record['lat_center']):.5f}, {float(record['lon_center']):.5f}"
         )
 
+        # Draw each raster cell as a colored rectangle in map coordinates.
         folium.Rectangle(
             bounds=[
                 [float(record["lat_bottom"]), float(record["lon_left"])],
@@ -331,6 +364,7 @@ def _build_map(records: list[dict[str, float | int]], border_geometry) -> folium
             tooltip=tooltip,
         ).add_to(density_map)
 
+    # Overlay border outline for geographic context.
     folium.GeoJson(
         {
             "type": "Feature",
@@ -352,6 +386,7 @@ def _build_map(records: list[dict[str, float | int]], border_geometry) -> folium
 
 
 def main() -> int:
+    """Entrypoint: build Chiang Mai cell CSV and preview map from source raster."""
     border_geometry = _load_border_geometry(BORDER_PATH)
     (
         raster,

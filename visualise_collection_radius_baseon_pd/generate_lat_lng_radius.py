@@ -1,4 +1,22 @@
 #!/usr/bin/env python3
+"""
+Generate adaptive collection circles from population-density inputs.
+
+Core idea:
+- Dense areas should receive smaller circles (finer sampling).
+- Sparse areas can use larger circles (fewer requests).
+
+Pipeline:
+1) Read border geometry and density-cell CSV.
+2) Build a local meter-space projection for geometric operations.
+3) Seed circles from lattice-based honeycomb candidates.
+4) Patch uncovered areas with sample and exact-geometry passes.
+5) Optionally prune redundant circles and preserve prior `collected` flags.
+6) Export lat_lng_radius.json for data collection and visualization.
+
+Dependency:
+    pip install shapely
+"""
 from __future__ import annotations
 
 import argparse
@@ -26,6 +44,7 @@ INPUT_DENSITY_PATH = REPO_ROOT / "chiang_mai_population_density_cells.csv"
 BORDER_PATH = REPO_ROOT / "chiang_mai_main_area_merged_border.geojson"
 OUTPUT_PATH = REPO_ROOT / "lat_lng_radius.json"
 
+# Adaptive-model tuning constants.
 ROUNDING_METERS = 25
 IDW_NEIGHBORS = 4
 IDW_EPS = 1e-12
@@ -37,6 +56,7 @@ PATCH_FOCUS_TOP_K = 24
 
 
 def _fatal(message: str) -> "None":
+    """Abort execution with a clear fatal error message."""
     import sys
 
     print(f"Error: {message}", file=sys.stderr)
@@ -44,6 +64,7 @@ def _fatal(message: str) -> "None":
 
 
 def _to_float(value: Any) -> float | None:
+    """Convert loosely typed scalar values to float when possible."""
     if isinstance(value, bool):
         return None
     if isinstance(value, (int, float)):
@@ -60,10 +81,12 @@ def _to_float(value: Any) -> float | None:
 
 
 def _to_bool(value: Any) -> bool | None:
+    """Return the value only if it is a real boolean."""
     return value if isinstance(value, bool) else None
 
 
 def _percentile(sorted_values: list[float], p: float) -> float:
+    """Return percentile from a pre-sorted numeric array."""
     if not sorted_values:
         _fatal("cannot compute percentile of empty list")
     if p <= 0:
@@ -80,6 +103,7 @@ def _percentile(sorted_values: list[float], p: float) -> float:
 
 
 def _auto_max_radius(min_radius: int, densities: list[float]) -> int:
+    """Choose max radius using density spread heuristics."""
     if not densities:
         _fatal("cannot choose max radius without density values")
     sorted_density = sorted(densities)
@@ -101,6 +125,7 @@ def _auto_max_radius(min_radius: int, densities: list[float]) -> int:
 
 
 def _load_border_geometry(path: Path) -> BaseGeometry:
+    """Load and validate Chiang Mai border geometry from GeoJSON."""
     if not path.exists():
         _fatal(f"border file not found: {path}")
     try:
@@ -122,6 +147,7 @@ def _load_border_geometry(path: Path) -> BaseGeometry:
 
 
 def _load_density_rows(path: Path) -> list[dict[str, float]]:
+    """Load density points and drop malformed/out-of-range rows."""
     if not path.exists():
         _fatal(f"input CSV not found: {path}")
     rows: list[dict[str, float]] = []
@@ -161,12 +187,15 @@ class LocalProjection:
     cos_lat0: float
 
     def to_xy(self, lng: float, lat: float) -> tuple[float, float]:
+        """Convert xy."""
         return (lng - self.lng0) * self.cos_lat0 * 111320.0, (lat - self.lat0) * 111320.0
 
     def to_lng_lat(self, x: float, y: float) -> tuple[float, float]:
+        """Convert lng/lat."""
         return (x / (self.cos_lat0 * 111320.0)) + self.lng0, (y / 111320.0) + self.lat0
 
     def _forward(self, x: Any, y: Any, z: Any = None):
+        """Helper for forward."""
         if hasattr(x, "__iter__"):
             return (
                 [((xi - self.lng0) * self.cos_lat0 * 111320.0) for xi in x],
@@ -175,6 +204,7 @@ class LocalProjection:
         return (x - self.lng0) * self.cos_lat0 * 111320.0, (y - self.lat0) * 111320.0
 
     def geom_to_xy(self, geom: BaseGeometry) -> BaseGeometry:
+        """Helper for geom to xy."""
         return transform(self._forward, geom)
 
 
@@ -231,6 +261,7 @@ class LatticeBand:
 
 
 def _build_projection(border_geom_lng_lat: BaseGeometry) -> LocalProjection:
+    """Build projection."""
     centroid = border_geom_lng_lat.centroid
     lat0 = float(centroid.y)
     return LocalProjection(
@@ -244,6 +275,7 @@ def _build_density_points(
     density_rows: list[dict[str, float]],
     projection: LocalProjection,
 ) -> list[DensityPoint]:
+    """Build density points."""
     return [
         DensityPoint(*projection.to_xy(float(row["lng"]), float(row["lat"])), float(row["population_density"]))
         for row in density_rows
@@ -251,11 +283,13 @@ def _build_density_points(
 
 
 def _prepare_density_scale(density_rows: list[dict[str, float]]) -> tuple[float, float]:
+    """Helper for prepare density scale."""
     log_values = sorted(math.log1p(max(0.0, row["population_density"])) for row in density_rows)
     return _percentile(log_values, 0.05), _percentile(log_values, 0.95)
 
 
 def _normalize_density(density: float, low_log: float, high_log: float) -> float:
+    """Helper for normalize density."""
     if high_log <= low_log:
         return 1.0
     value = math.log1p(max(0.0, density))
@@ -270,6 +304,7 @@ def _radius_from_density(
     low_log: float,
     high_log: float,
 ) -> int:
+    """Helper for radius from density."""
     normalized = _normalize_density(density, low_log=low_log, high_log=high_log)
     radius = max_radius - (normalized * (max_radius - min_radius))
     rounded = int(round(radius / ROUNDING_METERS) * ROUNDING_METERS)
@@ -277,6 +312,7 @@ def _radius_from_density(
 
 
 def _query_density(x: float, y: float, density_points: list[DensityPoint]) -> float:
+    """Helper for query density."""
     if not density_points:
         _fatal("density points are empty")
     best: list[tuple[float, float]] = []
@@ -305,6 +341,7 @@ def _query_density(x: float, y: float, density_points: list[DensityPoint]) -> fl
 
 
 def _iter_staggered_grid(bounds: tuple[float, float, float, float], spacing: float):
+    """Iterate staggered grid."""
     min_x, min_y, max_x, max_y = bounds
     row_step = spacing * math.sqrt(3.0) / 2.0
     y = min_y
@@ -319,10 +356,12 @@ def _iter_staggered_grid(bounds: tuple[float, float, float, float], spacing: flo
 
 
 def _center_key_xy(x: float, y: float) -> tuple[float, float]:
+    """Helper for center key xy."""
     return round(x, 3), round(y, 3)
 
 
 def _point_is_covered(x: float, y: float, circles: list[CirclePlacement]) -> bool:
+    """Helper for point is covered."""
     for circle in circles:
         dx = x - circle.x
         dy = y - circle.y
@@ -337,6 +376,7 @@ def _nearest_normalized_distance(
     radius: int,
     circles: list[CirclePlacement],
 ) -> float:
+    """Helper for nearest normalized distance."""
     if not circles:
         return float("inf")
     best = float("inf")
@@ -350,6 +390,7 @@ def _nearest_normalized_distance(
 
 
 def _build_radius_bands(min_radius: int, max_radius: int, band_step: int) -> list[tuple[int, int]]:
+    """Build radius bands."""
     highs: list[int] = []
     current = max_radius
     while current > min_radius:
@@ -372,6 +413,7 @@ def _build_lattice_bands(
     phase_x: float,
     phase_y: float,
 ) -> list[LatticeBand]:
+    """Build lattice bands."""
     min_x, min_y, _max_x, _max_y = border_xy.bounds
     result: list[LatticeBand] = []
     for idx, (band_low, band_high) in enumerate(_build_radius_bands(min_radius, max_radius, band_step)):
@@ -395,6 +437,7 @@ def _build_lattice_bands(
 
 
 def _lattice_node_xy(band: LatticeBand, row: int, col: int) -> tuple[float, float]:
+    """Helper for lattice node xy."""
     y = band.origin_y + (row * band.row_step)
     x_offset = band.spacing / 2.0 if row % 2 else 0.0
     x = band.origin_x + x_offset + (col * band.spacing)
@@ -402,6 +445,7 @@ def _lattice_node_xy(band: LatticeBand, row: int, col: int) -> tuple[float, floa
 
 
 def _nearest_lattice_node(band: LatticeBand, x: float, y: float) -> tuple[int, int, float, float, float]:
+    """Helper for nearest lattice node."""
     row0 = int(round((y - band.origin_y) / band.row_step))
     best: tuple[int, int, float, float, float] | None = None
     for row in (row0 - 1, row0, row0 + 1):
@@ -419,6 +463,7 @@ def _iter_lattice_points_in_bounds(
     band: LatticeBand,
     bounds: tuple[float, float, float, float],
 ):
+    """Iterate lattice points in bounds."""
     min_x, min_y, max_x, max_y = bounds
     row_min = int(math.floor((min_y - band.origin_y) / band.row_step)) - 1
     row_max = int(math.ceil((max_y - band.origin_y) / band.row_step)) + 1
@@ -433,6 +478,7 @@ def _iter_lattice_points_in_bounds(
 
 
 def _nearest_band_idx_for_radius(radius: int, lattice_bands: list[LatticeBand]) -> int:
+    """Helper for nearest band idx for radius."""
     best_idx = 0
     best_gap = float("inf")
     for idx, band in enumerate(lattice_bands):
@@ -450,6 +496,7 @@ def _iter_lattice_nodes_near_target(
     neighbor_ring: int,
     max_distance: float,
 ) -> list[tuple[int, int, float, float, float]]:
+    """Iterate lattice nodes near target."""
     row0, col0, _nx, _ny, _dist = _nearest_lattice_node(band, target_x, target_y)
     candidates: dict[tuple[int, int], tuple[int, int, float, float, float]] = {}
     row_min = row0 - neighbor_ring
@@ -478,6 +525,7 @@ def _generate_honeycomb_circles(
     lattice_bands: list[LatticeBand],
     deadline: float,
 ) -> list[CirclePlacement] | None:
+    """Generate honeycomb circles."""
     circles: list[CirclePlacement] = []
     seen_centers: set[tuple[float, float]] = set()
     for band in lattice_bands:
@@ -523,6 +571,7 @@ def _generate_honeycomb_circles(
 
 
 def _build_coverage_samples(area_xy: BaseGeometry, step: float) -> list[tuple[float, float]]:
+    """Build coverage samples."""
     min_x, min_y, max_x, max_y = area_xy.bounds
     start_x = math.floor(min_x / step) * step
     start_y = math.floor(min_y / step) * step
@@ -544,6 +593,7 @@ def _build_coverage_state(
     samples: list[tuple[float, float]],
     circles: list[CirclePlacement],
 ) -> tuple[list[int], list[float]]:
+    """Build coverage state."""
     coverage_counts = [0] * len(samples)
     nearest_center_d2 = [float("inf")] * len(samples)
     for circle in circles:
@@ -565,6 +615,7 @@ def _update_coverage_state_for_circle(
     nearest_center_d2: list[float],
     circle: CirclePlacement,
 ) -> None:
+    """Update coverage state for circle."""
     cx, cy, r2 = circle.x, circle.y, float(circle.radius * circle.radius)
     for idx, (x, y) in enumerate(samples):
         dx = x - cx
@@ -577,6 +628,7 @@ def _update_coverage_state_for_circle(
 
 
 def _count_uncovered(coverage_counts: list[int]) -> int:
+    """Count uncovered."""
     return sum(1 for count in coverage_counts if count == 0)
 
 
@@ -587,6 +639,7 @@ def _candidate_sample_impact(
     y: float,
     radius: int,
 ) -> tuple[int, int]:
+    """Helper for candidate sample impact."""
     r2 = float(radius * radius)
     new_cover = 0
     overlap_increase = 0
@@ -621,6 +674,7 @@ def _patch_sample_coverage_max_gap(
     overlap_penalty: float,
     deadline: float,
 ) -> tuple[int, int] | None:
+    """Helper for patch sample coverage max gap."""
     initial_uncovered = _count_uncovered(coverage_counts)
     if initial_uncovered == 0:
         return 0, 0
@@ -738,6 +792,7 @@ def _patch_sample_coverage_max_gap(
 
 
 def _iter_polygon_parts(geom: BaseGeometry) -> list[BaseGeometry]:
+    """Iterate polygon parts."""
     if geom.is_empty:
         return []
     if geom.geom_type == "Polygon":
@@ -753,6 +808,7 @@ def _iter_polygon_parts(geom: BaseGeometry) -> list[BaseGeometry]:
 
 
 def _circle_geometries(circles: list[CirclePlacement]) -> list[BaseGeometry]:
+    """Helper for circle geometries."""
     return [
         Point(circle.x, circle.y).buffer(float(circle.radius), resolution=EXACT_BUFFER_RESOLUTION)
         for circle in circles
@@ -763,6 +819,7 @@ def _exact_missing_geometry(
     border_xy: BaseGeometry,
     circle_geometries: list[BaseGeometry],
 ) -> tuple[BaseGeometry, float]:
+    """Helper for exact missing geometry."""
     if not circle_geometries:
         return border_xy, float(border_xy.area)
     missing = border_xy.difference(unary_union(circle_geometries))
@@ -790,6 +847,7 @@ def _patch_exact_coverage(
     overlap_penalty: float,
     deadline: float,
 ) -> tuple[int, float] | None:
+    """Helper for patch exact coverage."""
     added = 0
     seen_centers = {_center_key_xy(circle.x, circle.y) for circle in circles}
     border_buffer_cache: dict[int, BaseGeometry] = {}
@@ -932,6 +990,7 @@ def _build_cover_index(
     circles: list[CirclePlacement],
     active: list[bool],
 ) -> tuple[list[set[int]], list[int]]:
+    """Build cover index."""
     cover_by_circle = [set() for _ in circles]
     cover_counts = [0] * len(samples)
     for ci, circle in enumerate(circles):
@@ -952,12 +1011,14 @@ def _exact_missing_for_active(
     circle_geometries: list[BaseGeometry],
     active: list[bool],
 ) -> float:
+    """Helper for exact missing for active."""
     selected = [geom for idx, geom in enumerate(circle_geometries) if active[idx]]
     _missing, area = _exact_missing_geometry(border_xy, selected)
     return area
 
 
 def _hex_neighbor_coords(row: int, col: int) -> list[tuple[int, int]]:
+    """Helper for hex neighbor coords."""
     if row % 2 == 0:
         return [
             (row, col - 1),
@@ -981,6 +1042,7 @@ def _is_hole_protected(
     circle: CirclePlacement,
     active_nodes_by_band: dict[int, set[tuple[int, int]]],
 ) -> bool:
+    """Check whether hole protected."""
     band_nodes = active_nodes_by_band.get(circle.band_idx)
     if not band_nodes:
         return False
@@ -996,6 +1058,7 @@ def _prune_circles(
     prune_max_passes: int,
     deadline: float,
 ) -> tuple[list[CirclePlacement], int, list[int], float] | None:
+    """Helper for prune circles."""
     if not circles:
         return [], 0, [0] * len(samples), float(border_xy.area)
     active = [True] * len(circles)
@@ -1050,6 +1113,7 @@ def _prune_circles(
 
 
 def _spacing_score(circles: list[CirclePlacement]) -> float:
+    """Helper for spacing score."""
     if len(circles) <= 1:
         return float("inf")
     mins: list[float] = []
@@ -1071,6 +1135,7 @@ def _spacing_score(circles: list[CirclePlacement]) -> float:
 
 
 def _regularity_score(circles: list[CirclePlacement]) -> float:
+    """Helper for regularity score."""
     if not circles:
         return 0.0
     errors = sorted(max(circle.lattice_error, 0.0) for circle in circles)
@@ -1079,10 +1144,12 @@ def _regularity_score(circles: list[CirclePlacement]) -> float:
 
 
 def _off_lattice_count(circles: list[CirclePlacement]) -> int:
+    """Helper for off lattice count."""
     return sum(1 for circle in circles if circle.lattice_error > 1e-6)
 
 
 def _overlap_metrics(coverage_counts: list[int]) -> tuple[float, float, int]:
+    """Helper for overlap metrics."""
     if not coverage_counts:
         return 1.0, 0.0, 0
     total = len(coverage_counts)
@@ -1093,6 +1160,7 @@ def _overlap_metrics(coverage_counts: list[int]) -> tuple[float, float, int]:
 
 
 def _candidate_sort_key(candidate: CandidateResult) -> tuple[Any, ...]:
+    """Helper for candidate sort key."""
     return (
         len(candidate.circles),
         -candidate.regularity_score,
@@ -1125,6 +1193,7 @@ def _evaluate_candidate(
     overlap_penalty: float,
     deadline: float,
 ) -> CandidateResult | None:
+    """Helper for evaluate candidate."""
     start = time.perf_counter()
     lattice_bands = _build_lattice_bands(
         border_xy=border_xy,
@@ -1232,6 +1301,7 @@ def _evaluate_candidate(
 
 
 def _circles_to_rows(circles: list[CirclePlacement], projection: LocalProjection) -> list[dict[str, Any]]:
+    """Helper for circles to rows."""
     rows: list[dict[str, Any]] = []
     for circle in circles:
         lng, lat = projection.to_lng_lat(circle.x, circle.y)
@@ -1249,6 +1319,7 @@ def _circles_to_rows(circles: list[CirclePlacement], projection: LocalProjection
 
 
 def _load_existing_rows(path: Path) -> list[dict[str, Any]]:
+    """Load existing rows."""
     if not path.exists():
         return []
     try:
@@ -1266,6 +1337,7 @@ def _apply_collected_preservation(
     projection: LocalProjection,
     preserve_distance: float,
 ) -> tuple[int, int]:
+    """Apply collected preservation."""
     old_index: dict[tuple[float, float], bool] = {}
     old_unique: list[tuple[float, float, bool]] = []
     for row in old_rows:
@@ -1338,6 +1410,7 @@ def _apply_collected_preservation(
 
 
 def _parse_float_values_list(raw: str, name: str, allow_zero: bool = False) -> list[float]:
+    """Parse comma-separated float CLI values with validation."""
     values: list[float] = []
     for piece in raw.split(","):
         text = piece.strip()
@@ -1361,6 +1434,7 @@ def _parse_float_values_list(raw: str, name: str, allow_zero: bool = False) -> l
 
 
 def _parse_int_values_list(raw: str, name: str) -> list[int]:
+    """Parse comma-separated integer CLI values with validation."""
     values: list[int] = []
     for piece in raw.split(","):
         text = piece.strip()
@@ -1379,18 +1453,21 @@ def _parse_int_values_list(raw: str, name: str) -> list[int]:
 
 
 def _candidate_combinations(spacing_scales: list[float], band_steps: list[int]) -> list[tuple[float, int]]:
+    """Build ordered (spacing_scale, band_step) combinations to evaluate first."""
     combos = [(scale, band) for scale in spacing_scales for band in band_steps]
     combos.sort(key=lambda item: (abs(item[0] - 0.94), abs(item[1] - 100), item[0], item[1]))
     return combos
 
 
 def _phase_pairs(phase_values: list[float]) -> list[tuple[float, float]]:
+    """Build ordered lattice phase pairs, prioritizing canonical phase first."""
     pairs = [(px, py) for px in phase_values for py in phase_values]
     pairs.sort(key=lambda pair: (0 if pair == (0.0, 0.0) else 1, abs(pair[0] - 0.5) + abs(pair[1] - 0.25)))
     return pairs
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI knobs controlling adaptive radius optimization."""
     parser = argparse.ArgumentParser(
         description="Generate optimized honeycomb adaptive circles for Chiang Mai."
     )
@@ -1416,6 +1493,10 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Program entrypoint for this script."""
+    # ---------------------------------------------------------------------
+    # Phase 1: Validate CLI parameters and load source datasets.
+    # ---------------------------------------------------------------------
     args = _parse_args(argv)
     if args.min_radius < 100:
         _fatal("--min-radius must be >= 100")
@@ -1446,6 +1527,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.overlap_penalty < 0:
         _fatal("--overlap-penalty must be >= 0")
 
+    # Load border + density data used by every candidate evaluation.
     border_lng_lat = _load_border_geometry(BORDER_PATH)
     density_rows = _load_density_rows(INPUT_DENSITY_PATH)
     densities = [row["population_density"] for row in density_rows]
@@ -1472,6 +1554,7 @@ def main(argv: list[str] | None = None) -> int:
     combinations = _candidate_combinations(spacing_scales, band_steps)
     phase_pairs = _phase_pairs(phase_values)
 
+    # Build geometry/model inputs reused by all optimization trials.
     projection = _build_projection(border_lng_lat)
     border_xy = projection.geom_to_xy(border_lng_lat)
     density_points = _build_density_points(density_rows, projection)
@@ -1486,6 +1569,9 @@ def main(argv: list[str] | None = None) -> int:
     baseline_phase = (0.0, 0.0)
     baseline_by_combo: dict[tuple[float, int], CandidateResult | None] = {}
 
+    # ---------------------------------------------------------------------
+    # Phase 2: Baseline search over spacing-scale + band-step combinations.
+    # ---------------------------------------------------------------------
     for spacing_scale, band_step in combinations:
         if time.perf_counter() > deadline and tested > 0:
             break
@@ -1520,9 +1606,13 @@ def main(argv: list[str] | None = None) -> int:
         if best is None or _candidate_sort_key(candidate) < _candidate_sort_key(best):
             best = candidate
 
+    # ---------------------------------------------------------------------
+    # Phase 3: Optional phase refinement if there is time budget remaining.
+    # ---------------------------------------------------------------------
     nonzero_phase_pairs = [pair for pair in phase_pairs if pair != baseline_phase]
     if nonzero_phase_pairs and time.perf_counter() <= deadline:
         def _combo_priority(combo: tuple[float, int]) -> tuple[Any, ...]:
+            """Helper for combo priority."""
             baseline = baseline_by_combo.get(combo)
             if baseline is None:
                 scale, band = combo
@@ -1574,6 +1664,9 @@ def main(argv: list[str] | None = None) -> int:
             f"(tested {tested} candidate(s))."
         )
 
+    # ---------------------------------------------------------------------
+    # Phase 4: Persist result and preserve previous collected flags when possible.
+    # ---------------------------------------------------------------------
     output_rows = _circles_to_rows(best.circles, projection)
     old_rows = _load_existing_rows(OUTPUT_PATH)
     exact_preserved, nearest_preserved = _apply_collected_preservation(

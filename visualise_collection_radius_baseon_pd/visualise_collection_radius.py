@@ -8,6 +8,12 @@ Circle color follows collected status:
 
 Dependency:
     pip install folium
+
+Pipeline:
+1) Load adaptive circle records from JSON.
+2) Validate border GeoJSON.
+3) Draw circles and center markers colored by collected status.
+4) Add a visual legend and fit map bounds.
 """
 
 from __future__ import annotations
@@ -29,6 +35,7 @@ except ImportError:  # pragma: no cover
 
 
 REPO_ROOT = Path(__file__).resolve().parent
+# Local artifacts for this visualization.
 INPUT_PATH = REPO_ROOT / "lat_lng_radius.json"
 OUTPUT_PATH = REPO_ROOT / "collection_radius_map.html"
 BORDER_PATH = REPO_ROOT / "chiang_mai_main_area_merged_border.geojson"
@@ -39,6 +46,7 @@ CHIANG_MAI_BORDER_COLOR = "#ff4d4d"
 
 
 def _to_float(value: Any) -> float | None:
+    """Best-effort conversion helper for numeric JSON fields."""
     if isinstance(value, bool):
         return None
     if isinstance(value, (int, float)):
@@ -55,12 +63,14 @@ def _to_float(value: Any) -> float | None:
 
 
 def _to_bool(value: Any) -> bool | None:
+    """Return value only when it is an actual boolean."""
     if isinstance(value, bool):
         return value
     return None
 
 
 def _load_json(path: Path) -> Any:
+    """Load JSON file with strict error reporting."""
     if not path.exists():
         print(f"Error: file not found: {path}", file=sys.stderr)
         raise SystemExit(1)
@@ -72,6 +82,7 @@ def _load_json(path: Path) -> Any:
 
 
 def _validate_border_geojson(data: Any) -> dict[str, Any]:
+    """Validate that border data is a non-empty FeatureCollection."""
     if not isinstance(data, dict):
         print("Error: border GeoJSON must be an object.", file=sys.stderr)
         raise SystemExit(1)
@@ -86,6 +97,7 @@ def _validate_border_geojson(data: Any) -> dict[str, Any]:
 
 
 def _iter_lng_lat_pairs(value: Any):
+    """Flatten nested coordinate arrays into (lng, lat) tuples."""
     if isinstance(value, (list, tuple)):
         if len(value) == 2 and all(isinstance(v, (int, float)) for v in value):
             yield float(value[0]), float(value[1])
@@ -95,6 +107,7 @@ def _iter_lng_lat_pairs(value: Any):
 
 
 def _iter_geojson_lng_lat_pairs(geojson: Any):
+    """Traverse GeoJSON containers and emit all coordinate pairs."""
     if not isinstance(geojson, dict):
         return
     geo_type = geojson.get("type")
@@ -115,6 +128,7 @@ def _iter_geojson_lng_lat_pairs(geojson: Any):
 
 
 def _geojson_bounds(geojson: Any) -> list[list[float]] | None:
+    """Compute map bounds from geojson coordinates in folium format."""
     pairs = list(_iter_geojson_lng_lat_pairs(geojson))
     if not pairs:
         return None
@@ -138,6 +152,7 @@ def _build_popup_html(
     collected: bool,
     population_density: float | None,
 ) -> str:
+    """Render popup details for one adaptive-radius circle."""
     collection_status = "Collected" if collected else "Not collected"
     density_text = "N/A" if population_density is None else f"{population_density:,.2f}"
     return (
@@ -157,6 +172,7 @@ def _build_popup_html(
 
 
 def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
+    """Normalize valid records into map-ready point dictionaries."""
     points: list[dict[str, Any]] = []
     skipped = 0
 
@@ -183,6 +199,7 @@ def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
             skipped += 1
             continue
 
+        # Reuse shared color semantics from the project map scripts.
         color = COLLECTED_COLOR if collected else NOT_COLLECTED_COLOR
         points.append(
             {
@@ -199,6 +216,7 @@ def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
 
 
 def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) -> folium.Map:
+    """Draw circles, border overlays, and legend into a Folium map."""
     lats = [point["lat"] for point in points]
     lngs = [point["lng"] for point in points]
     center = [sum(lats) / len(lats), sum(lngs) / len(lngs)]
@@ -259,12 +277,14 @@ def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) 
         tooltip="Chiang Mai Border",
     ).add_to(point_map)
 
+    # Prefer fitting to border when available to keep framing consistent.
     bounds = _geojson_bounds(chiang_mai_border)
     if bounds is not None:
         point_map.fit_bounds(bounds)
     else:
         point_map.fit_bounds([[min(lats), min(lngs)], [max(lats), max(lngs)]])
 
+    # Static legend explains the meaning of marker colors.
     legend_html = (
         "<div style='"
         "position: fixed; bottom: 24px; left: 24px; z-index: 9999; "
@@ -280,6 +300,7 @@ def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) 
 
 
 def main() -> int:
+    """Entrypoint for producing collection_radius_map.html."""
     records = _load_json(INPUT_PATH)
     if not isinstance(records, list):
         print(f"Error: expected a JSON array in {INPUT_PATH}.", file=sys.stderr)

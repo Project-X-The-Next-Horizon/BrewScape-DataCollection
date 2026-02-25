@@ -4,6 +4,13 @@ Generate optimized Chiang Mai coverage circles for lat_lng_radius.json.
 
 Dependencies:
     pip install shapely
+
+High-level strategy:
+1) Load the merged Chiang Mai border polygon.
+2) Build municipality zones where either 500m or 1000m circles are allowed.
+3) Search spacing combinations (fast or auto mode) for a good hex-like lattice.
+4) Patch uncovered areas with sample-based and exact geometric passes.
+5) Emit lat/lng/radius rows for downstream collection and visualization.
 """
 
 from __future__ import annotations
@@ -33,6 +40,7 @@ REPO_ROOT = Path(__file__).resolve().parent
 MERGED_BORDER_PATH = REPO_ROOT / "chiang_mai_main_area_merged_border.geojson"
 OUTPUT_PATH = REPO_ROOT / "lat_lng_radius.json"
 
+# Boundary source configuration.
 NOMINATIM_USER_AGENT = "BrewScape-DataCollection/1.0 (+circle-generator)"
 RELATION_IDS = ("R18271830", "R19975357", "R19033670")
 CITY_RELATION_ID = "R18271830"
@@ -43,12 +51,14 @@ SUPPLEMENT_ANCHOR = (98.9674, 18.8108)  # lng, lat
 # West/left side of Chang Phueak supplement uses 1000m; east/right side stays 500m.
 CHANG_PHUEAK_WEST_1000_MAX_LNG = 98.952
 
+# Coverage model constants.
 RADIUS_500 = 500.0
 RADIUS_1000 = 1000.0
 COVERAGE_STEP = 100.0
 EXACT_BUFFER_RESOLUTION = 64
 EXACT_COVERAGE_TOLERANCE_M2 = 1.0
 
+# Patch-search and numerical tolerance controls.
 SHIFT_STEP = 100.0
 SHIFT_MAX_DISTANCE = 2000.0
 SHIFT_ANGLES = 16
@@ -56,6 +66,7 @@ MAX_AUTO_FIX_ADDITIONS = 2000
 MAX_EXACT_PATCH = 20
 EPS = 1e-9
 
+# Coarse auto-search spacing ranges.
 COARSE_SPACING500_MIN = 700
 COARSE_SPACING500_MAX = 900
 COARSE_SPACING500_STEP = 25
@@ -63,6 +74,7 @@ COARSE_SPACING1000_MIN = 1400
 COARSE_SPACING1000_MAX = 1800
 COARSE_SPACING1000_STEP = 25
 
+# Full search bounds and fast local tuning windows.
 SPACING500_MIN = 650
 SPACING500_MAX = 950
 SPACING1000_MIN = 1300
@@ -77,27 +89,36 @@ FAST_LOCAL_1000_DELTA = 25
 
 
 def _fatal(message: str) -> "None":
+    """Abort execution with a consistent error format."""
     print(f"Error: {message}", file=sys.stderr)
     raise SystemExit(1)
 
 
 @dataclass(frozen=True)
 class LocalProjection:
+    """Local equirectangular-like projection around border centroid.
+
+    This keeps geometry operations in meters (x/y) while retaining reversible
+    conversion to geographic lon/lat for final output.
+    """
     lng0: float
     lat0: float
     cos_lat0: float
 
     def to_xy(self, lng: float, lat: float) -> tuple[float, float]:
+        """Convert xy."""
         x = (lng - self.lng0) * self.cos_lat0 * 111320.0
         y = (lat - self.lat0) * 111320.0
         return x, y
 
     def to_lng_lat(self, x: float, y: float) -> tuple[float, float]:
+        """Convert lng/lat."""
         lng = (x / (self.cos_lat0 * 111320.0)) + self.lng0
         lat = (y / 111320.0) + self.lat0
         return lng, lat
 
     def _forward(self, x: Any, y: Any, z: Any = None):
+        """Helper for forward."""
         if hasattr(x, "__iter__"):
             xs = [((xi - self.lng0) * self.cos_lat0 * 111320.0) for xi in x]
             ys = [((yi - self.lat0) * 111320.0) for yi in y]
@@ -105,6 +126,7 @@ class LocalProjection:
         return (x - self.lng0) * self.cos_lat0 * 111320.0, (y - self.lat0) * 111320.0
 
     def _inverse(self, x: Any, y: Any, z: Any = None):
+        """Helper for inverse."""
         if hasattr(x, "__iter__"):
             xs = [((xi / (self.cos_lat0 * 111320.0)) + self.lng0) for xi in x]
             ys = [((yi / 111320.0) + self.lat0) for yi in y]
@@ -112,14 +134,18 @@ class LocalProjection:
         return (x / (self.cos_lat0 * 111320.0)) + self.lng0, (y / 111320.0) + self.lat0
 
     def geom_to_xy(self, geom: BaseGeometry) -> BaseGeometry:
+        """Helper for geom to xy."""
         return transform(self._forward, geom)
 
     def geom_to_lng_lat(self, geom: BaseGeometry) -> BaseGeometry:
+        """Helper for geom to lng lat."""
         return transform(self._inverse, geom)
 
 
 @dataclass
 class CandidateResult:
+    """Scoring payload for one spacing candidate evaluation."""
+
     spacing500: int
     spacing1000: int
     records: list[dict[str, Any]]
@@ -131,6 +157,7 @@ class CandidateResult:
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI flags controlling fast vs auto spacing search modes."""
     parser = argparse.ArgumentParser(
         description=(
             "Generate lat_lng_radius.json. Default uses a fast hex-spacing "
@@ -166,6 +193,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def _load_border_geometry(path: Path) -> BaseGeometry:
+    """Load the cached merged border polygon used for optimization."""
     if not path.exists():
         _fatal(f"merged border file not found: {path}")
 
@@ -196,6 +224,7 @@ def _load_border_geometry(path: Path) -> BaseGeometry:
 
 
 def _fetch_relation_geometries() -> dict[str, BaseGeometry]:
+    """Fetch raw relation geometries from Nominatim when rebuilding borders."""
     query = parse.urlencode(
         {
             "format": "jsonv2",
@@ -247,6 +276,7 @@ def _fetch_relation_geometries() -> dict[str, BaseGeometry]:
 
 
 def _iter_polygon_parts(geom: BaseGeometry) -> list[BaseGeometry]:
+    """Iterate polygon parts."""
     if geom.is_empty:
         return []
     if geom.geom_type == "Polygon":
@@ -264,6 +294,7 @@ def _iter_polygon_parts(geom: BaseGeometry) -> list[BaseGeometry]:
 def _build_zone500_with_supplement(
     geometries: dict[str, BaseGeometry],
 ) -> tuple[BaseGeometry, BaseGeometry]:
+    """Build zone500 with supplement."""
     city = geometries[CITY_RELATION_ID]
     suthep = geometries[SUTHEP_RELATION_ID]
     district = geometries[DISTRICT_RELATION_ID]
@@ -284,6 +315,7 @@ def _build_zone500_with_supplement(
 
 
 def _build_projection(geom_lng_lat: BaseGeometry) -> LocalProjection:
+    """Build projection."""
     centroid = geom_lng_lat.centroid
     lat0 = float(centroid.y)
     return LocalProjection(
@@ -294,6 +326,7 @@ def _build_projection(geom_lng_lat: BaseGeometry) -> LocalProjection:
 
 
 def _iter_staggered_grid(bounds: tuple[float, float, float, float], spacing: float):
+    """Iterate staggered grid."""
     min_x, min_y, max_x, max_y = bounds
     row_step = spacing * math.sqrt(3.0) / 2.0
     y = min_y
@@ -313,6 +346,7 @@ def _generate_zone_centers(
     spacing: float,
     radius: float,
 ) -> list[tuple[float, float]]:
+    """Generate zone centers."""
     if zone_xy.is_empty:
         return []
 
@@ -329,6 +363,7 @@ def _generate_zone_centers(
 
 
 def _distance_squared(a: tuple[float, float], b: tuple[float, float]) -> float:
+    """Helper for distance squared."""
     dx = a[0] - b[0]
     dy = a[1] - b[1]
     return dx * dx + dy * dy
@@ -340,6 +375,7 @@ def _is_valid_1000_center(
     zone500_xy: BaseGeometry,
     centers500: list[tuple[float, float]],
 ) -> bool:
+    """Check whether valid 1000 center."""
     point = Point(center[0], center[1])
     if not zone1000_buffer_xy.covers(point):
         return False
@@ -359,6 +395,7 @@ def _filter_1000_centers(
     zone500_xy: BaseGeometry,
     centers500: list[tuple[float, float]],
 ) -> list[tuple[float, float]]:
+    """Helper for filter 1000 centers."""
     return [
         center
         for center in candidates
@@ -370,6 +407,7 @@ def _build_coverage_samples(
     area_xy: BaseGeometry,
     step: float,
 ) -> list[tuple[float, float]]:
+    """Build coverage samples."""
     min_x, min_y, max_x, max_y = area_xy.bounds
     start_x = math.floor(min_x / step) * step
     start_y = math.floor(min_y / step) * step
@@ -390,6 +428,7 @@ def _build_coverage_samples(
 
 
 def _point_is_covered(point: tuple[float, float], circles: list[tuple[float, float, float]]) -> bool:
+    """Helper for point is covered."""
     x, y = point
     for center_x, center_y, radius in circles:
         dx = x - center_x
@@ -403,6 +442,7 @@ def _find_uncovered_samples(
     samples: list[tuple[float, float]],
     circles: list[tuple[float, float, float]],
 ) -> list[tuple[float, float]]:
+    """Find uncovered samples."""
     return [sample for sample in samples if not _point_is_covered(sample, circles)]
 
 
@@ -412,6 +452,7 @@ def _try_shifted_1000_center(
     zone500_xy: BaseGeometry,
     centers500: list[tuple[float, float]],
 ) -> tuple[float, float] | None:
+    """Attempt shifted 1000 center."""
     if _is_valid_1000_center(origin, zone1000_buffer_xy, zone500_xy, centers500):
         return origin
 
@@ -431,6 +472,7 @@ def _try_shifted_1000_center(
 
 
 def _center_key_xy(center: tuple[float, float], radius: float) -> tuple[float, float, int]:
+    """Helper for center key xy."""
     return (round(center[0], 3), round(center[1], 3), int(radius))
 
 
@@ -438,12 +480,14 @@ def _circles_from_centers(
     centers500: list[tuple[float, float]],
     centers1000: list[tuple[float, float]],
 ) -> list[tuple[float, float, float]]:
+    """Helper for circles from centers."""
     circles: list[tuple[float, float, float]] = [(*center, RADIUS_500) for center in centers500]
     circles.extend([(*center, RADIUS_1000) for center in centers1000])
     return circles
 
 
 def _circles_to_coverage_geometry(circles: list[tuple[float, float, float]]) -> BaseGeometry:
+    """Helper for circles to coverage geometry."""
     if not circles:
         return Point(0.0, 0.0).buffer(0.0)
     disk_geometries = [
@@ -457,6 +501,7 @@ def _exact_missing_geometry(
     merged_border_xy: BaseGeometry,
     circles: list[tuple[float, float, float]],
 ) -> BaseGeometry:
+    """Helper for exact missing geometry."""
     coverage = _circles_to_coverage_geometry(circles)
     return merged_border_xy.difference(coverage)
 
@@ -468,6 +513,7 @@ def _auto_fix_coverage(
     centers500: list[tuple[float, float]],
     centers1000: list[tuple[float, float]],
 ) -> tuple[list[tuple[float, float]], list[tuple[float, float]], int]:
+    """Auto-tune fix coverage."""
     zone500_buffer_xy = zone500_xy.buffer(RADIUS_500)
     zone1000_buffer_xy = zone1000_xy.buffer(RADIUS_1000)
     samples = _build_coverage_samples(merged_border_xy, COVERAGE_STEP)
@@ -545,6 +591,7 @@ def _auto_fix_exact_coverage(
     centers500: list[tuple[float, float]],
     centers1000: list[tuple[float, float]],
 ) -> tuple[list[tuple[float, float]], list[tuple[float, float]], int, float]:
+    """Auto-tune fix exact coverage."""
     zone500_buffer_xy = zone500_xy.buffer(RADIUS_500)
     zone1000_buffer_xy = zone1000_xy.buffer(RADIUS_1000)
     keys = {_center_key_xy(center, RADIUS_500) for center in centers500}
@@ -617,10 +664,12 @@ def _records_from_centers(
     centers500: list[tuple[float, float]],
     centers1000: list[tuple[float, float]],
 ) -> list[dict[str, Any]]:
+    """Helper for records from centers."""
     rows: list[dict[str, Any]] = []
     dedupe: set[tuple[float, float, int]] = set()
 
     def add_row(center: tuple[float, float], radius: int):
+        """Helper for add row."""
         lng, lat = projection.to_lng_lat(center[0], center[1])
         lat_r = round(lat, 6)
         lng_r = round(lng, 6)
@@ -650,6 +699,7 @@ def _validate_no_full_swallow(
     records: list[dict[str, Any]],
     projection: LocalProjection,
 ) -> int:
+    """Validate no full swallow."""
     centers500: list[tuple[float, float]] = []
     centers1000: list[tuple[float, float]] = []
 
@@ -675,6 +725,7 @@ def _validate_coverage_strict(
     merged_border_xy: BaseGeometry,
     projection: LocalProjection,
 ) -> int:
+    """Validate coverage strict."""
     circles = _circles_from_records(records, projection)
 
     samples = _build_coverage_samples(merged_border_xy, COVERAGE_STEP)
@@ -686,6 +737,7 @@ def _circles_from_records(
     records: list[dict[str, Any]],
     projection: LocalProjection,
 ) -> list[tuple[float, float, float]]:
+    """Helper for circles from records."""
     circles: list[tuple[float, float, float]] = []
     for row in records:
         x, y = projection.to_xy(float(row["lng"]), float(row["lat"]))
@@ -698,16 +750,19 @@ def _validate_exact_coverage(
     merged_border_xy: BaseGeometry,
     projection: LocalProjection,
 ) -> float:
+    """Validate exact coverage."""
     circles = _circles_from_records(records, projection)
     missing = _exact_missing_geometry(merged_border_xy, circles)
     return float(missing.area)
 
 
 def _iter_spacing_values(minimum: int, maximum: int, step: int) -> list[int]:
+    """Iterate spacing values."""
     return list(range(minimum, maximum + 1, step))
 
 
 def _derive_hex_spacing(radius: float, minimum: int, maximum: int, step: int) -> int:
+    """Helper for derive hex spacing."""
     if step <= 0:
         _fatal("spacing step must be positive")
     target = math.sqrt(3.0) * radius
@@ -716,6 +771,7 @@ def _derive_hex_spacing(radius: float, minimum: int, maximum: int, step: int) ->
 
 
 def _fast_local_values(base: int, minimum: int, maximum: int, delta: int) -> list[int]:
+    """Helper for fast local values."""
     values = [base]
     if delta > 0:
         values.extend([base - delta, base + delta])
@@ -723,6 +779,7 @@ def _fast_local_values(base: int, minimum: int, maximum: int, delta: int) -> lis
 
 
 def _candidate_sort_key(candidate: CandidateResult) -> tuple[Any, ...]:
+    """Helper for candidate sort key."""
     return (
         len(candidate.records),
         candidate.exact_patch_added,
@@ -735,6 +792,7 @@ def _candidate_sort_key(candidate: CandidateResult) -> tuple[Any, ...]:
 
 
 def _is_better_candidate(candidate: CandidateResult, best: CandidateResult | None) -> bool:
+    """Check whether better candidate."""
     if best is None:
         return True
     return _candidate_sort_key(candidate) < _candidate_sort_key(best)
@@ -748,6 +806,7 @@ def _evaluate_spacing_candidate(
     zone1000_xy: BaseGeometry,
     projection: LocalProjection,
 ) -> CandidateResult | None:
+    """Helper for evaluate spacing candidate."""
     centers500 = _generate_zone_centers(
         zone500_xy,
         spacing=float(spacing500),
@@ -819,6 +878,7 @@ def _search_best_candidate(
     zone1000_xy: BaseGeometry,
     projection: LocalProjection,
 ) -> tuple[CandidateResult | None, int, int]:
+    """Evaluate all spacing combinations and return the best valid candidate."""
     best: CandidateResult | None = None
     tested = 0
     valid = 0
@@ -844,6 +904,10 @@ def _search_best_candidate(
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Program entrypoint for this script."""
+    # ---------------------------------------------------------------------
+    # Phase 1: Load geometry inputs and derive 500m/1000m operating zones.
+    # ---------------------------------------------------------------------
     args = _parse_args(argv)
     use_fast = not args.auto
     merged_border_lng_lat = _load_border_geometry(MERGED_BORDER_PATH)
@@ -875,6 +939,9 @@ def main(argv: list[str] | None = None) -> int:
     zone500_xy = projection.geom_to_xy(zone500_lng_lat)
     zone1000_xy = projection.geom_to_xy(zone1000_lng_lat)
 
+    # ---------------------------------------------------------------------
+    # Phase 2: Run spacing search (fast, fast-local, or full auto mode).
+    # ---------------------------------------------------------------------
     search_mode = "fast"
     coarse_tested = 0
     coarse_valid = 0
@@ -974,6 +1041,9 @@ def main(argv: list[str] | None = None) -> int:
         if fine_best is not None and _is_better_candidate(fine_best, best_candidate):
             best_candidate = fine_best
 
+    # ---------------------------------------------------------------------
+    # Phase 3: Re-validate final candidate before writing output.
+    # ---------------------------------------------------------------------
     records = best_candidate.records
     violations = _validate_no_full_swallow(records, projection)
     if violations:
@@ -991,6 +1061,7 @@ def main(argv: list[str] | None = None) -> int:
             f"{EXACT_COVERAGE_TOLERANCE_M2:.6f} m^2"
         )
 
+    # Persist final candidate for downstream collection scripts.
     OUTPUT_PATH.write_text(json.dumps(records, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
 
     count500 = best_candidate.count500
