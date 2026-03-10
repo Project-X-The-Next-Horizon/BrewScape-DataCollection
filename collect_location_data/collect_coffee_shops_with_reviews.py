@@ -21,6 +21,7 @@ from __future__ import annotations
 import csv
 import json
 import math
+import os
 import sys
 import time
 from dataclasses import dataclass
@@ -29,8 +30,6 @@ from pathlib import Path
 from typing import Any
 from urllib import error, parse, request
 
-
-API_KEY = "AIzaSyBkpabPLS7ejjyE7ckd65w540bA8_CkgtU"
 
 # Places API (New) endpoints used by this collector.
 NEARBY_URL = "https://places.googleapis.com/v1/places:searchNearby"
@@ -65,6 +64,50 @@ CSV_COLUMNS = [
 REPO_ROOT = Path(__file__).resolve().parent
 INPUT_PATH = REPO_ROOT / "lat_lng_radius.json"
 OUTPUT_PATH = REPO_ROOT / "coffee_shops_with_reviews.csv"
+ENV_PATH = REPO_ROOT / ".env"
+API_KEY_ENV_VAR = "GOOGLE_PLACES_API_KEY"
+
+
+def _load_dotenv(path: Path) -> None:
+    """Populate process environment variables from a simple .env file."""
+    if not path.exists():
+        return
+
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError as exc:
+        print(f"[WARN] Could not read {path}: {exc}", file=sys.stderr)
+        return
+
+    for line_number, line in enumerate(lines, start=1):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        if stripped.startswith("export "):
+            stripped = stripped[7:].strip()
+
+        if "=" not in stripped:
+            print(
+                f"[WARN] Ignoring invalid .env line {line_number} in {path}.",
+                file=sys.stderr,
+            )
+            continue
+
+        key, value = stripped.split("=", maxsplit=1)
+        key = key.strip()
+        value = value.strip()
+        if not key:
+            continue
+
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+            value = value[1:-1]
+
+        os.environ.setdefault(key, value)
+
+
+_load_dotenv(ENV_PATH)
+API_KEY = os.environ.get(API_KEY_ENV_VAR, "").strip()
 
 
 @dataclass
@@ -290,7 +333,7 @@ def _collect_place_ids_for_location(
 
     # Nearby Search (New): strict type and strict circular restriction.
     nearby_payload = {
-        "includedTypes": ["coffee_shop"],
+        "includedTypes": ["cafe"],
         "maxResultCount": 20,
         "locationRestriction": {
             "circle": {
@@ -319,8 +362,8 @@ def _collect_place_ids_for_location(
     while len(ordered_ids) < PER_LOCATION_CAP:
         # Text Search fallback is used only when nearby is insufficient.
         text_payload: dict[str, Any] = {
-            "textQuery": "coffee shop",
-            "includedType": "coffee_shop",
+            "textQuery": "cafe",
+            "includedType": "cafe",
             "strictTypeFiltering": True,
             "pageSize": 20,
             "locationBias": {
@@ -559,8 +602,7 @@ def main() -> int:
     """Run the full coffee-shop collection pipeline."""
     if _is_placeholder_key(API_KEY):
         print(
-            "Error: set API_KEY in this script before running "
-            "(current value is placeholder).",
+            f"Error: set {API_KEY_ENV_VAR} in {ENV_PATH} or your environment before running.",
             file=sys.stderr,
         )
         return 1
