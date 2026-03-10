@@ -3,10 +3,11 @@
 Render an interactive map from the collected coffee-shop CSV dataset.
 
 Data flow (high level):
-1) Load CSV rows from collect_location_data/coffee_shops_with_reviews.csv.
+1) Load CSV rows from the current folder or collect_location_data/coffee_shops_with_reviews.csv.
 2) Validate and extract latitude/longitude for each row.
 3) Build a popup per valid point with place metadata and up to 5 review snippets.
-4) Render the points on a Folium map and save locations_map.html.
+4) Render the points on a Folium map, including a place-id search box, and save
+   locations_map.html.
 
 Dependency:
     pip install folium
@@ -33,7 +34,10 @@ except ImportError:  # pragma: no cover
 
 
 REPO_ROOT = Path(__file__).resolve().parent
-INPUT_PATH = REPO_ROOT.parent / "collect_location_data" / "coffee_shops_with_reviews.csv"
+INPUT_PATH_CANDIDATES = (
+    REPO_ROOT / "coffee_shops_with_reviews.csv",
+    REPO_ROOT.parent / "collect_location_data" / "coffee_shops_with_reviews.csv",
+)
 OUTPUT_PATH = REPO_ROOT / "locations_map.html"
 
 
@@ -98,6 +102,14 @@ def _load_records(path: Path) -> list[dict[str, str]]:
         raise SystemExit(1)
 
     return rows
+
+
+def _resolve_input_path(candidates: tuple[Path, ...]) -> Path | None:
+    """Return the first existing CSV path from the configured candidates."""
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return None
 
 
 def _build_popup_html(record: dict[str, Any], lat: float, lng: float) -> str:
@@ -172,6 +184,8 @@ def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
             {
                 "lat": lat,
                 "lng": lng,
+                "name": _to_text(record.get("name")) or "",
+                "place_id": _to_text(record.get("place_id")) or "",
                 "popup_html": _build_popup_html(record, lat, lng),
             }
         )
@@ -229,6 +243,219 @@ def _add_location_count_overlay(
     point_map.get_root().script.add_child(folium.Element(script))
 
 
+def _add_place_id_search_overlay(
+    point_map: folium.Map, points: list[dict[str, Any]], marker_names: list[str]
+) -> None:
+    """Inject a search box that jumps to a marker by place_id."""
+    search_box_id = "place-id-search-box"
+    search_button_id = "place-id-search-button"
+    status_id = "place-id-search-status"
+    overlay_html = (
+        "<div "
+        "style='"
+        "position: fixed; top: 24px; left: 24px; z-index: 9999; width: 320px; "
+        "background: rgba(255, 255, 255, 0.96); border: 1px solid #bbb; "
+        "border-radius: 8px; padding: 10px 12px; "
+        "box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15); "
+        "font-family: Arial, sans-serif; font-size: 12px; line-height: 1.35;'>"
+        "<div style='font-weight: 600; margin-bottom: 6px;'>Search by Place ID</div>"
+        f"<input id='{search_box_id}' type='text' placeholder='Enter place_id' "
+        "style='width: 100%; box-sizing: border-box; padding: 6px 8px; "
+        "border: 1px solid #bbb; border-radius: 4px; margin-bottom: 8px;'>"
+        f"<button id='{search_button_id}' type='button' "
+        "style='width: 100%; padding: 6px 8px; border: 1px solid #2c5aa0; "
+        "border-radius: 4px; background: #2c5aa0; color: white; cursor: pointer;'>"
+        "Find location"
+        "</button>"
+        f"<div id='{status_id}' style='margin-top: 8px; min-height: 16px; color: #444; "
+        "padding: 8px 10px; border-radius: 6px; background: #f7f7f7; border: 1px solid #e0e0e0;'>"
+        "Enter a place_id to center the map on that marker."
+        "</div>"
+        "</div>"
+    )
+    point_map.get_root().html.add_child(folium.Element(overlay_html))
+
+    searchable_entries = []
+    for point, marker_name in zip(points, marker_names, strict=True):
+        if not point["place_id"]:
+            continue
+        searchable_entries.append(
+            "{"
+            f"placeId:{json.dumps(point['place_id'])},"
+            f"name:{json.dumps(point['name'])},"
+            f"normalizedPlaceId:{json.dumps(point['place_id'].strip().lower())},"
+            f"lat:{point['lat']},"
+            f"lng:{point['lng']},"
+            f"markerName:{json.dumps(marker_name)}"
+            "}"
+        )
+
+    searchable_locations = "[\n" + ",\n".join(searchable_entries) + "\n]"
+    map_name = point_map.get_name()
+    script = f"""
+    const searchableLocations = {searchable_locations};
+    const defaultMarkerStyle = {{
+        radius: 3,
+        color: "#1f77b4",
+        weight: 1,
+        fillColor: "#1f77b4",
+        fillOpacity: 1.0,
+    }};
+    const highlightedMarkerStyle = {{
+        radius: 7,
+        color: "#c0392b",
+        weight: 2,
+        fillColor: "#f39c12",
+        fillOpacity: 1.0,
+    }};
+
+    window.addEventListener("load", function() {{
+        const searchInput = document.getElementById("{search_box_id}");
+        const searchButton = document.getElementById("{search_button_id}");
+        const statusText = document.getElementById("{status_id}");
+        let activeMarker = null;
+        let activeHalo = null;
+
+        function resolveMarker(location) {{
+            if (!location || !location.markerName) {{
+                return null;
+            }}
+            return globalThis[location.markerName] || null;
+        }}
+
+        function setStatus(message, tone) {{
+            if (!statusText) {{
+                return;
+            }}
+
+            statusText.textContent = message;
+            if (tone === "error") {{
+                statusText.style.background = "#fff1f0";
+                statusText.style.borderColor = "#f1b0aa";
+                statusText.style.color = "#8a1f17";
+                return;
+            }}
+
+            if (tone === "success") {{
+                statusText.style.background = "#eef8ec";
+                statusText.style.borderColor = "#9dcca1";
+                statusText.style.color = "#1f5f28";
+                return;
+            }}
+
+            statusText.style.background = "#f7f7f7";
+            statusText.style.borderColor = "#e0e0e0";
+            statusText.style.color = "#444";
+        }}
+
+        function resetMarkerHighlight() {{
+            if (!activeMarker) {{
+                if (activeHalo) {{
+                    {map_name}.removeLayer(activeHalo);
+                    activeHalo = null;
+                }}
+                return;
+            }}
+            activeMarker.setStyle(defaultMarkerStyle);
+            activeMarker.setRadius(defaultMarkerStyle.radius);
+            activeMarker = null;
+            if (activeHalo) {{
+                {map_name}.removeLayer(activeHalo);
+                activeHalo = null;
+            }}
+        }}
+
+        function highlightMarker(location, marker) {{
+            resetMarkerHighlight();
+            marker.setStyle(highlightedMarkerStyle);
+            marker.setRadius(highlightedMarkerStyle.radius);
+            activeMarker = marker;
+            activeHalo = L.circle([location.lat, location.lng], {{
+                radius: 45,
+                color: "#d35400",
+                weight: 2,
+                fillColor: "#f1c40f",
+                fillOpacity: 0.18,
+                interactive: false,
+            }}).addTo({map_name});
+            marker.bringToFront();
+        }}
+
+        function runSearch() {{
+            if (!searchInput || !statusText) {{
+                return;
+            }}
+
+            const rawQuery = searchInput.value.trim();
+            const query = rawQuery.toLowerCase();
+            if (!query) {{
+                resetMarkerHighlight();
+                setStatus("Enter a place_id to search.", "neutral");
+                return;
+            }}
+
+            const exactMatches = searchableLocations.filter(function(location) {{
+                return location.normalizedPlaceId === query;
+            }});
+            const matches = exactMatches.length > 0
+                ? exactMatches
+                : searchableLocations.filter(function(location) {{
+                    return location.normalizedPlaceId.includes(query);
+                }});
+
+            if (matches.length === 0) {{
+                resetMarkerHighlight();
+                setStatus(`No place_id match for "${{rawQuery}}".`, "error");
+                return;
+            }}
+
+            const selected = matches[0];
+            const marker = resolveMarker(selected);
+            if (!marker) {{
+                resetMarkerHighlight();
+                setStatus(
+                    "Matched a place_id, but the marker could not be loaded. Refresh the page and try again.",
+                    "error",
+                );
+                return;
+            }}
+
+            highlightMarker(selected, marker);
+            {map_name}.setView([selected.lat, selected.lng], Math.max({map_name}.getZoom(), 16), {{
+                animate: true,
+            }});
+            marker.openPopup();
+
+            if (matches.length === 1) {{
+                setStatus(selected.name
+                    ? `Showing ${{selected.placeId}} (${{selected.name}}).`
+                    : `Showing ${{selected.placeId}}.`, "success");
+                return;
+            }}
+
+            setStatus(selected.name
+                ? `Showing first of ${{matches.length}} matches: ${{selected.placeId}} (${{selected.name}}).`
+                : `Showing first of ${{matches.length}} matches: ${{selected.placeId}}.`, "success");
+        }}
+
+        if (searchButton) {{
+            searchButton.addEventListener("click", runSearch);
+        }}
+
+        if (searchInput) {{
+            searchInput.addEventListener("keydown", function(event) {{
+                if (event.key !== "Enter") {{
+                    return;
+                }}
+                event.preventDefault();
+                runSearch();
+            }});
+        }}
+    }});
+    """
+    point_map.get_root().script.add_child(folium.Element(script))
+
+
 def _build_map(points: list[dict[str, Any]]) -> folium.Map:
     """Create a Folium map, place all markers, and fit camera bounds to data."""
     lats = [point["lat"] for point in points]
@@ -237,9 +464,10 @@ def _build_map(points: list[dict[str, Any]]) -> folium.Map:
 
     # Use OpenStreetMap tiles for a lightweight default base layer.
     point_map = folium.Map(location=center, tiles="OpenStreetMap", zoom_start=10)
+    marker_names: list[str] = []
 
     for point in points:
-        folium.CircleMarker(
+        marker = folium.CircleMarker(
             location=[point["lat"], point["lng"]],
             radius=3,
             color="#1f77b4",
@@ -248,20 +476,28 @@ def _build_map(points: list[dict[str, Any]]) -> folium.Map:
             fill_color="#1f77b4",
             fill_opacity=1.0,
             popup=folium.Popup(point["popup_html"], max_width=420),
-        ).add_to(point_map)
+        )
+        marker.add_to(point_map)
+        marker_names.append(marker.get_name())
 
     point_map.fit_bounds([[min(lats), min(lngs)], [max(lats), max(lngs)]])
     _add_location_count_overlay(point_map, points)
+    _add_place_id_search_overlay(point_map, points, marker_names)
     return point_map
 
 
 def main() -> int:
     """Entrypoint for generating locations_map.html from the CSV input."""
-    if not INPUT_PATH.exists():
-        print(f"Error: input file not found: {INPUT_PATH}", file=sys.stderr)
+    input_path = _resolve_input_path(INPUT_PATH_CANDIDATES)
+    if input_path is None:
+        checked_paths = ", ".join(str(path) for path in INPUT_PATH_CANDIDATES)
+        print(
+            f"Error: input file not found. Checked: {checked_paths}",
+            file=sys.stderr,
+        )
         return 1
 
-    records = _load_records(INPUT_PATH)
+    records = _load_records(input_path)
     points, skipped = _extract_points(records)
 
     if not points:
@@ -276,6 +512,7 @@ def main() -> int:
     point_map.save(str(OUTPUT_PATH))
 
     print(
+        f"Input: {input_path} | "
         f"Total records: {len(records)} | "
         f"Plotted points: {len(points)} | "
         f"Skipped points: {skipped} | "

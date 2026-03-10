@@ -24,8 +24,8 @@ REPO_ROOT = Path(__file__).resolve().parent
 BORDER_PATH = REPO_ROOT / "chiang_mai_main_area_merged_border.geojson"
 OUTPUT_PATH = REPO_ROOT / "lat_lng_radius.json"
 
-GRID_SIZE_M = 1000.0
-OUTPUT_RADIUS_M = 1000.0
+GRID_SIZE_M = 500.0
+OUTPUT_RADIUS_M = 500.0
 EPS = 1e-9
 
 
