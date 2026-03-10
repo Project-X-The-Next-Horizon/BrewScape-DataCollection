@@ -15,6 +15,7 @@ Dependency:
 from __future__ import annotations
 
 import csv
+import json
 import sys
 from html import escape
 from pathlib import Path
@@ -178,6 +179,56 @@ def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
     return points, skipped
 
 
+def _add_location_count_overlay(
+    point_map: folium.Map, points: list[dict[str, Any]]
+) -> None:
+    """Inject a fixed overlay that shows plotted and in-view location counts."""
+    overlay_id = "location-count-overlay"
+    count_id = "location-count-overlay-text"
+    overlay_html = (
+        "<div "
+        f"id='{overlay_id}' "
+        "style='"
+        "position: fixed; bottom: 24px; right: 24px; z-index: 9999; "
+        "background: white; border: 1px solid #bbb; border-radius: 6px; "
+        "padding: 8px 10px; font-family: Arial, sans-serif; font-size: 12px; "
+        "line-height: 1.35; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15); "
+        "pointer-events: none;'>"
+        f"<div id='{count_id}'>Total plotted: {len(points)} | In view: {len(points)}</div>"
+        "</div>"
+    )
+    point_map.get_root().html.add_child(folium.Element(overlay_html))
+
+    plotted_locations = json.dumps(
+        [[point["lat"], point["lng"]] for point in points], separators=(",", ":")
+    )
+    map_name = point_map.get_name()
+    script = f"""
+    const plottedLocations = {plotted_locations};
+    const locationCountText = document.getElementById("{count_id}");
+
+    window.addEventListener("load", function() {{
+        function updateLocationCounts() {{
+            if (!locationCountText) {{
+                return;
+            }}
+
+            const bounds = {map_name}.getBounds();
+            const inViewCount = plottedLocations.reduce((count, location) => {{
+                return count + (bounds.contains(L.latLng(location[0], location[1])) ? 1 : 0);
+            }}, 0);
+
+            locationCountText.textContent =
+                `Total plotted: ${{plottedLocations.length}} | In view: ${{inViewCount}}`;
+        }}
+
+        {map_name}.on("moveend", updateLocationCounts);
+        updateLocationCounts();
+    }});
+    """
+    point_map.get_root().script.add_child(folium.Element(script))
+
+
 def _build_map(points: list[dict[str, Any]]) -> folium.Map:
     """Create a Folium map, place all markers, and fit camera bounds to data."""
     lats = [point["lat"] for point in points]
@@ -200,6 +251,7 @@ def _build_map(points: list[dict[str, Any]]) -> folium.Map:
         ).add_to(point_map)
 
     point_map.fit_bounds([[min(lats), min(lngs)], [max(lats), max(lngs)]])
+    _add_location_count_overlay(point_map, points)
     return point_map
 
 
