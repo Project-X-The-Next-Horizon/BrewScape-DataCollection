@@ -1,0 +1,663 @@
+#!/usr/bin/env python3
+"""
+Collect coffee shop data and reviews from Google Places API (New).
+
+Input:
+    lat_lng_radius.json (array of objects with lat, lng, radius)
+
+Output:
+    coffee_shops_with_reviews.csv
+
+Execution flow:
+1) Validate location seeds from lat_lng_radius.json.
+2) Collect place IDs per location with Nearby Search (New).
+3) If needed, continue with Text Search (New) pagination to reach up to 60 IDs.
+4) Enforce global place_id de-duplication across all location seeds.
+5) Fetch Place Details (New), extract ratings/reviews, and write one CSV row per place.
+"""
+
+from __future__ import annotations
+
+import csv
+import json
+import math
+import os
+import sys
+import time
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+from urllib import error, parse, request
+
+
+# Places API (New) endpoints used by this collector.
+NEARBY_URL = "https://places.googleapis.com/v1/places:searchNearby"
+TEXT_URL = "https://places.googleapis.com/v1/places:searchText"
+DETAILS_URL_TEMPLATE = "https://places.googleapis.com/v1/places/{place_id}"
+
+# Safety and collection behavior tuning.
+SLEEP_SECONDS = 0.2
+PER_LOCATION_CAP = 60
+EARTH_RADIUS_METERS = 6_371_008.8
+
+# Field masks are intentionally minimal to reduce payload size and API cost.
+NEARBY_FIELD_MASK = "places.id"
+TEXT_FIELD_MASK = "places.id,places.location,nextPageToken"
+DETAILS_FIELD_MASK = "id,displayName,location,rating,userRatingCount,reviews"
+
+CSV_COLUMNS = [
+    "place_id",
+    "name",
+    "lat",
+    "lon",
+    "average_rating",
+    "total_review_count",
+    "earliest_available_review_date",
+    "review_1_text",
+    "review_2_text",
+    "review_3_text",
+    "review_4_text",
+    "review_5_text",
+]
+
+REPO_ROOT = Path(__file__).resolve().parent
+INPUT_PATH = REPO_ROOT / "lat_lng_radius.json"
+OUTPUT_PATH = REPO_ROOT / "coffee_shops_with_reviews.csv"
+ENV_PATH = REPO_ROOT / ".env"
+API_KEY_ENV_VAR = "GOOGLE_PLACES_API_KEY"
+
+
+def _load_dotenv(path: Path) -> None:
+    """Populate process environment variables from a simple .env file."""
+    if not path.exists():
+        return
+
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError as exc:
+        print(f"[WARN] Could not read {path}: {exc}", file=sys.stderr)
+        return
+
+    for line_number, line in enumerate(lines, start=1):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        if stripped.startswith("export "):
+            stripped = stripped[7:].strip()
+
+        if "=" not in stripped:
+            print(
+                f"[WARN] Ignoring invalid .env line {line_number} in {path}.",
+                file=sys.stderr,
+            )
+            continue
+
+        key, value = stripped.split("=", maxsplit=1)
+        key = key.strip()
+        value = value.strip()
+        if not key:
+            continue
+
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+            value = value[1:-1]
+
+        os.environ.setdefault(key, value)
+
+
+_load_dotenv(ENV_PATH)
+API_KEY = os.environ.get(API_KEY_ENV_VAR, "").strip()
+
+
+@dataclass
+class Location:
+    """Validated location seed loaded from input JSON."""
+
+    lat: float
+    lng: float
+    radius: float
+    input_index: int
+
+
+@dataclass
+class Stats:
+    """Runtime counters for progress reporting and debugging."""
+
+    total_locations_read: int = 0
+    valid_locations_processed: int = 0
+    invalid_locations_skipped: int = 0
+    total_ids_discovered: int = 0
+    unique_places_written: int = 0
+    duplicate_place_ids_skipped: int = 0
+    api_errors: int = 0
+    details_errors: int = 0
+
+
+def _is_placeholder_key(value: str) -> bool:
+    """Return True when API key has not been replaced with a real key."""
+    return not value.strip() or value.strip() == "YOUR_API_KEY_HERE"
+
+
+def _to_float(value: Any) -> float | None:
+    """Best-effort numeric conversion used for permissive input parsing."""
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        text = value.strip()
+        if not text:
+            return None
+        try:
+            return float(text)
+        except ValueError:
+            return None
+    return None
+
+
+def _load_locations(path: Path, stats: Stats) -> list[Location]:
+    """Load and validate input location seeds.
+
+    Validation rules:
+    - lat/lng/radius must be present and numeric
+    - lat in [-90, 90], lng in [-180, 180]
+    - radius in (0, 50000] to comply with Places API circle limits
+    """
+    if not path.exists():
+        print(f"Error: input file not found: {path}", file=sys.stderr)
+        raise SystemExit(1)
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        print(f"Error: invalid JSON in {path}: {exc}", file=sys.stderr)
+        raise SystemExit(1)
+
+    if not isinstance(payload, list):
+        print(f"Error: expected a JSON array in {path}.", file=sys.stderr)
+        raise SystemExit(1)
+
+    stats.total_locations_read = len(payload)
+    locations: list[Location] = []
+
+    for index, row in enumerate(payload, start=1):
+        if not isinstance(row, dict):
+            stats.invalid_locations_skipped += 1
+            print(f"[WARN] Skipping row {index}: expected object.", file=sys.stderr)
+            continue
+
+        # Accept either numeric or numeric-string values in JSON.
+        lat = _to_float(row.get("lat"))
+        lng = _to_float(row.get("lng"))
+        radius = _to_float(row.get("radius"))
+
+        if lat is None or lng is None or radius is None:
+            stats.invalid_locations_skipped += 1
+            print(
+                f"[WARN] Skipping row {index}: missing/invalid lat,lng,radius.",
+                file=sys.stderr,
+            )
+            continue
+
+        if not (-90.0 <= lat <= 90.0 and -180.0 <= lng <= 180.0):
+            stats.invalid_locations_skipped += 1
+            print(f"[WARN] Skipping row {index}: lat/lng out of range.", file=sys.stderr)
+            continue
+
+        # Places API (New) circle radius supports up to 50km.
+        if not (0.0 < radius <= 50_000.0):
+            stats.invalid_locations_skipped += 1
+            print(
+                f"[WARN] Skipping row {index}: radius must be in (0, 50000].",
+                file=sys.stderr,
+            )
+            continue
+
+        locations.append(Location(lat=lat, lng=lng, radius=radius, input_index=index))
+
+    return locations
+
+
+def _request_json(
+    *,
+    method: str,
+    url: str,
+    field_mask: str,
+    stats: Stats,
+    context: str,
+    payload: dict[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    """Perform one API request and decode JSON safely.
+
+    Returns:
+    - dict on success
+    - {} when server returns an empty body
+    - None on HTTP/network/parse failure
+
+    Side effects:
+    - Increments API error counters on failures
+    - Sleeps SLEEP_SECONDS in finally block for rate limiting
+    """
+    headers = {
+        "X-Goog-Api-Key": API_KEY,
+        "X-Goog-FieldMask": field_mask,
+    }
+    data: bytes | None = None
+    if payload is not None:
+        # POST payloads are compact-encoded to reduce wire size.
+        headers["Content-Type"] = "application/json"
+        data = json.dumps(payload, separators=(",", ":")).encode("utf-8")
+
+    req = request.Request(url=url, data=data, method=method, headers=headers)
+    try:
+        with request.urlopen(req, timeout=40) as response:
+            raw = response.read()
+            if not raw:
+                return {}
+            try:
+                decoded = raw.decode("utf-8")
+            except UnicodeDecodeError:
+                decoded = raw.decode("utf-8", errors="replace")
+            return json.loads(decoded)
+    except error.HTTPError as exc:
+        try:
+            body = exc.read().decode("utf-8", errors="replace")
+        except Exception:
+            body = ""
+        if len(body) > 500:
+            body = body[:500] + "...(truncated)"
+        print(
+            f"[API ERROR] {context} -> HTTP {exc.code}: {body or exc.reason}",
+            file=sys.stderr,
+        )
+        stats.api_errors += 1
+    except error.URLError as exc:
+        print(f"[API ERROR] {context} -> URL error: {exc.reason}", file=sys.stderr)
+        stats.api_errors += 1
+    except TimeoutError:
+        print(f"[API ERROR] {context} -> request timed out.", file=sys.stderr)
+        stats.api_errors += 1
+    except json.JSONDecodeError as exc:
+        print(f"[API ERROR] {context} -> invalid JSON response: {exc}", file=sys.stderr)
+        stats.api_errors += 1
+    finally:
+        # Global pacing guard for both successful and failed calls.
+        time.sleep(SLEEP_SECONDS)
+
+    return None
+
+
+def _haversine_meters(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    """Great-circle distance between two lat/lng points in meters."""
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    d_phi = math.radians(lat2 - lat1)
+    d_lam = math.radians(lng2 - lng1)
+
+    a = (
+        math.sin(d_phi / 2.0) ** 2
+        + math.cos(phi1) * math.cos(phi2) * math.sin(d_lam / 2.0) ** 2
+    )
+    c = 2.0 * math.atan2(math.sqrt(a), math.sqrt(1.0 - a))
+    return EARTH_RADIUS_METERS * c
+
+
+def _add_place_id(place_id: Any, seen: set[str], ordered_ids: list[str]) -> None:
+    """Add a place ID once while preserving first-seen order."""
+    if not isinstance(place_id, str):
+        return
+    candidate = place_id.strip()
+    if not candidate or candidate in seen:
+        return
+    seen.add(candidate)
+    ordered_ids.append(candidate)
+
+
+def _collect_place_ids_for_location(
+    location: Location,
+    location_seq: int,
+    total_locations: int,
+    stats: Stats,
+) -> list[str]:
+    """Collect up to PER_LOCATION_CAP unique place IDs for one location seed.
+
+    Strategy:
+    1) searchNearby (New) using strict locationRestriction.
+    2) If count < cap, continue with searchText (New) pagination.
+    3) For text search results, apply explicit haversine radius filtering because
+       locationBias is a preference signal rather than a strict boundary.
+    """
+    ordered_ids: list[str] = []
+    seen_ids: set[str] = set()
+
+    # Nearby Search (New): strict type and strict circular restriction.
+    nearby_payload = {
+        "includedTypes": ["cafe"],
+        "maxResultCount": 20,
+        "locationRestriction": {
+            "circle": {
+                "center": {"latitude": location.lat, "longitude": location.lng},
+                "radius": location.radius,
+            }
+        },
+    }
+    nearby_response = _request_json(
+        method="POST",
+        url=NEARBY_URL,
+        field_mask=NEARBY_FIELD_MASK,
+        stats=stats,
+        context=(
+            "searchNearby "
+            f"(location {location_seq}/{total_locations}, input row {location.input_index})"
+        ),
+        payload=nearby_payload,
+    )
+    if nearby_response and isinstance(nearby_response.get("places"), list):
+        for place in nearby_response["places"]:
+            if isinstance(place, dict):
+                _add_place_id(place.get("id"), seen_ids, ordered_ids)
+
+    next_page_token: str | None = None
+    while len(ordered_ids) < PER_LOCATION_CAP:
+        # Text Search fallback is used only when nearby is insufficient.
+        text_payload: dict[str, Any] = {
+            "textQuery": "cafe",
+            "includedType": "cafe",
+            "strictTypeFiltering": True,
+            "pageSize": 20,
+            "locationBias": {
+                "circle": {
+                    "center": {"latitude": location.lat, "longitude": location.lng},
+                    "radius": location.radius,
+                }
+            },
+        }
+        if next_page_token:
+            text_payload["pageToken"] = next_page_token
+
+        text_response = _request_json(
+            method="POST",
+            url=TEXT_URL,
+            field_mask=TEXT_FIELD_MASK,
+            stats=stats,
+            context=(
+                "searchText "
+                f"(location {location_seq}/{total_locations}, input row {location.input_index}, "
+                f"page_token={'yes' if next_page_token else 'no'})"
+            ),
+            payload=text_payload,
+        )
+        if text_response is None:
+            break
+
+        places = text_response.get("places")
+        if isinstance(places, list):
+            for place in places:
+                if not isinstance(place, dict):
+                    continue
+
+                place_id = place.get("id")
+                place_location = place.get("location")
+                if not isinstance(place_location, dict):
+                    continue
+
+                place_lat = _to_float(place_location.get("latitude"))
+                place_lng = _to_float(place_location.get("longitude"))
+                if place_lat is None or place_lng is None:
+                    continue
+
+                # Hard client-side distance cut to keep results inside input radius.
+                distance = _haversine_meters(
+                    location.lat, location.lng, place_lat, place_lng
+                )
+                if distance <= location.radius:
+                    _add_place_id(place_id, seen_ids, ordered_ids)
+                if len(ordered_ids) >= PER_LOCATION_CAP:
+                    break
+
+        if len(ordered_ids) >= PER_LOCATION_CAP:
+            break
+
+        token = text_response.get("nextPageToken")
+        if not isinstance(token, str) or not token.strip():
+            break
+
+        # Defensive guard against accidental token loops.
+        token = token.strip()
+        if token == next_page_token:
+            break
+        next_page_token = token
+
+    print(
+        f"[INFO] Location {location_seq}/{total_locations} (input row {location.input_index}) "
+        f"collected {len(ordered_ids)} unique place IDs."
+    )
+    return ordered_ids
+
+
+def _extract_localized_text(value: Any) -> str:
+    """Extract text from Google LocalizedText objects or raw string values."""
+    if isinstance(value, dict):
+        text = value.get("text")
+        if isinstance(text, str):
+            return text.strip()
+    if isinstance(value, str):
+        return value.strip()
+    return ""
+
+
+def _extract_review_text(review: dict[str, Any]) -> str:
+    """Prefer translated/localized review text and fallback to original text."""
+    text = _extract_localized_text(review.get("text"))
+    if text:
+        return text
+    return _extract_localized_text(review.get("originalText"))
+
+
+def _parse_publish_time(value: str) -> datetime | None:
+    """Parse RFC3339-like timestamps returned by Places reviews."""
+    text = value.strip()
+    if not text:
+        return None
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    try:
+        return datetime.fromisoformat(text)
+    except ValueError:
+        return None
+
+
+def _extract_earliest_available_review_date(reviews: list[dict[str, Any]]) -> str:
+    """Compute oldest review date from the up-to-5 review payload.
+
+    Note:
+    Places Details (New) returns a maximum of 5 reviews, so this date is
+    "earliest among currently returned reviews", not the place's true first review.
+    """
+    parsed_times: list[datetime] = []
+    fallback_raw_times: list[str] = []
+
+    for review in reviews:
+        publish_time = review.get("publishTime")
+        if not isinstance(publish_time, str):
+            continue
+
+        publish_time = publish_time.strip()
+        if not publish_time:
+            continue
+
+        fallback_raw_times.append(publish_time)
+        parsed = _parse_publish_time(publish_time)
+        if parsed is not None:
+            parsed_times.append(parsed)
+
+    if parsed_times:
+        return min(parsed_times).date().isoformat()
+
+    if fallback_raw_times:
+        raw = min(fallback_raw_times)
+        if "T" in raw:
+            return raw.split("T", maxsplit=1)[0]
+        return raw[:10]
+
+    return ""
+
+
+def _extract_place_row(details: dict[str, Any], fallback_place_id: str) -> dict[str, Any]:
+    """Transform a Place Details response into one CSV row."""
+    # Prefer API-provided id, but keep the queried id as a safety fallback.
+    place_id = details.get("id")
+    if not isinstance(place_id, str) or not place_id.strip():
+        place_id = fallback_place_id
+
+    # displayName is a LocalizedText object in Places API (New).
+    display_name = _extract_localized_text(details.get("displayName"))
+    place_location = details.get("location")
+    lat: float | str = ""
+    lon: float | str = ""
+    if isinstance(place_location, dict):
+        lat_value = _to_float(place_location.get("latitude"))
+        lon_value = _to_float(place_location.get("longitude"))
+        if lat_value is not None:
+            lat = lat_value
+        if lon_value is not None:
+            lon = lon_value
+
+    rating = _to_float(details.get("rating"))
+    user_rating_count = details.get("userRatingCount")
+    if isinstance(user_rating_count, bool):
+        user_rating_count = ""
+    elif not isinstance(user_rating_count, int):
+        if isinstance(user_rating_count, float):
+            user_rating_count = int(user_rating_count)
+        elif isinstance(user_rating_count, str) and user_rating_count.strip().isdigit():
+            user_rating_count = int(user_rating_count.strip())
+        else:
+            user_rating_count = ""
+
+    # The API may return fewer than 5 reviews or none at all.
+    reviews_raw = details.get("reviews")
+    reviews: list[dict[str, Any]] = []
+    if isinstance(reviews_raw, list):
+        for review in reviews_raw[:5]:
+            if isinstance(review, dict):
+                reviews.append(review)
+
+    review_texts = [_extract_review_text(review) for review in reviews]
+    while len(review_texts) < 5:
+        review_texts.append("")
+
+    earliest_date = _extract_earliest_available_review_date(reviews)
+
+    row: dict[str, Any] = {
+        "place_id": place_id,
+        "name": display_name,
+        "lat": lat,
+        "lon": lon,
+        "average_rating": rating if rating is not None else "",
+        "total_review_count": user_rating_count,
+        "earliest_available_review_date": earliest_date,
+        "review_1_text": review_texts[0],
+        "review_2_text": review_texts[1],
+        "review_3_text": review_texts[2],
+        "review_4_text": review_texts[3],
+        "review_5_text": review_texts[4],
+    }
+    return row
+
+
+def _fetch_place_details(place_id: str, stats: Stats) -> dict[str, Any] | None:
+    """Fetch details for one place and return normalized CSV-ready data."""
+    url = DETAILS_URL_TEMPLATE.format(place_id=parse.quote(place_id, safe=""))
+    details = _request_json(
+        method="GET",
+        url=url,
+        field_mask=DETAILS_FIELD_MASK,
+        stats=stats,
+        context=f"placeDetails (place_id={place_id})",
+    )
+    if details is None:
+        stats.details_errors += 1
+        return None
+    if not isinstance(details, dict):
+        stats.details_errors += 1
+        print(
+            f"[API ERROR] placeDetails (place_id={place_id}) -> unexpected response type.",
+            file=sys.stderr,
+        )
+        return None
+    return _extract_place_row(details, place_id)
+
+
+def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+    """Write collected place rows to the final UTF-8 CSV output."""
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=CSV_COLUMNS)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def main() -> int:
+    """Run the full coffee-shop collection pipeline."""
+    if _is_placeholder_key(API_KEY):
+        print(
+            f"Error: set {API_KEY_ENV_VAR} in {ENV_PATH} or your environment before running.",
+            file=sys.stderr,
+        )
+        return 1
+
+    stats = Stats()
+    locations = _load_locations(INPUT_PATH, stats)
+    if not locations:
+        print("Error: no valid locations to process.", file=sys.stderr)
+        return 1
+
+    total_locations = len(locations)
+    processed_place_ids: set[str] = set()
+    rows: list[dict[str, Any]] = []
+
+    for sequence, location in enumerate(locations, start=1):
+        place_ids = _collect_place_ids_for_location(
+            location=location,
+            location_seq=sequence,
+            total_locations=total_locations,
+            stats=stats,
+        )
+        stats.valid_locations_processed += 1
+        stats.total_ids_discovered += len(place_ids)
+
+        for place_id in place_ids:
+            # Global de-dup prevents repeated details lookups across overlapping circles.
+            if place_id in processed_place_ids:
+                stats.duplicate_place_ids_skipped += 1
+                continue
+
+            row = _fetch_place_details(place_id, stats)
+            if row is None:
+                continue
+
+            rows.append(row)
+            processed_place_ids.add(place_id)
+            stats.unique_places_written += 1
+
+    _write_csv(OUTPUT_PATH, rows)
+
+    print("")
+    print("Collection complete.")
+    print(f"Input file: {INPUT_PATH}")
+    print(f"Output file: {OUTPUT_PATH}")
+    print(f"Total locations read: {stats.total_locations_read}")
+    print(f"Valid locations processed: {stats.valid_locations_processed}")
+    print(f"Invalid locations skipped: {stats.invalid_locations_skipped}")
+    print(f"Total IDs discovered (per-location sum): {stats.total_ids_discovered}")
+    print(f"Total unique places written: {stats.unique_places_written}")
+    print(f"Skipped duplicate place IDs: {stats.duplicate_place_ids_skipped}")
+    print(f"API errors: {stats.api_errors}")
+    print(f"Place details errors: {stats.details_errors}")
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
