@@ -36,7 +36,7 @@ except ImportError:  # pragma: no cover
 REPO_ROOT = Path(__file__).resolve().parent
 INPUT_PATH_CANDIDATES = (
     REPO_ROOT / "coffee_shops_with_reviews.csv",
-    REPO_ROOT.parent / "collect_location_data" / "coffee_shops_with_reviews.csv",
+    REPO_ROOT.parent / "visualise_locations" / "coffee_shops_with_reviews.csv",
 )
 OUTPUT_PATH = REPO_ROOT / "locations_map.html"
 

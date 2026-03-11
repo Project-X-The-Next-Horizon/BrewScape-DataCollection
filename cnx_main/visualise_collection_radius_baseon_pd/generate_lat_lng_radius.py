@@ -29,9 +29,11 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from shapely.geometry import Point, shape
+    from shapely.geometry import GeometryCollection, Point, shape
     from shapely.geometry.base import BaseGeometry
-    from shapely.ops import transform, unary_union
+    from shapely.ops import polygonize, transform, unary_union
+    from shapely.prepared import prep
+    from shapely.strtree import STRtree
 except ImportError:  # pragma: no cover
     import sys
 
@@ -50,9 +52,15 @@ IDW_NEIGHBORS = 4
 IDW_EPS = 1e-12
 EPS = 1e-9
 EXACT_BUFFER_RESOLUTION = 64
-SEED_MIN_NN_NORM = 0.40
-PATCH_NN_NORM_THRESHOLDS = (0.50, 0.45, 0.40, 0.35, 0.25, 0.0)
+SEED_MIN_NN_NORM = 0.22
+PATCH_NN_NORM_THRESHOLDS = (0.35, 0.30, 0.25, 0.20, 0.15, 0.0)
 PATCH_FOCUS_TOP_K = 24
+DEFAULT_TARGET_SPACING_SCALE = 0.60
+TARGET_SPACING_SCORE = 0.50
+TARGET_MEAN_MULTIPLICITY = 2.50
+DEFAULT_PRUNE_MIN_COVER = 2
+DEFAULT_MIN_COVER_COUNT = 2
+DEFAULT_SOFT_MAX_COVER_COUNT = 4
 
 
 def _fatal(message: str) -> "None":
@@ -111,16 +119,16 @@ def _auto_max_radius(min_radius: int, densities: list[float]) -> int:
     q90 = _percentile(sorted_density, 0.90)
     ratio = q90 / max(q10, 1.0)
     if ratio >= 60:
-        candidate = min_radius + 1400
+        candidate = min_radius + 1500
     elif ratio >= 30:
-        candidate = min_radius + 1200
+        candidate = min_radius + 1300
     elif ratio >= 15:
-        candidate = min_radius + 1000
+        candidate = min_radius + 1100
     elif ratio >= 8:
-        candidate = min_radius + 800
+        candidate = min_radius + 900
     else:
-        candidate = min_radius + 600
-    candidate = max(min_radius + 200, min(2500, candidate))
+        candidate = min_radius + 700
+    candidate = max(min_radius + 200, min(min_radius + 1500, candidate))
     return int(round(candidate / 50.0) * 50)
 
 
@@ -238,14 +246,33 @@ class CandidateResult:
     sample_patch_added: int
     exact_patch_added: int
     prune_removed: int
-    sample_uncovered: int
-    exact_missing_area: float
+    min_sample_cover: int
+    samples_below_min: int
+    samples_above_soft_max: int
+    exact_undercovered_area: float
     overlap_ratio: float
     mean_multiplicity: float
     regularity_score: float
     off_lattice_count: int
     spacing_score: float
     elapsed_seconds: float
+
+
+@dataclass(frozen=True)
+class SampleImpact:
+    under_min_improved: int
+    newly_satisfied: int
+    extra_overlap: int
+    overflow_above_soft: int
+
+
+@dataclass
+class ExactCoverageState:
+    undercovered_geom: BaseGeometry
+    undercovered_area: float
+    deficit_area: float
+    largest_undercovered_part: BaseGeometry | None
+    geoms_by_count: dict[int, BaseGeometry]
 
 
 @dataclass(frozen=True)
@@ -358,6 +385,15 @@ def _iter_staggered_grid(bounds: tuple[float, float, float, float], spacing: flo
 def _center_key_xy(x: float, y: float) -> tuple[float, float]:
     """Helper for center key xy."""
     return round(x, 3), round(y, 3)
+
+
+def _union_geometries(parts: list[BaseGeometry]) -> BaseGeometry:
+    """Return a stable union for zero-or-more geometries."""
+    if not parts:
+        return GeometryCollection()
+    if len(parts) == 1:
+        return parts[0]
+    return unary_union(parts)
 
 
 def _point_is_covered(x: float, y: float, circles: list[CirclePlacement]) -> bool:
@@ -487,6 +523,46 @@ def _nearest_band_idx_for_radius(radius: int, lattice_bands: list[LatticeBand]) 
             best_gap = gap
             best_idx = idx
     return best_idx
+
+
+def _candidate_lattice_nodes_near_target(
+    lattice_bands: list[LatticeBand],
+    target_radius: int,
+    target_x: float,
+    target_y: float,
+    neighbor_ring: int,
+    max_distance_factor: float,
+    max_bands: int | None = None,
+) -> list[tuple[LatticeBand, int, int, float, float, float]]:
+    """Collect unique nearby lattice nodes across all bands, ordered by relevance."""
+    ordered_bands = sorted(
+        lattice_bands,
+        key=lambda band: (abs(band.band_radius - target_radius), band.band_idx),
+    )
+    if max_bands is not None:
+        ordered_bands = ordered_bands[:max_bands]
+    candidates: dict[tuple[float, float], tuple[tuple[float, float, int], LatticeBand, int, int, float, float, float]] = {}
+    for band in ordered_bands:
+        max_distance = max_distance_factor * max(float(target_radius), float(band.band_radius))
+        for row, col, x, y, lattice_dist_norm in _iter_lattice_nodes_near_target(
+            band=band,
+            target_x=target_x,
+            target_y=target_y,
+            neighbor_ring=neighbor_ring,
+            max_distance=max_distance,
+        ):
+            key = _center_key_xy(x, y)
+            score = (abs(float(band.band_radius - target_radius)), lattice_dist_norm, band.band_idx)
+            current = candidates.get(key)
+            if current is None or score < current[0]:
+                candidates[key] = (score, band, row, col, x, y, lattice_dist_norm)
+    return [
+        (band, row, col, x, y, lattice_dist_norm)
+        for _score, band, row, col, x, y, lattice_dist_norm in sorted(
+            candidates.values(),
+            key=lambda item: item[0],
+        )
+    ]
 
 
 def _iter_lattice_nodes_near_target(
@@ -627,9 +703,9 @@ def _update_coverage_state_for_circle(
             coverage_counts[idx] += 1
 
 
-def _count_uncovered(coverage_counts: list[int]) -> int:
-    """Count uncovered."""
-    return sum(1 for count in coverage_counts if count == 0)
+def _count_undercovered(coverage_counts: list[int], min_cover_count: int) -> int:
+    """Count sample points that are below the configured minimum cover."""
+    return sum(1 for count in coverage_counts if count < min_cover_count)
 
 
 def _candidate_sample_impact(
@@ -638,20 +714,51 @@ def _candidate_sample_impact(
     x: float,
     y: float,
     radius: int,
-) -> tuple[int, int]:
-    """Helper for candidate sample impact."""
+    min_cover_count: int,
+    soft_max_cover_count: int,
+) -> SampleImpact:
+    """Measure how one candidate changes under-covered and over-covered samples."""
     r2 = float(radius * radius)
-    new_cover = 0
-    overlap_increase = 0
+    under_min_improved = 0
+    newly_satisfied = 0
+    extra_overlap = 0
+    overflow_above_soft = 0
     for idx, (sx, sy) in enumerate(samples):
         dx = sx - x
         dy = sy - y
         if (dx * dx) + (dy * dy) <= r2 + EPS:
-            if coverage_counts[idx] == 0:
-                new_cover += 1
+            current_cover = coverage_counts[idx]
+            if current_cover < min_cover_count:
+                under_min_improved += 1
+                if current_cover + 1 >= min_cover_count:
+                    newly_satisfied += 1
             else:
-                overlap_increase += 1
-    return new_cover, overlap_increase
+                extra_overlap += 1
+            if current_cover + 1 > soft_max_cover_count:
+                overflow_above_soft += 1
+    return SampleImpact(
+        under_min_improved=under_min_improved,
+        newly_satisfied=newly_satisfied,
+        extra_overlap=extra_overlap,
+        overflow_above_soft=overflow_above_soft,
+    )
+
+
+def _coverage_metrics(
+    coverage_counts: list[int],
+    min_cover_count: int,
+    soft_max_cover_count: int,
+) -> tuple[float, float, int, int, int]:
+    """Summarize sample coverage relative to the configured min/max targets."""
+    if not coverage_counts:
+        return 1.0, 0.0, 0, 0, 0
+    total = len(coverage_counts)
+    cover_at_min_or_better = sum(1 for count in coverage_counts if count >= min_cover_count)
+    mean_mult = sum(coverage_counts) / total
+    min_sample_cover = min(coverage_counts)
+    below_min = sum(1 for count in coverage_counts if count < min_cover_count)
+    above_soft = sum(1 for count in coverage_counts if count > soft_max_cover_count)
+    return cover_at_min_or_better / total, mean_mult, min_sample_cover, below_min, above_soft
 
 
 def _patch_sample_coverage_max_gap(
@@ -666,6 +773,8 @@ def _patch_sample_coverage_max_gap(
     max_radius: int,
     low_log: float,
     high_log: float,
+    min_cover_count: int,
+    soft_max_cover_count: int,
     max_gap_patch_limit: int,
     lattice_patch_radius_factor: float,
     lattice_neighbor_ring: int,
@@ -675,8 +784,8 @@ def _patch_sample_coverage_max_gap(
     deadline: float,
 ) -> tuple[int, int] | None:
     """Helper for patch sample coverage max gap."""
-    initial_uncovered = _count_uncovered(coverage_counts)
-    if initial_uncovered == 0:
+    initial_undercovered = _count_undercovered(coverage_counts, min_cover_count)
+    if initial_undercovered == 0:
         return 0, 0
     added = 0
     seen_centers = {_center_key_xy(circle.x, circle.y) for circle in circles}
@@ -685,13 +794,15 @@ def _patch_sample_coverage_max_gap(
     while True:
         if time.perf_counter() > deadline:
             return None
-        uncovered_indices = [idx for idx, covered_count in enumerate(coverage_counts) if covered_count == 0]
-        if not uncovered_indices:
+        undercovered_indices = [
+            idx for idx, covered_count in enumerate(coverage_counts) if covered_count < min_cover_count
+        ]
+        if not undercovered_indices:
             break
-        uncovered_indices.sort(key=lambda idx: nearest_center_d2[idx], reverse=True)
-        focus_indices = uncovered_indices[: min(PATCH_FOCUS_TOP_K, len(uncovered_indices))]
+        undercovered_indices.sort(key=lambda idx: (coverage_counts[idx], -nearest_center_d2[idx]))
+        focus_indices = undercovered_indices[: min(PATCH_FOCUS_TOP_K, len(undercovered_indices))]
 
-        best_score: tuple[float, int, float, float] | None = None
+        best_score: tuple[float, float, int, int, float, float, float] | None = None
         best_circle: CirclePlacement | None = None
         for nn_threshold in PATCH_NN_NORM_THRESHOLDS:
             evaluated_centers: set[tuple[float, float]] = set()
@@ -705,20 +816,295 @@ def _patch_sample_coverage_max_gap(
                     low_log=low_log,
                     high_log=high_log,
                 )
-                target_band_idx = _nearest_band_idx_for_radius(target_radius, lattice_bands)
-                band = lattice_bands[target_band_idx]
-                candidate_nodes = _iter_lattice_nodes_near_target(
-                    band=band,
+                for band_limit in (3, None):
+                    candidate_nodes = _candidate_lattice_nodes_near_target(
+                        lattice_bands=lattice_bands,
+                        target_radius=target_radius,
+                        target_x=target_x,
+                        target_y=target_y,
+                        neighbor_ring=lattice_neighbor_ring,
+                        max_distance_factor=lattice_patch_radius_factor,
+                        max_bands=band_limit,
+                    )
+                    for band, row, col, x, y, lattice_dist_norm in candidate_nodes:
+                        key = _center_key_xy(x, y)
+                        if key in seen_centers or key in evaluated_centers:
+                            continue
+                        evaluated_centers.add(key)
+                        cached = density_radius_cache.get(key)
+                        if cached is None:
+                            density = _query_density(x, y, density_points)
+                            radius = _radius_from_density(
+                                density=density,
+                                min_radius=min_radius,
+                                max_radius=max_radius,
+                                low_log=low_log,
+                                high_log=high_log,
+                            )
+                            cached = (density, radius)
+                            density_radius_cache[key] = cached
+                        density, radius = cached
+                        nearest_norm = _nearest_normalized_distance(x, y, radius, circles)
+                        if nearest_norm < nn_threshold:
+                            continue
+                        border_buffer = border_buffer_cache.get(radius)
+                        if border_buffer is None:
+                            border_buffer = border_xy.buffer(float(radius))
+                            border_buffer_cache[radius] = border_buffer
+                        if not border_buffer.covers(Point(x, y)):
+                            continue
+                        impact = _candidate_sample_impact(
+                            samples=samples,
+                            coverage_counts=coverage_counts,
+                            x=x,
+                            y=y,
+                            radius=radius,
+                            min_cover_count=min_cover_count,
+                            soft_max_cover_count=soft_max_cover_count,
+                        )
+                        if impact.under_min_improved <= 0:
+                            continue
+                        gain_f = float(impact.under_min_improved)
+                        coverage_efficiency = count_penalty / gain_f
+                        overlap_rate = float(impact.extra_overlap) / gain_f
+                        overflow_rate = float(impact.overflow_above_soft) / gain_f
+                        spacing_penalty = max(0.0, 0.55 - nearest_norm)
+                        score = (
+                            -float(impact.newly_satisfied),
+                            -gain_f,
+                            impact.overflow_above_soft,
+                            impact.extra_overlap,
+                            coverage_efficiency
+                            + (regularity_weight * lattice_dist_norm)
+                            + (overlap_penalty * overlap_rate)
+                            + overflow_rate
+                            + spacing_penalty,
+                            lattice_dist_norm,
+                            -nearest_norm,
+                        )
+                        if best_score is None or score < best_score:
+                            best_score = score
+                            best_circle = CirclePlacement(
+                                x=x,
+                                y=y,
+                                radius=radius,
+                                density=density,
+                                band_idx=band.band_idx,
+                                row=row,
+                                col=col,
+                                lattice_error=0.0,
+                            )
+                    if best_circle is not None:
+                        break
+            if best_circle is not None:
+                break
+
+        if best_circle is None:
+            return None
+
+        circle = best_circle
+        circles.append(circle)
+        seen_centers.add(_center_key_xy(circle.x, circle.y))
+        added += 1
+        _update_coverage_state_for_circle(samples, coverage_counts, nearest_center_d2, circle)
+        if added > max_gap_patch_limit:
+            return None
+    return None if _count_undercovered(coverage_counts, min_cover_count) != 0 else (initial_undercovered, added)
+
+
+def _iter_polygon_parts(geom: BaseGeometry) -> list[BaseGeometry]:
+    """Iterate polygon parts."""
+    if geom.is_empty:
+        return []
+    if geom.geom_type == "Polygon":
+        return [geom]
+    if geom.geom_type == "MultiPolygon":
+        return list(geom.geoms)
+    if geom.geom_type == "GeometryCollection":
+        parts: list[BaseGeometry] = []
+        for sub in geom.geoms:
+            parts.extend(_iter_polygon_parts(sub))
+        return parts
+    return []
+
+
+def _circle_geometries(
+    circles: list[CirclePlacement],
+    clip_to: BaseGeometry | None = None,
+) -> list[BaseGeometry]:
+    """Build exact circle geometries, optionally clipped to a target geometry."""
+    geometries: list[BaseGeometry] = []
+    for circle in circles:
+        geom = Point(circle.x, circle.y).buffer(float(circle.radius), resolution=EXACT_BUFFER_RESOLUTION)
+        if clip_to is not None:
+            geom = geom.intersection(clip_to)
+        geometries.append(geom)
+    return geometries
+
+
+def _exact_coverage_state(
+    border_xy: BaseGeometry,
+    circle_geometries: list[BaseGeometry],
+    min_cover_count: int,
+) -> ExactCoverageState:
+    """Build an exact partition of the border and measure where coverage is below the minimum."""
+    if min_cover_count <= 0:
+        _fatal("min_cover_count must be positive")
+    valid_geometries = [geom for geom in circle_geometries if not geom.is_empty and geom.area > EPS]
+    if not valid_geometries:
+        return ExactCoverageState(
+            undercovered_geom=border_xy,
+            undercovered_area=float(border_xy.area),
+            deficit_area=float(border_xy.area * min_cover_count),
+            largest_undercovered_part=border_xy,
+            geoms_by_count={0: border_xy},
+        )
+
+    if min_cover_count == 2:
+        covered_once_geom = _union_geometries(valid_geometries)
+        tree = STRtree(valid_geometries)
+        overlap_parts: list[BaseGeometry] = []
+        for idx, geom in enumerate(valid_geometries):
+            for other_idx in tree.query(geom):
+                other_idx = int(other_idx)
+                if other_idx <= idx:
+                    continue
+                overlap = geom.intersection(valid_geometries[other_idx])
+                if not overlap.is_empty and overlap.area > EPS:
+                    overlap_parts.append(overlap)
+        covered_twice_or_more = _union_geometries(overlap_parts)
+        count0_geom = border_xy.difference(covered_once_geom)
+        count1_geom = covered_once_geom.difference(covered_twice_or_more)
+        undercovered_geom = border_xy.difference(covered_twice_or_more)
+        undercovered_parts = [part for part in _iter_polygon_parts(undercovered_geom) if part.area > EPS]
+        largest_part = max(undercovered_parts, key=lambda part: part.area, default=None)
+        return ExactCoverageState(
+            undercovered_geom=undercovered_geom,
+            undercovered_area=float(undercovered_geom.area),
+            deficit_area=float((count0_geom.area * 2.0) + count1_geom.area),
+            largest_undercovered_part=largest_part,
+            geoms_by_count={
+                0: count0_geom,
+                1: count1_geom,
+                2: covered_twice_or_more,
+            },
+        )
+
+    boundaries: list[BaseGeometry] = [border_xy.boundary]
+    for geom in valid_geometries:
+        if geom.is_empty or geom.area <= EPS:
+            continue
+        boundaries.append(geom.boundary)
+
+    partition_lines = unary_union(boundaries)
+    border_prepared = prep(border_xy)
+    prepared_circles = [prep(geom) for geom in valid_geometries]
+    count_parts: dict[int, list[BaseGeometry]] = {}
+    undercovered_parts: list[BaseGeometry] = []
+    undercovered_area = 0.0
+    deficit_area = 0.0
+
+    for face in polygonize(partition_lines):
+        if face.is_empty or face.area <= EPS:
+            continue
+        rep = face.representative_point()
+        if not border_prepared.covers(rep):
+            continue
+        cover_count = 0
+        for prepared_circle in prepared_circles:
+            if prepared_circle.covers(rep):
+                cover_count += 1
+        if cover_count <= min_cover_count:
+            count_parts.setdefault(cover_count, []).append(face)
+        if cover_count < min_cover_count:
+            undercovered_parts.append(face)
+            undercovered_area += float(face.area)
+            deficit_area += float(face.area) * float(min_cover_count - cover_count)
+
+    geoms_by_count = {count: _union_geometries(parts) for count, parts in count_parts.items()}
+    largest_part = max(undercovered_parts, key=lambda part: part.area, default=None)
+    return ExactCoverageState(
+        undercovered_geom=_union_geometries(undercovered_parts),
+        undercovered_area=undercovered_area,
+        deficit_area=deficit_area,
+        largest_undercovered_part=largest_part,
+        geoms_by_count=geoms_by_count,
+    )
+
+
+def _patch_exact_coverage(
+    border_xy: BaseGeometry,
+    lattice_bands: list[LatticeBand],
+    samples: list[tuple[float, float]],
+    circles: list[CirclePlacement],
+    coverage_counts: list[int],
+    nearest_center_d2: list[float],
+    density_points: list[DensityPoint],
+    min_radius: int,
+    max_radius: int,
+    low_log: float,
+    high_log: float,
+    min_cover_count: int,
+    soft_max_cover_count: int,
+    exact_tolerance_m2: float,
+    exact_patch_limit: int,
+    lattice_patch_radius_factor: float,
+    lattice_neighbor_ring: int,
+    regularity_weight: float,
+    count_penalty: float,
+    overlap_penalty: float,
+    deadline: float,
+) -> tuple[int, float] | None:
+    """Helper for patch exact coverage."""
+    added = 0
+    seen_centers = {_center_key_xy(circle.x, circle.y) for circle in circles}
+    border_buffer_cache: dict[int, BaseGeometry] = {}
+    density_radius_cache: dict[tuple[float, float], tuple[float, int]] = {}
+    while True:
+        if time.perf_counter() > deadline:
+            return None
+        clipped_circle_geometries = _circle_geometries(circles, clip_to=border_xy)
+        exact_state = _exact_coverage_state(
+            border_xy=border_xy,
+            circle_geometries=clipped_circle_geometries,
+            min_cover_count=min_cover_count,
+        )
+        if exact_state.undercovered_area <= exact_tolerance_m2 + EPS:
+            return added, exact_state.undercovered_area
+        if added >= exact_patch_limit:
+            return None
+        part = exact_state.largest_undercovered_part
+        if part is None or part.area <= EPS:
+            return None
+        rep = part.representative_point()
+        target_x, target_y = float(rep.x), float(rep.y)
+        target_density = _query_density(target_x, target_y, density_points)
+        target_radius = _radius_from_density(
+            density=target_density,
+            min_radius=min_radius,
+            max_radius=max_radius,
+            low_log=low_log,
+            high_log=high_log,
+        )
+        best_circle: CirclePlacement | None = None
+        best_score: tuple[float, float, float, float, int, int, float, float, float] | None = None
+        fixable_geom = exact_state.geoms_by_count.get(min_cover_count - 1, GeometryCollection())
+
+        for nn_threshold in PATCH_NN_NORM_THRESHOLDS:
+            for band_limit in (3, None):
+                candidate_nodes = _candidate_lattice_nodes_near_target(
+                    lattice_bands=lattice_bands,
+                    target_radius=target_radius,
                     target_x=target_x,
                     target_y=target_y,
                     neighbor_ring=lattice_neighbor_ring,
-                    max_distance=lattice_patch_radius_factor * float(target_radius),
+                    max_distance_factor=lattice_patch_radius_factor,
+                    max_bands=band_limit,
                 )
-                for row, col, x, y, lattice_dist_norm in candidate_nodes:
+                for band, row, col, x, y, lattice_dist_norm in candidate_nodes:
                     key = _center_key_xy(x, y)
-                    if key in seen_centers or key in evaluated_centers:
+                    if key in seen_centers:
                         continue
-                    evaluated_centers.add(key)
                     cached = density_radius_cache.get(key)
                     if cached is None:
                         density = _query_density(x, y, density_points)
@@ -741,25 +1127,40 @@ def _patch_sample_coverage_max_gap(
                         border_buffer_cache[radius] = border_buffer
                     if not border_buffer.covers(Point(x, y)):
                         continue
-                    new_cover, overlap_increase = _candidate_sample_impact(
+                    candidate_geom = Point(x, y).buffer(
+                        float(radius),
+                        resolution=EXACT_BUFFER_RESOLUTION,
+                    ).intersection(border_xy)
+                    exact_fix_area = float(candidate_geom.intersection(fixable_geom).area)
+                    exact_progress_area = float(candidate_geom.intersection(exact_state.undercovered_geom).area)
+                    if exact_progress_area <= EPS:
+                        continue
+                    impact = _candidate_sample_impact(
                         samples=samples,
                         coverage_counts=coverage_counts,
                         x=x,
                         y=y,
                         radius=radius,
+                        min_cover_count=min_cover_count,
+                        soft_max_cover_count=soft_max_cover_count,
                     )
-                    if new_cover <= 0:
-                        continue
-                    new_cover_f = float(new_cover)
-                    coverage_efficiency = count_penalty / new_cover_f
-                    overlap_rate = float(overlap_increase) / new_cover_f
+                    gain_f = float(max(1, impact.under_min_improved))
+                    coverage_efficiency = count_penalty / gain_f
+                    overlap_rate = float(impact.extra_overlap) / gain_f
+                    overflow_rate = float(impact.overflow_above_soft) / gain_f
                     spacing_penalty = max(0.0, 0.55 - nearest_norm)
                     score = (
+                        -exact_fix_area,
+                        -exact_progress_area,
+                        -float(impact.newly_satisfied),
+                        -gain_f,
+                        impact.overflow_above_soft,
+                        impact.extra_overlap,
                         coverage_efficiency
                         + (regularity_weight * lattice_dist_norm)
                         + (overlap_penalty * overlap_rate)
+                        + overflow_rate
                         + spacing_penalty,
-                        -new_cover,
                         lattice_dist_norm,
                         -nearest_norm,
                     )
@@ -775,207 +1176,12 @@ def _patch_sample_coverage_max_gap(
                             col=col,
                             lattice_error=0.0,
                         )
+                if best_circle is not None:
+                    break
             if best_circle is not None:
                 break
 
         if best_circle is None:
-            return None
-
-        circle = best_circle
-        circles.append(circle)
-        seen_centers.add(_center_key_xy(circle.x, circle.y))
-        added += 1
-        _update_coverage_state_for_circle(samples, coverage_counts, nearest_center_d2, circle)
-        if added > max_gap_patch_limit:
-            return None
-    return None if _count_uncovered(coverage_counts) != 0 else (initial_uncovered, added)
-
-
-def _iter_polygon_parts(geom: BaseGeometry) -> list[BaseGeometry]:
-    """Iterate polygon parts."""
-    if geom.is_empty:
-        return []
-    if geom.geom_type == "Polygon":
-        return [geom]
-    if geom.geom_type == "MultiPolygon":
-        return list(geom.geoms)
-    if geom.geom_type == "GeometryCollection":
-        parts: list[BaseGeometry] = []
-        for sub in geom.geoms:
-            parts.extend(_iter_polygon_parts(sub))
-        return parts
-    return []
-
-
-def _circle_geometries(circles: list[CirclePlacement]) -> list[BaseGeometry]:
-    """Helper for circle geometries."""
-    return [
-        Point(circle.x, circle.y).buffer(float(circle.radius), resolution=EXACT_BUFFER_RESOLUTION)
-        for circle in circles
-    ]
-
-
-def _exact_missing_geometry(
-    border_xy: BaseGeometry,
-    circle_geometries: list[BaseGeometry],
-) -> tuple[BaseGeometry, float]:
-    """Helper for exact missing geometry."""
-    if not circle_geometries:
-        return border_xy, float(border_xy.area)
-    missing = border_xy.difference(unary_union(circle_geometries))
-    return missing, float(missing.area)
-
-
-def _patch_exact_coverage(
-    border_xy: BaseGeometry,
-    lattice_bands: list[LatticeBand],
-    samples: list[tuple[float, float]],
-    circles: list[CirclePlacement],
-    coverage_counts: list[int],
-    nearest_center_d2: list[float],
-    density_points: list[DensityPoint],
-    min_radius: int,
-    max_radius: int,
-    low_log: float,
-    high_log: float,
-    exact_tolerance_m2: float,
-    exact_patch_limit: int,
-    lattice_patch_radius_factor: float,
-    lattice_neighbor_ring: int,
-    regularity_weight: float,
-    count_penalty: float,
-    overlap_penalty: float,
-    deadline: float,
-) -> tuple[int, float] | None:
-    """Helper for patch exact coverage."""
-    added = 0
-    seen_centers = {_center_key_xy(circle.x, circle.y) for circle in circles}
-    border_buffer_cache: dict[int, BaseGeometry] = {}
-    density_radius_cache: dict[tuple[float, float], tuple[float, int]] = {}
-    while True:
-        if time.perf_counter() > deadline:
-            return None
-        missing_geom, missing_area = _exact_missing_geometry(border_xy, _circle_geometries(circles))
-        if missing_area <= exact_tolerance_m2 + EPS:
-            return added, missing_area
-        if added >= exact_patch_limit:
-            return None
-        parts = [part for part in _iter_polygon_parts(missing_geom) if part.area > EPS]
-        if not parts:
-            return None
-        parts.sort(key=lambda part: part.area, reverse=True)
-        selected_point: tuple[float, float] | None = None
-        for part in parts:
-            rep = part.representative_point()
-            selected_point = (float(rep.x), float(rep.y))
-            break
-        if selected_point is None:
-            return None
-
-        target_x, target_y = selected_point
-        target_density = _query_density(target_x, target_y, density_points)
-        target_radius = _radius_from_density(
-            density=target_density,
-            min_radius=min_radius,
-            max_radius=max_radius,
-            low_log=low_log,
-            high_log=high_log,
-        )
-        target_band_idx = _nearest_band_idx_for_radius(target_radius, lattice_bands)
-        band = lattice_bands[target_band_idx]
-        candidate_nodes = _iter_lattice_nodes_near_target(
-            band=band,
-            target_x=target_x,
-            target_y=target_y,
-            neighbor_ring=lattice_neighbor_ring,
-            max_distance=lattice_patch_radius_factor * float(target_radius),
-        )
-
-        best_circle: CirclePlacement | None = None
-        best_union = None
-        best_missing = None
-        best_aux_score: tuple[float, int, float, float] | None = None
-        current_missing = missing_area
-        current_union = unary_union(_circle_geometries(circles))
-
-        for nn_threshold in PATCH_NN_NORM_THRESHOLDS:
-            for row, col, x, y, lattice_dist_norm in candidate_nodes:
-                key = _center_key_xy(x, y)
-                if key in seen_centers:
-                    continue
-                cached = density_radius_cache.get(key)
-                if cached is None:
-                    density = _query_density(x, y, density_points)
-                    radius = _radius_from_density(
-                        density=density,
-                        min_radius=min_radius,
-                        max_radius=max_radius,
-                        low_log=low_log,
-                        high_log=high_log,
-                    )
-                    cached = (density, radius)
-                    density_radius_cache[key] = cached
-                density, radius = cached
-                nearest_norm = _nearest_normalized_distance(x, y, radius, circles)
-                if nearest_norm < nn_threshold:
-                    continue
-                border_buffer = border_buffer_cache.get(radius)
-                if border_buffer is None:
-                    border_buffer = border_xy.buffer(float(radius))
-                    border_buffer_cache[radius] = border_buffer
-                if not border_buffer.covers(Point(x, y)):
-                    continue
-                candidate_geom = Point(x, y).buffer(float(radius), resolution=EXACT_BUFFER_RESOLUTION)
-                new_union = current_union.union(candidate_geom)
-                new_missing = float(border_xy.difference(new_union).area)
-                reduction = current_missing - new_missing
-                if reduction <= EPS:
-                    continue
-                new_cover, overlap_increase = _candidate_sample_impact(
-                    samples=samples,
-                    coverage_counts=coverage_counts,
-                    x=x,
-                    y=y,
-                    radius=radius,
-                )
-                new_cover_f = float(max(1, new_cover))
-                coverage_efficiency = count_penalty / new_cover_f
-                overlap_rate = float(overlap_increase) / new_cover_f
-                spacing_penalty = max(0.0, 0.55 - nearest_norm)
-                aux_score = (
-                    coverage_efficiency
-                    + (regularity_weight * lattice_dist_norm)
-                    + (overlap_penalty * overlap_rate)
-                    + spacing_penalty,
-                    -new_cover,
-                    lattice_dist_norm,
-                    -nearest_norm,
-                )
-                better = False
-                if best_missing is None:
-                    better = True
-                elif new_missing < best_missing - EPS:
-                    better = True
-                elif abs(new_missing - best_missing) <= EPS and aux_score < best_aux_score:
-                    better = True
-                if better:
-                    best_missing = new_missing
-                    best_union = new_union
-                    best_aux_score = aux_score
-                    best_circle = CirclePlacement(
-                        x=x,
-                        y=y,
-                        radius=radius,
-                        density=density,
-                        band_idx=band.band_idx,
-                        row=row,
-                        col=col,
-                        lattice_error=0.0,
-                    )
-            if best_circle is not None:
-                break
-
-        if best_circle is None or best_union is None:
             return None
 
         circle = best_circle
@@ -1006,15 +1212,19 @@ def _build_cover_index(
     return cover_by_circle, cover_counts
 
 
-def _exact_missing_for_active(
+def _exact_coverage_state_for_active(
     border_xy: BaseGeometry,
     circle_geometries: list[BaseGeometry],
     active: list[bool],
-) -> float:
-    """Helper for exact missing for active."""
+    min_cover_count: int,
+) -> ExactCoverageState:
+    """Build exact coverage state for the currently active circles only."""
     selected = [geom for idx, geom in enumerate(circle_geometries) if active[idx]]
-    _missing, area = _exact_missing_geometry(border_xy, selected)
-    return area
+    return _exact_coverage_state(
+        border_xy=border_xy,
+        circle_geometries=selected,
+        min_cover_count=min_cover_count,
+    )
 
 
 def _hex_neighbor_coords(row: int, col: int) -> list[tuple[int, int]]:
@@ -1056,13 +1266,14 @@ def _prune_circles(
     circles: list[CirclePlacement],
     exact_tolerance_m2: float,
     prune_max_passes: int,
+    prune_min_cover: int,
     deadline: float,
 ) -> tuple[list[CirclePlacement], int, list[int], float] | None:
     """Helper for prune circles."""
     if not circles:
         return [], 0, [0] * len(samples), float(border_xy.area)
     active = [True] * len(circles)
-    circle_geometries = _circle_geometries(circles)
+    circle_geometries = _circle_geometries(circles, clip_to=border_xy)
     removed_total = 0
     for _ in range(prune_max_passes):
         if time.perf_counter() > deadline:
@@ -1076,7 +1287,8 @@ def _prune_circles(
             circle = circles[ci]
             active_nodes_by_band.setdefault(circle.band_idx, set()).add((circle.row, circle.col))
         unique_support = {
-            ci: sum(1 for si in cover_by_circle[ci] if cover_counts[si] == 1) for ci in active_indices
+            ci: sum(1 for si in cover_by_circle[ci] if cover_counts[si] == prune_min_cover)
+            for ci in active_indices
         }
         order = sorted(
             active_indices,
@@ -1093,11 +1305,16 @@ def _prune_circles(
                 return None
             if not active[ci]:
                 continue
-            if any(cover_counts[si] <= 1 for si in cover_by_circle[ci]):
+            if any(cover_counts[si] <= prune_min_cover for si in cover_by_circle[ci]):
                 continue
             active[ci] = False
-            missing_area = _exact_missing_for_active(border_xy, circle_geometries, active)
-            if missing_area <= exact_tolerance_m2 + EPS:
+            tentative_exact_state = _exact_coverage_state_for_active(
+                border_xy=border_xy,
+                circle_geometries=circle_geometries,
+                active=active,
+                min_cover_count=prune_min_cover,
+            )
+            if tentative_exact_state.undercovered_area <= exact_tolerance_m2 + EPS:
                 removed_this_pass += 1
                 removed_total += 1
                 for si in cover_by_circle[ci]:
@@ -1108,8 +1325,13 @@ def _prune_circles(
             break
     pruned = [circle for idx, circle in enumerate(circles) if active[idx]]
     _cover_map, final_cover_counts = _build_cover_index(samples, circles, active)
-    final_missing_area = _exact_missing_for_active(border_xy, circle_geometries, active)
-    return pruned, removed_total, final_cover_counts, final_missing_area
+    final_exact_state = _exact_coverage_state_for_active(
+        border_xy=border_xy,
+        circle_geometries=circle_geometries,
+        active=active,
+        min_cover_count=prune_min_cover,
+    )
+    return pruned, removed_total, final_cover_counts, final_exact_state.undercovered_area
 
 
 def _spacing_score(circles: list[CirclePlacement]) -> float:
@@ -1148,25 +1370,17 @@ def _off_lattice_count(circles: list[CirclePlacement]) -> int:
     return sum(1 for circle in circles if circle.lattice_error > 1e-6)
 
 
-def _overlap_metrics(coverage_counts: list[int]) -> tuple[float, float, int]:
-    """Helper for overlap metrics."""
-    if not coverage_counts:
-        return 1.0, 0.0, 0
-    total = len(coverage_counts)
-    overlap_samples = sum(1 for c in coverage_counts if c >= 2)
-    mean_mult = sum(coverage_counts) / total
-    uncovered = sum(1 for c in coverage_counts if c == 0)
-    return overlap_samples / total, mean_mult, uncovered
-
-
 def _candidate_sort_key(candidate: CandidateResult) -> tuple[Any, ...]:
     """Helper for candidate sort key."""
     return (
-        len(candidate.circles),
+        candidate.exact_undercovered_area,
+        candidate.samples_below_min,
+        candidate.samples_above_soft_max,
+        abs(candidate.spacing_score - TARGET_SPACING_SCORE),
+        abs(candidate.mean_multiplicity - TARGET_MEAN_MULTIPLICITY),
         -candidate.regularity_score,
-        -candidate.spacing_score,
-        candidate.overlap_ratio,
-        candidate.mean_multiplicity,
+        candidate.off_lattice_count,
+        len(candidate.circles),
     )
 
 
@@ -1178,6 +1392,8 @@ def _evaluate_candidate(
     max_radius: int,
     low_log: float,
     high_log: float,
+    min_cover_count: int,
+    soft_max_cover_count: int,
     spacing_scale: float,
     band_step: int,
     lattice_phase_x: float,
@@ -1186,6 +1402,7 @@ def _evaluate_candidate(
     max_gap_patch_limit: int,
     exact_patch_limit: int,
     prune_max_passes: int,
+    prune_min_cover: int,
     lattice_patch_radius_factor: float,
     lattice_neighbor_ring: int,
     regularity_weight: float,
@@ -1230,6 +1447,8 @@ def _evaluate_candidate(
         max_radius=max_radius,
         low_log=low_log,
         high_log=high_log,
+        min_cover_count=min_cover_count,
+        soft_max_cover_count=soft_max_cover_count,
         max_gap_patch_limit=max_gap_patch_limit,
         lattice_patch_radius_factor=lattice_patch_radius_factor,
         lattice_neighbor_ring=lattice_neighbor_ring,
@@ -1253,6 +1472,8 @@ def _evaluate_candidate(
         max_radius=max_radius,
         low_log=low_log,
         high_log=high_log,
+        min_cover_count=min_cover_count,
+        soft_max_cover_count=soft_max_cover_count,
         exact_tolerance_m2=exact_tolerance_m2,
         exact_patch_limit=exact_patch_limit,
         lattice_patch_radius_factor=lattice_patch_radius_factor,
@@ -1271,13 +1492,18 @@ def _evaluate_candidate(
         circles=circles,
         exact_tolerance_m2=exact_tolerance_m2,
         prune_max_passes=prune_max_passes,
+        prune_min_cover=prune_min_cover,
         deadline=deadline,
     )
     if pruned is None:
         return None
-    pruned_circles, prune_removed, final_cover_counts, final_missing = pruned
-    overlap_ratio, mean_mult, uncovered = _overlap_metrics(final_cover_counts)
-    if uncovered != 0 or final_missing > exact_tolerance_m2 + EPS:
+    pruned_circles, prune_removed, final_cover_counts, final_undercovered = pruned
+    overlap_ratio, mean_mult, min_sample_cover, samples_below_min, samples_above_soft_max = _coverage_metrics(
+        final_cover_counts,
+        min_cover_count=min_cover_count,
+        soft_max_cover_count=soft_max_cover_count,
+    )
+    if samples_below_min != 0 or final_undercovered > exact_tolerance_m2 + EPS:
         return None
     return CandidateResult(
         spacing_scale=spacing_scale,
@@ -1289,8 +1515,10 @@ def _evaluate_candidate(
         sample_patch_added=sample_patch_added,
         exact_patch_added=exact_patch_added,
         prune_removed=prune_removed,
-        sample_uncovered=uncovered,
-        exact_missing_area=final_missing,
+        min_sample_cover=min_sample_cover,
+        samples_below_min=samples_below_min,
+        samples_above_soft_max=samples_above_soft_max,
+        exact_undercovered_area=final_undercovered,
         overlap_ratio=overlap_ratio,
         mean_multiplicity=mean_mult,
         regularity_score=_regularity_score(pruned_circles),
@@ -1455,7 +1683,14 @@ def _parse_int_values_list(raw: str, name: str) -> list[int]:
 def _candidate_combinations(spacing_scales: list[float], band_steps: list[int]) -> list[tuple[float, int]]:
     """Build ordered (spacing_scale, band_step) combinations to evaluate first."""
     combos = [(scale, band) for scale in spacing_scales for band in band_steps]
-    combos.sort(key=lambda item: (abs(item[0] - 0.94), abs(item[1] - 100), item[0], item[1]))
+    combos.sort(
+        key=lambda item: (
+            abs(item[0] - DEFAULT_TARGET_SPACING_SCALE),
+            abs(item[1] - 100),
+            item[0],
+            item[1],
+        )
+    )
     return combos
 
 
@@ -1474,21 +1709,24 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--min-radius", type=int, default=500)
     parser.add_argument("--max-radius", type=int, default=None)
     parser.add_argument("--coverage-step", type=float, default=100.0)
-    parser.add_argument("--band-step", type=int, default=100)
+    parser.add_argument("--band-step", type=int, default=75)
     parser.add_argument("--preserve-distance", type=float, default=300.0)
-    parser.add_argument("--opt-max-seconds", type=float, default=60.0)
-    parser.add_argument("--spacing-scale-values", type=str, default="0.86,0.90,0.94,0.98,1.02")
-    parser.add_argument("--band-step-values", type=str, default="75,100,125")
-    parser.add_argument("--lattice-phase-values", type=str, default="0,0.25,0.5,0.75")
+    parser.add_argument("--opt-max-seconds", type=float, default=600.0)
+    parser.add_argument("--spacing-scale-values", type=str, default="0.60")
+    parser.add_argument("--band-step-values", type=str, default="75")
+    parser.add_argument("--lattice-phase-values", type=str, default="0")
     parser.add_argument("--exact-tolerance-m2", type=float, default=1.0)
+    parser.add_argument("--min-cover-count", type=int, default=DEFAULT_MIN_COVER_COUNT)
+    parser.add_argument("--soft-max-cover-count", type=int, default=DEFAULT_SOFT_MAX_COVER_COUNT)
     parser.add_argument("--max-gap-patch-limit", type=int, default=1200)
     parser.add_argument("--exact-patch-limit", type=int, default=1500)
-    parser.add_argument("--prune-max-passes", type=int, default=3)
+    parser.add_argument("--prune-max-passes", type=int, default=1)
+    parser.add_argument("--prune-min-cover", type=int, default=DEFAULT_PRUNE_MIN_COVER)
     parser.add_argument("--lattice-patch-radius-factor", type=float, default=1.35)
     parser.add_argument("--lattice-neighbor-ring", type=int, default=2)
     parser.add_argument("--regularity-weight", type=float, default=4.0)
-    parser.add_argument("--count-penalty", type=float, default=1.0)
-    parser.add_argument("--overlap-penalty", type=float, default=0.6)
+    parser.add_argument("--count-penalty", type=float, default=0.35)
+    parser.add_argument("--overlap-penalty", type=float, default=0.15)
     return parser.parse_args(argv)
 
 
@@ -1510,12 +1748,18 @@ def main(argv: list[str] | None = None) -> int:
         _fatal("--opt-max-seconds must be > 0")
     if args.exact_tolerance_m2 < 0:
         _fatal("--exact-tolerance-m2 must be >= 0")
+    if args.min_cover_count <= 0:
+        _fatal("--min-cover-count must be > 0")
+    if args.soft_max_cover_count < args.min_cover_count:
+        _fatal("--soft-max-cover-count must be >= --min-cover-count")
     if args.max_gap_patch_limit <= 0:
         _fatal("--max-gap-patch-limit must be > 0")
     if args.exact_patch_limit <= 0:
         _fatal("--exact-patch-limit must be > 0")
     if args.prune_max_passes <= 0:
         _fatal("--prune-max-passes must be > 0")
+    if args.prune_min_cover <= 0:
+        _fatal("--prune-min-cover must be > 0")
     if args.lattice_patch_radius_factor <= 0:
         _fatal("--lattice-patch-radius-factor must be > 0")
     if args.lattice_neighbor_ring < 0:
@@ -1560,6 +1804,7 @@ def main(argv: list[str] | None = None) -> int:
     density_points = _build_density_points(density_rows, projection)
     low_log, high_log = _prepare_density_scale(density_rows)
     samples = _build_coverage_samples(border_xy, args.coverage_step)
+    prune_min_cover = max(args.prune_min_cover, args.min_cover_count)
 
     optimization_start = time.perf_counter()
     deadline = optimization_start + args.opt_max_seconds
@@ -1584,6 +1829,8 @@ def main(argv: list[str] | None = None) -> int:
             max_radius=max_radius,
             low_log=low_log,
             high_log=high_log,
+            min_cover_count=args.min_cover_count,
+            soft_max_cover_count=args.soft_max_cover_count,
             spacing_scale=spacing_scale,
             band_step=band_step,
             lattice_phase_x=baseline_phase[0],
@@ -1592,6 +1839,7 @@ def main(argv: list[str] | None = None) -> int:
             max_gap_patch_limit=args.max_gap_patch_limit,
             exact_patch_limit=args.exact_patch_limit,
             prune_max_passes=args.prune_max_passes,
+            prune_min_cover=prune_min_cover,
             lattice_patch_radius_factor=args.lattice_patch_radius_factor,
             lattice_neighbor_ring=args.lattice_neighbor_ring,
             regularity_weight=args.regularity_weight,
@@ -1616,7 +1864,7 @@ def main(argv: list[str] | None = None) -> int:
             baseline = baseline_by_combo.get(combo)
             if baseline is None:
                 scale, band = combo
-                return (1, abs(scale - 0.94), abs(band - 100), scale, band)
+                return (1, abs(scale - DEFAULT_TARGET_SPACING_SCALE), abs(band - 100), scale, band)
             return (0, *_candidate_sort_key(baseline))
 
         ordered_combos = sorted(combinations, key=_combo_priority)
@@ -1635,6 +1883,8 @@ def main(argv: list[str] | None = None) -> int:
                     max_radius=max_radius,
                     low_log=low_log,
                     high_log=high_log,
+                    min_cover_count=args.min_cover_count,
+                    soft_max_cover_count=args.soft_max_cover_count,
                     spacing_scale=spacing_scale,
                     band_step=band_step,
                     lattice_phase_x=phase_x,
@@ -1643,6 +1893,7 @@ def main(argv: list[str] | None = None) -> int:
                     max_gap_patch_limit=args.max_gap_patch_limit,
                     exact_patch_limit=args.exact_patch_limit,
                     prune_max_passes=args.prune_max_passes,
+                    prune_min_cover=prune_min_cover,
                     lattice_patch_radius_factor=args.lattice_patch_radius_factor,
                     lattice_neighbor_ring=args.lattice_neighbor_ring,
                     regularity_weight=args.regularity_weight,
@@ -1660,7 +1911,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if best is None:
         _fatal(
-            "optimization failed: no valid candidate met strict sample + exact coverage "
+            "optimization failed: no valid candidate met strict sample + exact minimum coverage "
             f"(tested {tested} candidate(s))."
         )
 
@@ -1697,9 +1948,13 @@ def main(argv: list[str] | None = None) -> int:
         f"Sample patch added: {best.sample_patch_added} | "
         f"Exact patch added: {best.exact_patch_added} | "
         f"Pruned removed: {best.prune_removed} | "
-        f"Sample uncovered: {best.sample_uncovered} | "
-        f"Exact missing area m2: {best.exact_missing_area:.6f} | "
-        f"Overlap ratio: {best.overlap_ratio:.4f} | "
+        f"Min cover target: {args.min_cover_count} | "
+        f"Soft max target: {args.soft_max_cover_count} | "
+        f"Min sample cover: {best.min_sample_cover} | "
+        f"Samples below min: {best.samples_below_min} | "
+        f"Samples above soft max: {best.samples_above_soft_max} | "
+        f"Exact undercovered area m2: {best.exact_undercovered_area:.6f} | "
+        f"Coverage-at-min ratio: {best.overlap_ratio:.4f} | "
         f"Mean multiplicity: {best.mean_multiplicity:.4f} | "
         f"Regularity score: {best.regularity_score:.4f} | "
         f"Off-lattice circles: {best.off_lattice_count} | "
