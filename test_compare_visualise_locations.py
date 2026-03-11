@@ -28,7 +28,11 @@ FIELDNAMES = [
 
 def _write_csv(path: Path, rows: list[dict[str, object]], fieldnames: list[str] | None = None) -> None:
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames or FIELDNAMES)
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=fieldnames or FIELDNAMES,
+            extrasaction="ignore",
+        )
         writer.writeheader()
         writer.writerows(rows)
 
@@ -121,13 +125,39 @@ class CompareVisualiseLocationsTests(unittest.TestCase):
         self.assertEqual(points_by_id["shared"]["lng"], 98.111)
         self.assertIn("Coordinates differ between files", points_by_id["shared"]["popup_html"])
 
-    def test_main_requires_exactly_two_csv_paths(self) -> None:
+    def test_main_uses_default_input_paths_when_no_args(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            temp_dir = Path(tmp_dir)
+            csv1 = temp_dir / "csv1.csv"
+            csv2 = temp_dir / "csv2.csv"
+            output_path = temp_dir / "compare_locations_map.html"
+
+            _write_csv(csv1, [_row("shared", 18.1, 98.1, name="Shared")])
+            _write_csv(csv2, [_row("shared", 18.1, 98.1, name="Shared")])
+
+            stdout = io.StringIO()
+            stderr = io.StringIO()
+            with (
+                patch.object(compare_map, "DEFAULT_INPUT_PATHS", (csv1, csv2)),
+                patch.object(compare_map, "OUTPUT_PATH", output_path),
+                contextlib.redirect_stdout(stdout),
+                contextlib.redirect_stderr(stderr),
+            ):
+                exit_code = compare_map.main([])
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(stderr.getvalue(), "")
+            self.assertTrue(output_path.exists())
+            self.assertIn("Shared: 1", stdout.getvalue())
+
+    def test_main_rejects_single_csv_argument(self) -> None:
         stderr = io.StringIO()
         with contextlib.redirect_stderr(stderr):
-            exit_code = compare_map.main([])
+            exit_code = compare_map.main(["only-one.csv"])
 
         self.assertEqual(exit_code, 1)
         self.assertIn("Usage: python compare_visualise_locations/map_locations.py", stderr.getvalue())
+        self.assertIn("expected either zero arguments", stderr.getvalue())
 
     def test_main_returns_error_when_required_headers_are_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:

@@ -3,7 +3,7 @@
 Render an interactive comparison map from two collected coffee-shop CSV datasets.
 
 Data flow (high level):
-1) Load two CSV files passed on the command line.
+1) Load two CSV files from the built-in defaults or from command-line overrides.
 2) Validate required headers and extract unique, valid place_id/lat/lon rows per file.
 3) Compare the union of place IDs across both files.
 4) Render one Folium marker per place_id:
@@ -39,6 +39,16 @@ except ImportError:  # pragma: no cover
 
 REPO_ROOT = Path(__file__).resolve().parent
 OUTPUT_PATH = REPO_ROOT / "compare_locations_map.html"
+DEFAULT_INPUT_PATHS = (
+    REPO_ROOT.parent
+    / "collect_location_data"
+    / "prev_data"
+    / "coffee_shops_with_reviews3.csv",
+    REPO_ROOT.parent
+    / "collect_location_data"
+    / "prev_data"
+    / "coffee_shops_with_reviews4.csv",
+)
 REQUIRED_COLUMNS = {"place_id", "lat", "lon"}
 STATUS_STYLES = {
     "shared": {"label": "Shared", "color": "#2ca02c"},
@@ -192,6 +202,20 @@ def _load_dataset(path: Path, label: str) -> DatasetLoadResult:
         )
 
     return result
+
+
+def _resolve_input_paths(args: list[str]) -> tuple[Path, Path]:
+    """Resolve CSV inputs from defaults or a two-argument override."""
+    if not args:
+        return DEFAULT_INPUT_PATHS
+
+    if len(args) != 2:
+        raise CsvInputError(
+            "expected either zero arguments to use the built-in CSV paths or "
+            "exactly two CSV paths"
+        )
+
+    return Path(args[0]).expanduser(), Path(args[1]).expanduser()
 
 
 def _render_metadata_table(record: DatasetRecord) -> str:
@@ -657,15 +681,16 @@ def _print_overlap_summary(stats: ComparisonStats) -> None:
 def main(argv: list[str] | None = None) -> int:
     """Entrypoint for generating a compare map from two CSV inputs."""
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) != 2:
+    try:
+        csv1_path, csv2_path = _resolve_input_paths(args)
+    except CsvInputError as exc:
         print(
-            "Usage: python compare_visualise_locations/map_locations.py <csv1_path> <csv2_path>",
+            "Usage: python compare_visualise_locations/map_locations.py "
+            "[<csv1_path> <csv2_path>]",
             file=sys.stderr,
         )
+        print(f"Error: {exc}", file=sys.stderr)
         return 1
-
-    csv1_path = Path(args[0]).expanduser()
-    csv2_path = Path(args[1]).expanduser()
 
     missing_paths = [path for path in (csv1_path, csv2_path) if not path.exists()]
     if missing_paths:
