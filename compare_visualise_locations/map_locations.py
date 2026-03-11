@@ -344,7 +344,7 @@ def _build_comparison_points(
                 "name": name,
                 "lat": lat,
                 "lng": lng,
-                "radius": 5,
+                "radius": 3,
                 "color": status_style["color"],
                 "status_key": status_key,
                 "status_label": status_style["label"],
@@ -449,7 +449,7 @@ def _add_place_id_search_overlay(
             f"lat:{point['lat']},"
             f"lng:{point['lng']},"
             f"markerName:{json.dumps(marker_name)},"
-            f"baseStyle:{{radius:{point['radius']},color:{json.dumps(point['color'])},weight:1,fillColor:{json.dumps(point['color'])},fillOpacity:1.0}}"
+            f"baseStyle:{{radius:{point['radius']},color:{json.dumps(point['color'])},weight:0.5,fillColor:{json.dumps(point['color'])},fillOpacity:1.0}}"
             "}"
         )
 
@@ -634,7 +634,7 @@ def _build_map(
             location=[point["lat"], point["lng"]],
             radius=point["radius"],
             color=point["color"],
-            weight=1,
+            weight=0.5,
             fill=True,
             fill_color=point["color"],
             fill_opacity=1.0,
