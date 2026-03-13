@@ -24,7 +24,8 @@ import csv
 import json
 import math
 import time
-from dataclasses import dataclass
+from bisect import bisect_right
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -45,6 +46,9 @@ REPO_ROOT = Path(__file__).resolve().parent
 INPUT_DENSITY_PATH = REPO_ROOT / "chiang_mai_population_density_cells.csv"
 BORDER_PATH = REPO_ROOT / "chiang_mai_main_area_merged_border.geojson"
 OUTPUT_PATH = REPO_ROOT / "lat_lng_radius.json"
+DEFAULT_CALIBRATION_CSV_PATH = (
+    REPO_ROOT.parent.parent / "collect_location_data" / "prev_data" / "coffee_shops_with_reviews3.csv"
+)
 
 # Adaptive-model tuning constants.
 ROUNDING_METERS = 25
@@ -61,6 +65,9 @@ TARGET_MEAN_MULTIPLICITY = 2.50
 DEFAULT_PRUNE_MIN_COVER = 2
 DEFAULT_MIN_COVER_COUNT = 2
 DEFAULT_SOFT_MAX_COVER_COUNT = 4
+DEFAULT_SHOP_SOFT_CAP = 45
+DEFAULT_SHOP_HARD_CAP = 60
+SHOP_RADIUS_EPS = 1.0
 
 
 def _fatal(message: str) -> "None":
@@ -188,6 +195,44 @@ def _load_density_rows(path: Path) -> list[dict[str, float]]:
     return rows
 
 
+def _load_calibration_rows(path: Path) -> list[dict[str, float | str]]:
+    """Load known cafe locations used to calibrate circle sizes."""
+    if not path.exists():
+        _fatal(f"calibration CSV not found: {path}")
+
+    rows: list[dict[str, float | str]] = []
+    seen_place_ids: set[str] = set()
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle)
+        required = {"place_id", "lat", "lon"}
+        if reader.fieldnames is None:
+            _fatal(f"calibration CSV has no header row: {path}")
+        missing = required.difference(reader.fieldnames)
+        if missing:
+            _fatal(f"calibration CSV missing columns: {', '.join(sorted(missing))}")
+        for raw in reader:
+            place_id = raw.get("place_id")
+            lat = _to_float(raw.get("lat"))
+            lng = _to_float(raw.get("lon"))
+            if not isinstance(place_id, str):
+                continue
+            place_id = place_id.strip()
+            if (
+                not place_id
+                or place_id in seen_place_ids
+                or lat is None
+                or lng is None
+                or not (-90 <= lat <= 90)
+                or not (-180 <= lng <= 180)
+            ):
+                continue
+            seen_place_ids.add(place_id)
+            rows.append({"place_id": place_id, "lat": lat, "lng": lng})
+    if not rows:
+        _fatal(f"calibration CSV has zero usable rows: {path}")
+    return rows
+
+
 @dataclass(frozen=True)
 class LocalProjection:
     lng0: float
@@ -233,6 +278,7 @@ class CirclePlacement:
     row: int
     col: int
     lattice_error: float
+    estimated_shop_load: int = 0
 
 
 @dataclass
@@ -255,6 +301,12 @@ class CandidateResult:
     regularity_score: float
     off_lattice_count: int
     spacing_score: float
+    calibration_uncovered_shops: int
+    calibration_only_overloaded_shops: int
+    soft_overloaded_circles: int
+    hard_overloaded_circles: int
+    max_estimated_shop_load: int
+    mean_estimated_shop_load: float
     elapsed_seconds: float
 
 
@@ -273,6 +325,36 @@ class ExactCoverageState:
     deficit_area: float
     largest_undercovered_part: BaseGeometry | None
     geoms_by_count: dict[int, BaseGeometry]
+
+
+@dataclass(frozen=True)
+class CalibrationShop:
+    place_id: str
+    x: float
+    y: float
+
+
+@dataclass
+class CalibrationModel:
+    shops: list[CalibrationShop]
+    shop_soft_cap: int
+    shop_hard_cap: int
+    distance_sq_cache: dict[tuple[float, float], list[float]] = field(default_factory=dict)
+    shop_load_cache: dict[tuple[float, float, int], int] = field(default_factory=dict)
+
+
+@dataclass
+class CalibrationCoverageState:
+    cover_by_circle: list[set[int]]
+    shop_cover_counts: list[int]
+    shop_non_overloaded_counts: list[int]
+    uncovered_shops: int
+    only_overloaded_shops: int
+    soft_overloaded_circles: int
+    hard_overloaded_circles: int
+    max_estimated_shop_load: int
+    mean_estimated_shop_load: float
+    target_shop_indices: list[int]
 
 
 @dataclass(frozen=True)
@@ -309,6 +391,24 @@ def _build_density_points(
     ]
 
 
+def _build_calibration_model(
+    calibration_rows: list[dict[str, float | str]],
+    projection: LocalProjection,
+    shop_soft_cap: int,
+    shop_hard_cap: int,
+) -> CalibrationModel:
+    """Project calibration cafes into XY space and initialize caches."""
+    shops: list[CalibrationShop] = []
+    for row in calibration_rows:
+        x, y = projection.to_xy(float(row["lng"]), float(row["lat"]))
+        shops.append(CalibrationShop(place_id=str(row["place_id"]), x=x, y=y))
+    return CalibrationModel(
+        shops=shops,
+        shop_soft_cap=shop_soft_cap,
+        shop_hard_cap=shop_hard_cap,
+    )
+
+
 def _prepare_density_scale(density_rows: list[dict[str, float]]) -> tuple[float, float]:
     """Helper for prepare density scale."""
     log_values = sorted(math.log1p(max(0.0, row["population_density"])) for row in density_rows)
@@ -336,6 +436,136 @@ def _radius_from_density(
     radius = max_radius - (normalized * (max_radius - min_radius))
     rounded = int(round(radius / ROUNDING_METERS) * ROUNDING_METERS)
     return max(min_radius, min(max_radius, rounded))
+
+
+def _sorted_shop_distances_sq(
+    x: float,
+    y: float,
+    calibration_model: CalibrationModel | None,
+) -> list[float]:
+    """Return sorted squared distances from a center to every calibration shop."""
+    if calibration_model is None or not calibration_model.shops:
+        return []
+    key = _center_key_xy(x, y)
+    cached = calibration_model.distance_sq_cache.get(key)
+    if cached is not None:
+        return cached
+    distances_sq = sorted(
+        ((shop.x - x) * (shop.x - x)) + ((shop.y - y) * (shop.y - y))
+        for shop in calibration_model.shops
+    )
+    calibration_model.distance_sq_cache[key] = distances_sq
+    return distances_sq
+
+
+def _estimate_shop_load(
+    x: float,
+    y: float,
+    radius: int,
+    calibration_model: CalibrationModel | None,
+) -> int:
+    """Estimate known-shop count inside one candidate circle."""
+    if calibration_model is None or not calibration_model.shops:
+        return 0
+    key = (*_center_key_xy(x, y), int(radius))
+    cached = calibration_model.shop_load_cache.get(key)
+    if cached is not None:
+        return cached
+    distances_sq = _sorted_shop_distances_sq(x, y, calibration_model)
+    threshold = float(radius * radius) + EPS
+    count = bisect_right(distances_sq, threshold)
+    calibration_model.shop_load_cache[key] = count
+    return count
+
+
+def _radius_cap_from_calibration(
+    x: float,
+    y: float,
+    min_radius: int,
+    max_radius: int,
+    calibration_model: CalibrationModel | None,
+) -> int:
+    """Cap radius using the distance to the first shop beyond the soft cap."""
+    if calibration_model is None or not calibration_model.shops:
+        return max_radius
+    if len(calibration_model.shops) <= calibration_model.shop_soft_cap:
+        return max_radius
+    distances_sq = _sorted_shop_distances_sq(x, y, calibration_model)
+    nearest_idx = calibration_model.shop_soft_cap
+    if nearest_idx >= len(distances_sq):
+        return max_radius
+    kth_distance = math.sqrt(distances_sq[nearest_idx])
+    capped = min(float(max_radius), max(float(min_radius), kth_distance - SHOP_RADIUS_EPS))
+    rounded = int(math.floor(capped / ROUNDING_METERS) * ROUNDING_METERS)
+    return max(min_radius, min(max_radius, rounded))
+
+
+def _adaptive_radius_for_center(
+    x: float,
+    y: float,
+    density: float,
+    min_radius: int,
+    max_radius: int,
+    low_log: float,
+    high_log: float,
+    calibration_model: CalibrationModel | None,
+) -> int:
+    """Combine population density with optional shop-based radius capping."""
+    density_radius = _radius_from_density(
+        density=density,
+        min_radius=min_radius,
+        max_radius=max_radius,
+        low_log=low_log,
+        high_log=high_log,
+    )
+    calibration_radius = _radius_cap_from_calibration(
+        x=x,
+        y=y,
+        min_radius=min_radius,
+        max_radius=density_radius,
+        calibration_model=calibration_model,
+    )
+    return min(density_radius, calibration_radius)
+
+
+def _make_circle_placement(
+    *,
+    x: float,
+    y: float,
+    density_points: list[DensityPoint],
+    min_radius: int,
+    max_radius: int,
+    low_log: float,
+    high_log: float,
+    calibration_model: CalibrationModel | None,
+    band_idx: int,
+    row: int,
+    col: int,
+    lattice_error: float,
+) -> CirclePlacement:
+    """Build a circle placement using density and optional calibration caps."""
+    density = _query_density(x, y, density_points)
+    radius = _adaptive_radius_for_center(
+        x=x,
+        y=y,
+        density=density,
+        min_radius=min_radius,
+        max_radius=max_radius,
+        low_log=low_log,
+        high_log=high_log,
+        calibration_model=calibration_model,
+    )
+    return CirclePlacement(
+        x=x,
+        y=y,
+        radius=radius,
+        density=density,
+        band_idx=band_idx,
+        row=row,
+        col=col,
+        lattice_error=lattice_error,
+        estimated_shop_load=_estimate_shop_load(x, y, radius, calibration_model),
+    )
 
 
 def _query_density(x: float, y: float, density_points: list[DensityPoint]) -> float:
@@ -598,6 +828,7 @@ def _generate_honeycomb_circles(
     max_radius: int,
     low_log: float,
     high_log: float,
+    calibration_model: CalibrationModel | None,
     lattice_bands: list[LatticeBand],
     deadline: float,
 ) -> list[CirclePlacement] | None:
@@ -615,12 +846,15 @@ def _generate_honeycomb_circles(
             if _point_is_covered(x, y, circles):
                 continue
             density = _query_density(x, y, density_points)
-            adaptive_radius = _radius_from_density(
+            adaptive_radius = _adaptive_radius_for_center(
+                x=x,
+                y=y,
                 density=density,
                 min_radius=min_radius,
                 max_radius=max_radius,
                 low_log=low_log,
                 high_log=high_log,
+                calibration_model=calibration_model,
             )
             if adaptive_radius < band.band_low or adaptive_radius > band.band_high:
                 continue
@@ -632,11 +866,15 @@ def _generate_honeycomb_circles(
                 continue
             seen_centers.add(key)
             circles.append(
-                CirclePlacement(
+                _make_circle_placement(
                     x=x,
                     y=y,
-                    radius=adaptive_radius,
-                    density=density,
+                    density_points=density_points,
+                    min_radius=min_radius,
+                    max_radius=max_radius,
+                    low_log=low_log,
+                    high_log=high_log,
+                    calibration_model=calibration_model,
                     band_idx=band.band_idx,
                     row=row,
                     col=col,
@@ -761,6 +999,121 @@ def _coverage_metrics(
     return cover_at_min_or_better / total, mean_mult, min_sample_cover, below_min, above_soft
 
 
+def _empty_calibration_coverage_state(circle_count: int) -> CalibrationCoverageState:
+    """Return zeroed calibration metrics when calibration is disabled."""
+    return CalibrationCoverageState(
+        cover_by_circle=[set() for _ in range(circle_count)],
+        shop_cover_counts=[],
+        shop_non_overloaded_counts=[],
+        uncovered_shops=0,
+        only_overloaded_shops=0,
+        soft_overloaded_circles=0,
+        hard_overloaded_circles=0,
+        max_estimated_shop_load=0,
+        mean_estimated_shop_load=0.0,
+        target_shop_indices=[],
+    )
+
+
+def _build_calibration_coverage_state(
+    circles: list[CirclePlacement],
+    calibration_model: CalibrationModel | None,
+    active: list[bool] | None = None,
+) -> CalibrationCoverageState:
+    """Measure calibration-shop coverage and circle overload using current circles."""
+    if calibration_model is None or not calibration_model.shops:
+        return _empty_calibration_coverage_state(len(circles))
+
+    cover_by_circle = [set() for _ in circles]
+    shop_cover_counts = [0] * len(calibration_model.shops)
+    shop_non_overloaded_counts = [0] * len(calibration_model.shops)
+    active_circle_loads: list[int] = []
+
+    for ci, circle in enumerate(circles):
+        if active is not None and not active[ci]:
+            continue
+        active_circle_loads.append(circle.estimated_shop_load)
+        r2 = float(circle.radius * circle.radius)
+        is_non_overloaded = circle.estimated_shop_load <= calibration_model.shop_soft_cap
+        for si, shop in enumerate(calibration_model.shops):
+            dx = shop.x - circle.x
+            dy = shop.y - circle.y
+            if (dx * dx) + (dy * dy) <= r2 + EPS:
+                cover_by_circle[ci].add(si)
+                shop_cover_counts[si] += 1
+                if is_non_overloaded:
+                    shop_non_overloaded_counts[si] += 1
+
+    uncovered_shops = sum(1 for count in shop_cover_counts if count == 0)
+    only_overloaded_shops = sum(
+        1
+        for cover_count, non_overloaded_count in zip(shop_cover_counts, shop_non_overloaded_counts)
+        if cover_count > 0 and non_overloaded_count == 0
+    )
+    target_shop_indices = [
+        idx
+        for idx, (cover_count, non_overloaded_count) in enumerate(
+            zip(shop_cover_counts, shop_non_overloaded_counts)
+        )
+        if cover_count == 0 or (cover_count > 0 and non_overloaded_count == 0)
+    ]
+    soft_overloaded_circles = sum(
+        1
+        for ci, circle in enumerate(circles)
+        if (active is None or active[ci]) and circle.estimated_shop_load > calibration_model.shop_soft_cap
+    )
+    hard_overloaded_circles = sum(
+        1
+        for ci, circle in enumerate(circles)
+        if (active is None or active[ci]) and circle.estimated_shop_load > calibration_model.shop_hard_cap
+    )
+    max_estimated_shop_load = max(active_circle_loads, default=0)
+    mean_estimated_shop_load = (
+        sum(active_circle_loads) / len(active_circle_loads) if active_circle_loads else 0.0
+    )
+    return CalibrationCoverageState(
+        cover_by_circle=cover_by_circle,
+        shop_cover_counts=shop_cover_counts,
+        shop_non_overloaded_counts=shop_non_overloaded_counts,
+        uncovered_shops=uncovered_shops,
+        only_overloaded_shops=only_overloaded_shops,
+        soft_overloaded_circles=soft_overloaded_circles,
+        hard_overloaded_circles=hard_overloaded_circles,
+        max_estimated_shop_load=max_estimated_shop_load,
+        mean_estimated_shop_load=mean_estimated_shop_load,
+        target_shop_indices=target_shop_indices,
+    )
+
+
+def _candidate_shop_impact(
+    x: float,
+    y: float,
+    radius: int,
+    estimated_shop_load: int,
+    calibration_model: CalibrationModel | None,
+    calibration_state: CalibrationCoverageState,
+) -> tuple[set[int], int, int]:
+    """Measure calibration-shop improvements from adding one candidate circle."""
+    if calibration_model is None or not calibration_model.shops:
+        return set(), 0, 0
+    covered_shop_indices: set[int] = set()
+    improves_uncovered = 0
+    improves_non_overloaded = 0
+    r2 = float(radius * radius)
+    is_non_overloaded = estimated_shop_load <= calibration_model.shop_soft_cap
+    for si, shop in enumerate(calibration_model.shops):
+        dx = shop.x - x
+        dy = shop.y - y
+        if (dx * dx) + (dy * dy) > r2 + EPS:
+            continue
+        covered_shop_indices.add(si)
+        if calibration_state.shop_cover_counts[si] == 0:
+            improves_uncovered += 1
+        if is_non_overloaded and calibration_state.shop_non_overloaded_counts[si] == 0:
+            improves_non_overloaded += 1
+    return covered_shop_indices, improves_uncovered, improves_non_overloaded
+
+
 def _patch_sample_coverage_max_gap(
     border_xy: BaseGeometry,
     lattice_bands: list[LatticeBand],
@@ -773,6 +1126,7 @@ def _patch_sample_coverage_max_gap(
     max_radius: int,
     low_log: float,
     high_log: float,
+    calibration_model: CalibrationModel | None,
     min_cover_count: int,
     soft_max_cover_count: int,
     max_gap_patch_limit: int,
@@ -809,12 +1163,15 @@ def _patch_sample_coverage_max_gap(
             for sample_idx in focus_indices:
                 target_x, target_y = samples[sample_idx]
                 target_density = _query_density(target_x, target_y, density_points)
-                target_radius = _radius_from_density(
+                target_radius = _adaptive_radius_for_center(
+                    x=target_x,
+                    y=target_y,
                     density=target_density,
                     min_radius=min_radius,
                     max_radius=max_radius,
                     low_log=low_log,
                     high_log=high_log,
+                    calibration_model=calibration_model,
                 )
                 for band_limit in (3, None):
                     candidate_nodes = _candidate_lattice_nodes_near_target(
@@ -834,12 +1191,15 @@ def _patch_sample_coverage_max_gap(
                         cached = density_radius_cache.get(key)
                         if cached is None:
                             density = _query_density(x, y, density_points)
-                            radius = _radius_from_density(
+                            radius = _adaptive_radius_for_center(
+                                x=x,
+                                y=y,
                                 density=density,
                                 min_radius=min_radius,
                                 max_radius=max_radius,
                                 low_log=low_log,
                                 high_log=high_log,
+                                calibration_model=calibration_model,
                             )
                             cached = (density, radius)
                             density_radius_cache[key] = cached
@@ -884,11 +1244,15 @@ def _patch_sample_coverage_max_gap(
                         )
                         if best_score is None or score < best_score:
                             best_score = score
-                            best_circle = CirclePlacement(
+                            best_circle = _make_circle_placement(
                                 x=x,
                                 y=y,
-                                radius=radius,
-                                density=density,
+                                density_points=density_points,
+                                min_radius=min_radius,
+                                max_radius=max_radius,
+                                low_log=low_log,
+                                high_log=high_log,
+                                calibration_model=calibration_model,
                                 band_idx=band.band_idx,
                                 row=row,
                                 col=col,
@@ -1044,6 +1408,7 @@ def _patch_exact_coverage(
     max_radius: int,
     low_log: float,
     high_log: float,
+    calibration_model: CalibrationModel | None,
     min_cover_count: int,
     soft_max_cover_count: int,
     exact_tolerance_m2: float,
@@ -1079,12 +1444,15 @@ def _patch_exact_coverage(
         rep = part.representative_point()
         target_x, target_y = float(rep.x), float(rep.y)
         target_density = _query_density(target_x, target_y, density_points)
-        target_radius = _radius_from_density(
+        target_radius = _adaptive_radius_for_center(
+            x=target_x,
+            y=target_y,
             density=target_density,
             min_radius=min_radius,
             max_radius=max_radius,
             low_log=low_log,
             high_log=high_log,
+            calibration_model=calibration_model,
         )
         best_circle: CirclePlacement | None = None
         best_score: tuple[float, float, float, float, int, int, float, float, float] | None = None
@@ -1108,12 +1476,15 @@ def _patch_exact_coverage(
                     cached = density_radius_cache.get(key)
                     if cached is None:
                         density = _query_density(x, y, density_points)
-                        radius = _radius_from_density(
+                        radius = _adaptive_radius_for_center(
+                            x=x,
+                            y=y,
                             density=density,
                             min_radius=min_radius,
                             max_radius=max_radius,
                             low_log=low_log,
                             high_log=high_log,
+                            calibration_model=calibration_model,
                         )
                         cached = (density, radius)
                         density_radius_cache[key] = cached
@@ -1166,11 +1537,15 @@ def _patch_exact_coverage(
                     )
                     if best_score is None or score < best_score:
                         best_score = score
-                        best_circle = CirclePlacement(
+                        best_circle = _make_circle_placement(
                             x=x,
                             y=y,
-                            radius=radius,
-                            density=density,
+                            density_points=density_points,
+                            min_radius=min_radius,
+                            max_radius=max_radius,
+                            low_log=low_log,
+                            high_log=high_log,
+                            calibration_model=calibration_model,
                             band_idx=band.band_idx,
                             row=row,
                             col=col,
@@ -1189,6 +1564,160 @@ def _patch_exact_coverage(
         seen_centers.add(_center_key_xy(circle.x, circle.y))
         added += 1
         _update_coverage_state_for_circle(samples, coverage_counts, nearest_center_d2, circle)
+
+
+def _repair_calibration_coverage(
+    border_xy: BaseGeometry,
+    lattice_bands: list[LatticeBand],
+    circles: list[CirclePlacement],
+    density_points: list[DensityPoint],
+    calibration_model: CalibrationModel | None,
+    min_radius: int,
+    max_radius: int,
+    low_log: float,
+    high_log: float,
+    max_patch_limit: int,
+    lattice_patch_radius_factor: float,
+    lattice_neighbor_ring: int,
+    deadline: float,
+) -> tuple[int, CalibrationCoverageState] | None:
+    """Add circles so calibration shops are covered by at least one non-overloaded circle."""
+    calibration_state = _build_calibration_coverage_state(circles, calibration_model)
+    if calibration_model is None or not calibration_model.shops:
+        return 0, calibration_state
+
+    seen_centers = {_center_key_xy(circle.x, circle.y) for circle in circles}
+    border_buffer_cache: dict[int, BaseGeometry] = {}
+    density_radius_cache: dict[tuple[float, float], tuple[float, int, int]] = {}
+    added = 0
+
+    while calibration_state.uncovered_shops > 0 or calibration_state.only_overloaded_shops > 0:
+        if time.perf_counter() > deadline:
+            return None
+        if added >= max_patch_limit:
+            break
+
+        best_circle: CirclePlacement | None = None
+        best_score: tuple[float, float, float, float, int, float, float] | None = None
+        target_indices = sorted(
+            calibration_state.target_shop_indices,
+            key=lambda idx: (
+                0 if calibration_state.shop_cover_counts[idx] == 0 else 1,
+                calibration_state.shop_cover_counts[idx],
+                calibration_state.shop_non_overloaded_counts[idx],
+            ),
+        )[: max(PATCH_FOCUS_TOP_K, 1)]
+        for nn_threshold in PATCH_NN_NORM_THRESHOLDS:
+            for target_idx in target_indices:
+                target_shop = calibration_model.shops[target_idx]
+                target_density = _query_density(target_shop.x, target_shop.y, density_points)
+                target_radius = _adaptive_radius_for_center(
+                    x=target_shop.x,
+                    y=target_shop.y,
+                    density=target_density,
+                    min_radius=min_radius,
+                    max_radius=max_radius,
+                    low_log=low_log,
+                    high_log=high_log,
+                    calibration_model=calibration_model,
+                )
+                for band_limit in (3, None):
+                    candidate_nodes = _candidate_lattice_nodes_near_target(
+                        lattice_bands=lattice_bands,
+                        target_radius=target_radius,
+                        target_x=target_shop.x,
+                        target_y=target_shop.y,
+                        neighbor_ring=lattice_neighbor_ring,
+                        max_distance_factor=lattice_patch_radius_factor,
+                        max_bands=band_limit,
+                    )
+                    for band, row, col, x, y, lattice_dist_norm in candidate_nodes:
+                        key = _center_key_xy(x, y)
+                        if key in seen_centers:
+                            continue
+                        cached = density_radius_cache.get(key)
+                        if cached is None:
+                            density = _query_density(x, y, density_points)
+                            radius = _adaptive_radius_for_center(
+                                x=x,
+                                y=y,
+                                density=density,
+                                min_radius=min_radius,
+                                max_radius=max_radius,
+                                low_log=low_log,
+                                high_log=high_log,
+                                calibration_model=calibration_model,
+                            )
+                            shop_load = _estimate_shop_load(x, y, radius, calibration_model)
+                            cached = (density, radius, shop_load)
+                            density_radius_cache[key] = cached
+                        density, radius, shop_load = cached
+                        if shop_load > calibration_model.shop_soft_cap:
+                            continue
+                        border_buffer = border_buffer_cache.get(radius)
+                        if border_buffer is None:
+                            border_buffer = border_xy.buffer(float(radius))
+                            border_buffer_cache[radius] = border_buffer
+                        if not border_buffer.covers(Point(x, y)):
+                            continue
+                        dx = target_shop.x - x
+                        dy = target_shop.y - y
+                        if (dx * dx) + (dy * dy) > float(radius * radius) + EPS:
+                            continue
+                        nearest_norm = _nearest_normalized_distance(x, y, radius, circles)
+                        if nearest_norm < nn_threshold:
+                            continue
+                        covered_shop_indices, improves_uncovered, improves_non_overloaded = (
+                            _candidate_shop_impact(
+                                x=x,
+                                y=y,
+                                radius=radius,
+                                estimated_shop_load=shop_load,
+                                calibration_model=calibration_model,
+                                calibration_state=calibration_state,
+                            )
+                        )
+                        if target_idx not in covered_shop_indices or improves_non_overloaded <= 0:
+                            continue
+                        target_is_uncovered = calibration_state.shop_cover_counts[target_idx] == 0
+                        score = (
+                            -float(target_is_uncovered),
+                            -float(improves_non_overloaded),
+                            -float(improves_uncovered),
+                            float(shop_load),
+                            radius,
+                            lattice_dist_norm,
+                            -nearest_norm,
+                        )
+                        if best_score is None or score < best_score:
+                            best_score = score
+                            best_circle = CirclePlacement(
+                                x=x,
+                                y=y,
+                                radius=radius,
+                                density=density,
+                                band_idx=band.band_idx,
+                                row=row,
+                                col=col,
+                                lattice_error=0.0,
+                                estimated_shop_load=shop_load,
+                            )
+                    if best_circle is not None:
+                        break
+                if best_circle is not None:
+                    break
+            if best_circle is not None:
+                break
+
+        if best_circle is None:
+            break
+
+        circles.append(best_circle)
+        seen_centers.add(_center_key_xy(best_circle.x, best_circle.y))
+        calibration_state = _build_calibration_coverage_state(circles, calibration_model)
+        added += 1
+
+    return added, calibration_state
 
 
 def _build_cover_index(
@@ -1264,6 +1793,7 @@ def _prune_circles(
     border_xy: BaseGeometry,
     samples: list[tuple[float, float]],
     circles: list[CirclePlacement],
+    calibration_model: CalibrationModel | None,
     exact_tolerance_m2: float,
     prune_max_passes: int,
     prune_min_cover: int,
@@ -1279,6 +1809,7 @@ def _prune_circles(
         if time.perf_counter() > deadline:
             return None
         cover_by_circle, cover_counts = _build_cover_index(samples, circles, active)
+        calibration_state = _build_calibration_coverage_state(circles, calibration_model, active=active)
         active_indices = [idx for idx, is_active in enumerate(active) if is_active]
         if not active_indices:
             break
@@ -1307,6 +1838,15 @@ def _prune_circles(
                 continue
             if any(cover_counts[si] <= prune_min_cover for si in cover_by_circle[ci]):
                 continue
+            calibration_cover_indices = calibration_state.cover_by_circle[ci]
+            if any(calibration_state.shop_cover_counts[si] <= 1 for si in calibration_cover_indices):
+                continue
+            if circles[ci].estimated_shop_load <= (
+                calibration_model.shop_soft_cap if calibration_model is not None else 0
+            ) and any(
+                calibration_state.shop_non_overloaded_counts[si] <= 1 for si in calibration_cover_indices
+            ):
+                continue
             active[ci] = False
             tentative_exact_state = _exact_coverage_state_for_active(
                 border_xy=border_xy,
@@ -1319,6 +1859,12 @@ def _prune_circles(
                 removed_total += 1
                 for si in cover_by_circle[ci]:
                     cover_counts[si] -= 1
+                for shop_idx in calibration_cover_indices:
+                    calibration_state.shop_cover_counts[shop_idx] -= 1
+                    if circles[ci].estimated_shop_load <= (
+                        calibration_model.shop_soft_cap if calibration_model is not None else 0
+                    ):
+                        calibration_state.shop_non_overloaded_counts[shop_idx] -= 1
             else:
                 active[ci] = True
         if removed_this_pass == 0:
@@ -1373,6 +1919,10 @@ def _off_lattice_count(circles: list[CirclePlacement]) -> int:
 def _candidate_sort_key(candidate: CandidateResult) -> tuple[Any, ...]:
     """Helper for candidate sort key."""
     return (
+        candidate.calibration_uncovered_shops,
+        candidate.calibration_only_overloaded_shops,
+        candidate.hard_overloaded_circles,
+        candidate.soft_overloaded_circles,
         candidate.exact_undercovered_area,
         candidate.samples_below_min,
         candidate.samples_above_soft_max,
@@ -1388,6 +1938,7 @@ def _evaluate_candidate(
     border_xy: BaseGeometry,
     samples: list[tuple[float, float]],
     density_points: list[DensityPoint],
+    calibration_model: CalibrationModel | None,
     min_radius: int,
     max_radius: int,
     low_log: float,
@@ -1428,6 +1979,7 @@ def _evaluate_candidate(
         max_radius=max_radius,
         low_log=low_log,
         high_log=high_log,
+        calibration_model=calibration_model,
         lattice_bands=lattice_bands,
         deadline=deadline,
     )
@@ -1447,6 +1999,7 @@ def _evaluate_candidate(
         max_radius=max_radius,
         low_log=low_log,
         high_log=high_log,
+        calibration_model=calibration_model,
         min_cover_count=min_cover_count,
         soft_max_cover_count=soft_max_cover_count,
         max_gap_patch_limit=max_gap_patch_limit,
@@ -1472,6 +2025,7 @@ def _evaluate_candidate(
         max_radius=max_radius,
         low_log=low_log,
         high_log=high_log,
+        calibration_model=calibration_model,
         min_cover_count=min_cover_count,
         soft_max_cover_count=soft_max_cover_count,
         exact_tolerance_m2=exact_tolerance_m2,
@@ -1486,10 +2040,29 @@ def _evaluate_candidate(
     if exact_patch is None:
         return None
     exact_patch_added, _missing_after_exact = exact_patch
+    calibration_patch = _repair_calibration_coverage(
+        border_xy=border_xy,
+        lattice_bands=lattice_bands,
+        circles=circles,
+        density_points=density_points,
+        calibration_model=calibration_model,
+        min_radius=min_radius,
+        max_radius=max_radius,
+        low_log=low_log,
+        high_log=high_log,
+        max_patch_limit=max_gap_patch_limit,
+        lattice_patch_radius_factor=lattice_patch_radius_factor,
+        lattice_neighbor_ring=lattice_neighbor_ring,
+        deadline=deadline,
+    )
+    if calibration_patch is None:
+        return None
+    _calibration_patch_added, _calibration_state_after_patch = calibration_patch
     pruned = _prune_circles(
         border_xy=border_xy,
         samples=samples,
         circles=circles,
+        calibration_model=calibration_model,
         exact_tolerance_m2=exact_tolerance_m2,
         prune_max_passes=prune_max_passes,
         prune_min_cover=prune_min_cover,
@@ -1503,6 +2076,7 @@ def _evaluate_candidate(
         min_cover_count=min_cover_count,
         soft_max_cover_count=soft_max_cover_count,
     )
+    final_calibration_state = _build_calibration_coverage_state(pruned_circles, calibration_model)
     if samples_below_min != 0 or final_undercovered > exact_tolerance_m2 + EPS:
         return None
     return CandidateResult(
@@ -1524,6 +2098,12 @@ def _evaluate_candidate(
         regularity_score=_regularity_score(pruned_circles),
         off_lattice_count=_off_lattice_count(pruned_circles),
         spacing_score=_spacing_score(pruned_circles),
+        calibration_uncovered_shops=final_calibration_state.uncovered_shops,
+        calibration_only_overloaded_shops=final_calibration_state.only_overloaded_shops,
+        soft_overloaded_circles=final_calibration_state.soft_overloaded_circles,
+        hard_overloaded_circles=final_calibration_state.hard_overloaded_circles,
+        max_estimated_shop_load=final_calibration_state.max_estimated_shop_load,
+        mean_estimated_shop_load=final_calibration_state.mean_estimated_shop_load,
         elapsed_seconds=time.perf_counter() - start,
     )
 
@@ -1544,6 +2124,37 @@ def _circles_to_rows(circles: list[CirclePlacement], projection: LocalProjection
         )
     rows.sort(key=lambda item: (item["lat"], item["lng"], item["radius"]))
     return rows
+
+
+def _rows_to_circles(
+    rows: list[dict[str, Any]],
+    projection: LocalProjection,
+    calibration_model: CalibrationModel | None,
+) -> list[CirclePlacement]:
+    """Convert persisted output rows back into XY circle placements."""
+    circles: list[CirclePlacement] = []
+    for row in rows:
+        lat = _to_float(row.get("lat"))
+        lng = _to_float(row.get("lng"))
+        radius = _to_float(row.get("radius"))
+        density = _to_float(row.get("population_density"))
+        if lat is None or lng is None or radius is None:
+            continue
+        x, y = projection.to_xy(lng, lat)
+        circles.append(
+            CirclePlacement(
+                x=x,
+                y=y,
+                radius=int(radius),
+                density=0.0 if density is None else density,
+                band_idx=0,
+                row=0,
+                col=0,
+                lattice_error=0.0,
+                estimated_shop_load=_estimate_shop_load(x, y, int(radius), calibration_model),
+            )
+        )
+    return circles
 
 
 def _load_existing_rows(path: Path) -> list[dict[str, Any]]:
@@ -1680,6 +2291,14 @@ def _parse_int_values_list(raw: str, name: str) -> list[int]:
     return sorted(set(values))
 
 
+def _resolve_path(path_value: str) -> Path:
+    """Resolve CLI paths relative to the repository root."""
+    path = Path(path_value).expanduser()
+    if path.is_absolute():
+        return path
+    return (REPO_ROOT.parent.parent / path).resolve()
+
+
 def _candidate_combinations(spacing_scales: list[float], band_steps: list[int]) -> list[tuple[float, int]]:
     """Build ordered (spacing_scale, band_step) combinations to evaluate first."""
     combos = [(scale, band) for scale in spacing_scales for band in band_steps]
@@ -1706,6 +2325,10 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Generate optimized honeycomb adaptive circles for Chiang Mai."
     )
+    parser.add_argument("--calibration-csv", type=str, default=str(DEFAULT_CALIBRATION_CSV_PATH))
+    parser.add_argument("--disable-calibration", action="store_true")
+    parser.add_argument("--shop-soft-cap", type=int, default=DEFAULT_SHOP_SOFT_CAP)
+    parser.add_argument("--shop-hard-cap", type=int, default=DEFAULT_SHOP_HARD_CAP)
     parser.add_argument("--min-radius", type=int, default=500)
     parser.add_argument("--max-radius", type=int, default=None)
     parser.add_argument("--coverage-step", type=float, default=100.0)
@@ -1736,6 +2359,10 @@ def main(argv: list[str] | None = None) -> int:
     # Phase 1: Validate CLI parameters and load source datasets.
     # ---------------------------------------------------------------------
     args = _parse_args(argv)
+    if args.shop_soft_cap <= 0:
+        _fatal("--shop-soft-cap must be > 0")
+    if args.shop_hard_cap < args.shop_soft_cap:
+        _fatal("--shop-hard-cap must be >= --shop-soft-cap")
     if args.min_radius < 100:
         _fatal("--min-radius must be >= 100")
     if args.coverage_step <= 0:
@@ -1802,6 +2429,15 @@ def main(argv: list[str] | None = None) -> int:
     projection = _build_projection(border_lng_lat)
     border_xy = projection.geom_to_xy(border_lng_lat)
     density_points = _build_density_points(density_rows, projection)
+    calibration_model: CalibrationModel | None = None
+    if not args.disable_calibration:
+        calibration_rows = _load_calibration_rows(_resolve_path(args.calibration_csv))
+        calibration_model = _build_calibration_model(
+            calibration_rows=calibration_rows,
+            projection=projection,
+            shop_soft_cap=args.shop_soft_cap,
+            shop_hard_cap=args.shop_hard_cap,
+        )
     low_log, high_log = _prepare_density_scale(density_rows)
     samples = _build_coverage_samples(border_xy, args.coverage_step)
     prune_min_cover = max(args.prune_min_cover, args.min_cover_count)
@@ -1825,6 +2461,7 @@ def main(argv: list[str] | None = None) -> int:
             border_xy=border_xy,
             samples=samples,
             density_points=density_points,
+            calibration_model=calibration_model,
             min_radius=args.min_radius,
             max_radius=max_radius,
             low_log=low_log,
@@ -1879,6 +2516,7 @@ def main(argv: list[str] | None = None) -> int:
                     border_xy=border_xy,
                     samples=samples,
                     density_points=density_points,
+                    calibration_model=calibration_model,
                     min_radius=args.min_radius,
                     max_radius=max_radius,
                     low_log=low_log,
@@ -1935,6 +2573,19 @@ def main(argv: list[str] | None = None) -> int:
     radii = [int(row["radius"]) for row in output_rows]
     unique_radii = sorted(set(radii))
     total_runtime = time.perf_counter() - optimization_start
+    calibration_summary = (
+        "Calibration: disabled"
+        if calibration_model is None
+        else (
+            f"Calibration shops covered: "
+            f"{len(calibration_model.shops) - best.calibration_uncovered_shops}/{len(calibration_model.shops)} | "
+            f"Only overloaded cover: {best.calibration_only_overloaded_shops} | "
+            f"Circles > soft cap: {best.soft_overloaded_circles} | "
+            f"Circles > hard cap: {best.hard_overloaded_circles} | "
+            f"Max known shops in circle: {best.max_estimated_shop_load} | "
+            f"Mean known shops in circle: {best.mean_estimated_shop_load:.2f}"
+        )
+    )
 
     print(
         f"Candidates tested: {tested} ({valid} valid) | "
@@ -1959,6 +2610,7 @@ def main(argv: list[str] | None = None) -> int:
         f"Regularity score: {best.regularity_score:.4f} | "
         f"Off-lattice circles: {best.off_lattice_count} | "
         f"Spacing score p25: {best.spacing_score:.4f} | "
+        f"{calibration_summary} | "
         f"Preserved collected exact: {exact_preserved} | "
         f"Preserved collected nearest: {nearest_preserved} | "
         f"Best candidate sec: {best.elapsed_seconds:.2f} | "
