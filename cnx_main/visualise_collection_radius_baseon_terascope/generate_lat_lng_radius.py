@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 """
-Generate 500 m collection circles over built-up WorldCover pixels.
+Generate 500 m collection circles from Terascope 100 m built-up cells.
 
 Pipeline:
-1) Load the local Chiang Mai border GeoJSON.
-2) Read only the raster windows that overlap the border bbox.
-3) Keep WorldCover built-up pixel centers inside the border.
-4) Lay down a 500 m square lattice buffered by 500 m around built-up pixels.
-5) Keep only circles that cover at least one built-up pixel center.
-6) Verify each built-up pixel center is covered by at least two kept circles.
+1) Load the local Chiang Mai border GeoJSON for projection anchoring.
+2) Read Chiang Mai Terascope 100 m cells from the sibling CSV.
+3) Keep only cells whose dominant land-cover label is Built-up.
+4) Build a 500 m square lattice around the built 100 m cell bounds.
+5) Keep a circle when it intersects at least one built 100 m square.
+6) Verify every built 100 m cell center is covered by at least two circles.
 """
 
 from __future__ import annotations
 
+import csv
 import json
 import math
 import sys
@@ -21,19 +22,16 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-import rasterio
-from rasterio.windows import Window
-from shapely import intersects_xy
 from shapely.geometry import shape
 from shapely.ops import unary_union
 
 
 REPO_ROOT = Path(__file__).resolve().parent
 BORDER_PATH = REPO_ROOT / "chiang_mai_main_area_merged_border.geojson"
+TERASCOPE_CSV_PATH = REPO_ROOT.parent / "terascope" / "chiang_mai_terascope_100m_cells.csv"
 OUTPUT_PATH = REPO_ROOT / "lat_lng_radius.json"
-RASTER_GLOB = "data/*/*_Map.tif"
 
-BUILT_UP_VALUE = 50
+TARGET_LAND_COVER_LABEL = "Built-up"
 GRID_SPACING_M = 500.0
 RADIUS_M = 500.0
 RADIUS_SQ_M = RADIUS_M * RADIUS_M
@@ -44,6 +42,22 @@ EPS = 1e-9
 def _fatal(message: str) -> "None":
     print(f"Error: {message}", file=sys.stderr)
     raise SystemExit(1)
+
+
+def _to_float(value: Any) -> float | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        text = value.strip()
+        if not text:
+            return None
+        try:
+            return float(text)
+        except ValueError:
+            return None
+    return None
 
 
 @dataclass(frozen=True)
@@ -68,10 +82,13 @@ class LocalProjection:
 
 
 @dataclass(frozen=True)
-class RasterProfile:
-    crs: str
-    res_x: float
-    res_y: float
+class BuiltCellData:
+    left_x: np.ndarray
+    right_x: np.ndarray
+    bottom_y: np.ndarray
+    top_y: np.ndarray
+    center_x: np.ndarray
+    center_y: np.ndarray
 
 
 def _load_border_geometry(path: Path):
@@ -122,117 +139,89 @@ def _build_projection(border_geom) -> LocalProjection:
     )
 
 
-def _load_raster_paths() -> list[Path]:
-    paths = sorted(REPO_ROOT.glob(RASTER_GLOB))
-    if not paths:
-        _fatal(f"no raster files found under {REPO_ROOT / 'data'}")
-    return paths
+def _load_built_cells(path: Path, projection: LocalProjection) -> BuiltCellData:
+    if not path.exists():
+        _fatal(f"Terascope CSV not found: {path}")
 
+    required_columns = {
+        "lon_center",
+        "lat_center",
+        "lon_left",
+        "lon_right",
+        "lat_bottom",
+        "lat_top",
+        "dominant_land_cover_label",
+    }
 
-def _validate_raster_profile(
-    path: Path,
-    src: rasterio.io.DatasetReader,
-    expected: RasterProfile | None,
-) -> RasterProfile:
-    if src.crs is None:
-        _fatal(f"raster has no CRS: {path}")
+    left_x_values: list[float] = []
+    right_x_values: list[float] = []
+    bottom_y_values: list[float] = []
+    top_y_values: list[float] = []
+    center_x_values: list[float] = []
+    center_y_values: list[float] = []
 
-    current = RasterProfile(
-        crs=str(src.crs),
-        res_x=float(src.res[0]),
-        res_y=float(src.res[1]),
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        if reader.fieldnames is None:
+            _fatal(f"CSV has no header row: {path}")
+
+        missing = required_columns.difference(reader.fieldnames)
+        if missing:
+            _fatal(f"CSV missing columns: {', '.join(sorted(missing))}")
+
+        for raw in reader:
+            if raw.get("dominant_land_cover_label") != TARGET_LAND_COVER_LABEL:
+                continue
+
+            lon_center = _to_float(raw.get("lon_center"))
+            lat_center = _to_float(raw.get("lat_center"))
+            lon_left = _to_float(raw.get("lon_left"))
+            lon_right = _to_float(raw.get("lon_right"))
+            lat_bottom = _to_float(raw.get("lat_bottom"))
+            lat_top = _to_float(raw.get("lat_top"))
+
+            if (
+                lon_center is None
+                or lat_center is None
+                or lon_left is None
+                or lon_right is None
+                or lat_bottom is None
+                or lat_top is None
+            ):
+                continue
+
+            if not (
+                -180.0 <= lon_center <= 180.0
+                and -90.0 <= lat_center <= 90.0
+                and -180.0 <= lon_left <= 180.0
+                and -180.0 <= lon_right <= 180.0
+                and -90.0 <= lat_bottom <= 90.0
+                and -90.0 <= lat_top <= 90.0
+            ):
+                continue
+
+            center_x, center_y = projection.to_xy(lon_center, lat_center)
+            left_bottom_x, left_bottom_y = projection.to_xy(lon_left, lat_bottom)
+            right_top_x, right_top_y = projection.to_xy(lon_right, lat_top)
+
+            left_x_values.append(min(left_bottom_x, right_top_x))
+            right_x_values.append(max(left_bottom_x, right_top_x))
+            bottom_y_values.append(min(left_bottom_y, right_top_y))
+            top_y_values.append(max(left_bottom_y, right_top_y))
+            center_x_values.append(center_x)
+            center_y_values.append(center_y)
+
+    if not center_x_values:
+        _fatal("found zero dominant built-up Terascope cells")
+
+    return BuiltCellData(
+        left_x=np.asarray(left_x_values, dtype=np.float64),
+        right_x=np.asarray(right_x_values, dtype=np.float64),
+        bottom_y=np.asarray(bottom_y_values, dtype=np.float64),
+        top_y=np.asarray(top_y_values, dtype=np.float64),
+        center_x=np.asarray(center_x_values, dtype=np.float64),
+        center_y=np.asarray(center_y_values, dtype=np.float64),
     )
-
-    if current.crs != "EPSG:4326":
-        _fatal(f"expected EPSG:4326 raster, found {current.crs} in {path}")
-
-    if expected is None:
-        return current
-
-    if current.crs != expected.crs:
-        _fatal(f"raster CRS mismatch in {path}: {current.crs} vs {expected.crs}")
-
-    if not math.isclose(current.res_x, expected.res_x, rel_tol=0.0, abs_tol=1e-12):
-        _fatal(f"raster x resolution mismatch in {path}")
-
-    if not math.isclose(current.res_y, expected.res_y, rel_tol=0.0, abs_tol=1e-12):
-        _fatal(f"raster y resolution mismatch in {path}")
-
-    return expected
-
-
-def _window_for_bounds(
-    src: rasterio.io.DatasetReader,
-    bounds: tuple[float, float, float, float],
-) -> Window | None:
-    left, bottom, right, top = bounds
-
-    if (
-        right <= src.bounds.left + EPS
-        or left >= src.bounds.right - EPS
-        or top <= src.bounds.bottom + EPS
-        or bottom >= src.bounds.top - EPS
-    ):
-        return None
-
-    raw_window = src.window(left, bottom, right, top)
-
-    row_start = max(0, int(math.floor(raw_window.row_off)))
-    col_start = max(0, int(math.floor(raw_window.col_off)))
-    row_stop = min(src.height, int(math.ceil(raw_window.row_off + raw_window.height)))
-    col_stop = min(src.width, int(math.ceil(raw_window.col_off + raw_window.width)))
-
-    if row_stop <= row_start or col_stop <= col_start:
-        return None
-
-    return Window(
-        col_off=col_start,
-        row_off=row_start,
-        width=col_stop - col_start,
-        height=row_stop - row_start,
-    )
-
-
-def _read_built_up_points_xy(
-    raster_paths: list[Path],
-    border_geom,
-    projection: LocalProjection,
-) -> tuple[np.ndarray, np.ndarray]:
-    expected_profile: RasterProfile | None = None
-    x_parts: list[np.ndarray] = []
-    y_parts: list[np.ndarray] = []
-
-    for path in raster_paths:
-        with rasterio.open(path) as src:
-            expected_profile = _validate_raster_profile(path, src, expected_profile)
-            window = _window_for_bounds(src, border_geom.bounds)
-            if window is None:
-                continue
-
-            data = src.read(1, window=window)
-            built_up_mask = data == BUILT_UP_VALUE
-            if not np.any(built_up_mask):
-                continue
-
-            rows, cols = np.nonzero(built_up_mask)
-            transform = src.window_transform(window)
-            col_positions = cols.astype(np.float64) + 0.5
-            row_positions = rows.astype(np.float64) + 0.5
-            lngs = (transform.a * col_positions) + (transform.b * row_positions) + transform.c
-            lats = (transform.d * col_positions) + (transform.e * row_positions) + transform.f
-
-            inside_border = np.asarray(intersects_xy(border_geom, lngs, lats), dtype=bool)
-            if not np.any(inside_border):
-                continue
-
-            xs, ys = projection.to_xy(lngs[inside_border], lats[inside_border])
-            x_parts.append(np.asarray(xs, dtype=np.float64))
-            y_parts.append(np.asarray(ys, dtype=np.float64))
-
-    if not x_parts or not y_parts:
-        _fatal("found zero built-up pixels inside the border")
-
-    return np.concatenate(x_parts), np.concatenate(y_parts)
 
 
 def _build_grid_axis(min_value: float, max_value: float) -> np.ndarray:
@@ -245,29 +234,35 @@ def _build_grid_axis(min_value: float, max_value: float) -> np.ndarray:
 
 
 def _build_active_circle_mask(
-    point_x: np.ndarray,
-    point_y: np.ndarray,
+    built_cells: BuiltCellData,
     x_centers: np.ndarray,
     y_centers: np.ndarray,
 ) -> np.ndarray:
     active_mask = np.zeros((y_centers.size, x_centers.size), dtype=bool)
 
     for y_index, center_y in enumerate(y_centers):
-        dy = point_y - center_y
-        y_slab = np.abs(dy) <= RADIUS_M
-        if not np.any(y_slab):
+        dy = np.maximum(
+            np.maximum(built_cells.bottom_y - center_y, 0.0),
+            center_y - built_cells.top_y,
+        )
+        y_overlap = dy <= RADIUS_M
+        if not np.any(y_overlap):
             continue
 
-        slab_x = point_x[y_slab]
-        slab_dy = dy[y_slab]
+        left_x = built_cells.left_x[y_overlap]
+        right_x = built_cells.right_x[y_overlap]
+        dy = dy[y_overlap]
 
         for x_index, center_x in enumerate(x_centers):
-            dx = slab_x - center_x
-            x_slab = np.abs(dx) <= RADIUS_M
-            if not np.any(x_slab):
+            dx = np.maximum(
+                np.maximum(left_x - center_x, 0.0),
+                center_x - right_x,
+            )
+            x_overlap = dx <= RADIUS_M
+            if not np.any(x_overlap):
                 continue
 
-            if np.any((dx[x_slab] * dx[x_slab]) + (slab_dy[x_slab] * slab_dy[x_slab]) <= RADIUS_SQ_M + EPS):
+            if np.any((dx[x_overlap] * dx[x_overlap]) + (dy[x_overlap] * dy[x_overlap]) <= RADIUS_SQ_M + EPS):
                 active_mask[y_index, x_index] = True
 
     return active_mask
@@ -325,7 +320,7 @@ def _rows_from_active_mask(
     projection: LocalProjection,
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
-    seen_keys: set[tuple[float, float]] = set()
+    seen_keys: set[tuple[int, int]] = set()
 
     for y_index, center_y in enumerate(y_centers):
         for x_index, center_x in enumerate(x_centers):
@@ -333,15 +328,15 @@ def _rows_from_active_mask(
                 continue
 
             lng, lat = projection.to_lng_lat(float(center_x), float(center_y))
-            key = (round(lat, 6), round(lng, 6))
+            key = (y_index, x_index)
             if key in seen_keys:
                 continue
             seen_keys.add(key)
 
             rows.append(
                 {
-                    "lat": key[0],
-                    "lng": key[1],
+                    "lat": round(lat, 9),
+                    "lng": round(lng, 9),
                     "radius": int(RADIUS_M),
                     "collected": False,
                     "population_density": None,
@@ -355,27 +350,30 @@ def _rows_from_active_mask(
 def main() -> int:
     border_geom = _load_border_geometry(BORDER_PATH)
     projection = _build_projection(border_geom)
-    raster_paths = _load_raster_paths()
-    built_up_x, built_up_y = _read_built_up_points_xy(raster_paths, border_geom, projection)
+    built_cells = _load_built_cells(TERASCOPE_CSV_PATH, projection)
 
-    x_centers = _build_grid_axis(float(np.min(built_up_x)), float(np.max(built_up_x)))
-    y_centers = _build_grid_axis(float(np.min(built_up_y)), float(np.max(built_up_y)))
+    x_min = float(np.min(built_cells.left_x))
+    x_max = float(np.max(built_cells.right_x))
+    y_min = float(np.min(built_cells.bottom_y))
+    y_max = float(np.max(built_cells.top_y))
+
+    x_centers = _build_grid_axis(x_min, x_max)
+    y_centers = _build_grid_axis(y_min, y_max)
     candidate_center_count = int(x_centers.size * y_centers.size)
 
     active_mask = _build_active_circle_mask(
-        point_x=built_up_x,
-        point_y=built_up_y,
+        built_cells=built_cells,
         x_centers=x_centers,
         y_centers=y_centers,
     )
 
     kept_circle_count = int(np.count_nonzero(active_mask))
     if kept_circle_count == 0:
-        _fatal("grid generation produced zero circles covering built-up pixels")
+        _fatal("grid generation produced zero circles intersecting built-up Terascope cells")
 
     coverage_counts = _coverage_counts_for_points(
-        point_x=built_up_x,
-        point_y=built_up_y,
+        point_x=built_cells.center_x,
+        point_y=built_cells.center_y,
         x_centers=x_centers,
         y_centers=y_centers,
         active_mask=active_mask,
@@ -384,7 +382,7 @@ def main() -> int:
     if min_coverage_count < 2:
         _fatal(
             "built-up coverage target failed: "
-            f"minimum coverage count was {min_coverage_count}, expected at least 2"
+            f"minimum built-cell-center coverage count was {min_coverage_count}, expected at least 2"
         )
 
     output_rows = _rows_from_active_mask(active_mask, x_centers, y_centers, projection)
@@ -394,10 +392,10 @@ def main() -> int:
     )
 
     print(
-        f"Built-up pixels inside border: {built_up_x.size} | "
+        f"Dominant built 100m cells used: {built_cells.center_x.size} | "
         f"Candidate centers checked: {candidate_center_count} | "
         f"Circles kept: {kept_circle_count} | "
-        f"Minimum built-up coverage count: {min_coverage_count} | "
+        f"Minimum built-cell-center coverage count: {min_coverage_count} | "
         f"Output: {OUTPUT_PATH}"
     )
     return 0

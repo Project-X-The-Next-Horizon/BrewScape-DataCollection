@@ -141,6 +141,26 @@ def _build_popup_html(lat: float, lng: float, radius: float, collected: bool) ->
     )
 
 
+def _build_circle_count_html(circle_count: int) -> str:
+    return (
+        "<div style='"
+        "position: fixed; "
+        "bottom: 24px; "
+        "right: 24px; "
+        "z-index: 9999; "
+        "background: rgba(255, 255, 255, 0.95); "
+        "border: 1px solid #bbb; "
+        "border-radius: 8px; "
+        "padding: 10px 12px; "
+        "box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); "
+        "font-family: Arial, sans-serif; "
+        "font-size: 12px;'>"
+        "<div style='font-weight: 700; margin-bottom: 4px;'>Circle Count</div>"
+        f"<div>{circle_count}</div>"
+        "</div>"
+    )
+
+
 def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
     points: list[dict[str, Any]] = []
     skipped = 0
@@ -240,6 +260,10 @@ def _build_map(points: list[dict[str, Any]], border_geojson: dict[str, Any]) -> 
         point_map.fit_bounds(bounds)
     else:
         point_map.fit_bounds([[min(lats), min(lngs)], [max(lats), max(lngs)]])
+
+    point_map.get_root().html.add_child(
+        folium.Element(_build_circle_count_html(len(points)))
+    )
 
     return point_map
 
