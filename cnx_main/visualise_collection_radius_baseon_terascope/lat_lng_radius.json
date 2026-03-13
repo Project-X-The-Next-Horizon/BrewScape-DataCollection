@@ -1,3467 +1,2732 @@
 [
   {
-    "lat": 18.756726,
-    "lng": 98.955116,
+    "lat": 18.75448,
+    "lng": 98.93756,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 91.735537,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.756726,
-    "lng": 98.958911,
+    "lat": 18.75448,
+    "lng": 98.942305,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 62.5,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.756951,
-    "lng": 98.941119,
+    "lat": 18.75448,
+    "lng": 98.94705,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 53.333333,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.757624,
-    "lng": 98.962707,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 63.934426,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.757624,
-    "lng": 99.003511,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 82.575758,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.758523,
-    "lng": 99.010154,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 98.75,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.759421,
-    "lng": 98.965554,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 41.818182,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.759645,
-    "lng": 98.940644,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 73.636364,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.759645,
-    "lng": 99.001851,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 59.090909,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.761218,
-    "lng": 98.935188,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 67.692308,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.761218,
-    "lng": 98.936137,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 75.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.761218,
-    "lng": 98.944677,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 93.939394,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.761218,
-    "lng": 98.945626,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 78.512397,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.761218,
-    "lng": 98.949422,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 38.636364,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.761218,
+    "lat": 18.75448,
     "lng": 98.951794,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 34.090909,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.761218,
-    "lng": 98.954167,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 80.30303,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.761218,
+    "lat": 18.75448,
     "lng": 98.956539,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 61.983471,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.761218,
-    "lng": 98.958911,
+    "lat": 18.75448,
+    "lng": 98.961284,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 90.909091,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.761218,
-    "lng": 98.968401,
+    "lat": 18.75448,
+    "lng": 98.966028,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 62.878788,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.761218,
-    "lng": 98.996869,
+    "lat": 18.75448,
+    "lng": 98.999241,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 98.347107,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.761218,
-    "lng": 99.006358,
+    "lat": 18.75448,
+    "lng": 99.003986,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 61.983471,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.761218,
-    "lng": 99.011103,
+    "lat": 18.75448,
+    "lng": 99.00873,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.761218,
+    "lat": 18.75448,
+    "lng": 99.013475,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 98.932816,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 98.93756,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 98.942305,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 98.951794,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 98.956539,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 98.961284,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 98.994496,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 98.999241,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 99.003986,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 99.00873,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
+    "lng": 99.013475,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.758972,
     "lng": 99.01822,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 69.69697,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.761442,
-    "lng": 98.965791,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 59.504132,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.76234,
-    "lng": 99.015136,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 28.099174,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.763463,
-    "lng": 98.930443,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 46.363636,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.763463,
-    "lng": 98.956539,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 20.909091,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.763463,
-    "lng": 99.022964,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 35.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.763912,
-    "lng": 98.928545,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 66.666667,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.763912,
-    "lng": 99.025337,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 97.5,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.764137,
-    "lng": 98.972908,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 94.392523,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.764811,
-    "lng": 98.941831,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 78.787879,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.764811,
-    "lng": 98.996869,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 70.247934,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.765709,
-    "lng": 98.925699,
-    "radius": 1500,
-    "collected": false,
-    "land_cover_label": "Grassland",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "open_non_builtup"
-  },
-  {
-    "lat": 18.765709,
-    "lng": 98.950371,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 62.809917,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.765709,
-    "lng": 98.958911,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 77.272727,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.765709,
-    "lng": 98.968401,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.765709,
-    "lng": 98.973145,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 77.68595,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.765709,
-    "lng": 98.989277,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 89.690722,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.765709,
-    "lng": 98.992124,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 77.68595,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.765709,
-    "lng": 98.996869,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 53.719008,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.765709,
-    "lng": 99.001613,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 99.173554,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.765709,
-    "lng": 99.006358,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 96.694215,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.765709,
-    "lng": 99.011103,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 76.859504,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.765709,
-    "lng": 99.020592,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 61.363636,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.765709,
+    "lat": 18.758972,
     "lng": 99.022964,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 95.454545,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.765709,
-    "lng": 99.025337,
+    "lat": 18.763463,
+    "lng": 98.923326,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 71.212121,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.765709,
-    "lng": 99.027709,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 92.424242,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.766832,
-    "lng": 98.962944,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 54.545455,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.767955,
-    "lng": 98.949422,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 81.060606,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.767955,
-    "lng": 98.980262,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.767955,
-    "lng": 98.985007,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.767955,
-    "lng": 99.027709,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 78.787879,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.768404,
-    "lng": 98.937086,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 64.393939,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.768404,
-    "lng": 98.942779,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 97.520661,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.769302,
-    "lng": 99.015847,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 48.484848,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 98.940882,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 78.512397,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 98.944677,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 56.818182,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 98.945626,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 72.727273,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 98.950371,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 63.636364,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 98.954167,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 78.787879,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 98.958911,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 92.424242,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 98.968401,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 98.97789,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 98.982635,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 97.520661,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 98.992124,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 95.867769,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 99.001613,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 47.107438,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 99.006358,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 76.033058,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 99.011103,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 71.07438,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770201,
-    "lng": 99.025337,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 81.818182,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.770425,
-    "lng": 98.998529,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 75.206612,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.771099,
-    "lng": 98.972196,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 91.735537,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 98.899603,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 98.918582,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 98.951794,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 84.090909,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 98.956539,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 98.961284,
-    "radius": 1500,
-    "collected": false,
-    "land_cover_label": "Cropland",
-    "built_up_share_pct": 14.876033,
-    "radius_rule": "open_non_builtup"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 98.966028,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 98.980262,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 91.735537,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 98.985007,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 78.512397,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 98.989752,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 50.413223,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 98.994496,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 99.173554,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 99.006358,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 57.85124,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 99.013475,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 82.575758,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.772446,
-    "lng": 99.022964,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 56.818182,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.772896,
-    "lng": 98.962707,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 56.198347,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.774692,
-    "lng": 98.973145,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 75.206612,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.774692,
-    "lng": 98.97789,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 79.338843,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.774692,
-    "lng": 98.982635,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 91.735537,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.774692,
-    "lng": 98.987379,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 83.471074,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.774692,
-    "lng": 98.992124,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 93.38843,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.774692,
-    "lng": 99.001613,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.774692,
-    "lng": 99.015847,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 98.484848,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.774692,
-    "lng": 99.020592,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 77.272727,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.774692,
-    "lng": 99.027235,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 98.484848,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.776938,
-    "lng": 98.951794,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 98.484848,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.776938,
-    "lng": 98.966028,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 57.85124,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.776938,
-    "lng": 98.980262,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 96.694215,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.776938,
-    "lng": 98.985007,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.776938,
-    "lng": 98.989752,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.776938,
-    "lng": 98.994496,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.776938,
-    "lng": 99.027709,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 92.424242,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.777387,
-    "lng": 98.95132,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 98.484848,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.777612,
-    "lng": 99.005646,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 50.757576,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.778959,
-    "lng": 99.000427,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 56.060606,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.779184,
-    "lng": 98.958911,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 87.878788,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.779184,
-    "lng": 98.963656,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 62.878788,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.779184,
-    "lng": 98.968401,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 73.484848,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.779184,
-    "lng": 98.973145,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 57.85124,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.779184,
-    "lng": 98.982635,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.779184,
-    "lng": 98.987379,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 98.347107,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.779184,
-    "lng": 98.992124,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.779184,
-    "lng": 98.996869,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.779184,
-    "lng": 99.011103,
-    "radius": 1500,
-    "collected": false,
-    "land_cover_label": "Grassland",
-    "built_up_share_pct": 5.785124,
-    "radius_rule": "open_non_builtup"
-  },
-  {
-    "lat": 18.779184,
-    "lng": 99.015847,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 55.30303,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.779184,
-    "lng": 99.020592,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 68.939394,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.779184,
-    "lng": 99.025337,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 64.393939,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.779408,
-    "lng": 99.008968,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 65.289256,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.780082,
-    "lng": 98.973145,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 38.181818,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.78143,
-    "lng": 98.899603,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.78143,
+    "lat": 18.763463,
     "lng": 98.928071,
-    "radius": 2000,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.932816,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.93756,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.942305,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.951794,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.956539,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.961284,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.980262,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.985007,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.989752,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.994496,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 98.999241,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 99.003986,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 99.00873,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 99.013475,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 99.01822,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 99.022964,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 99.027709,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.763463,
+    "lng": 99.032454,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.923326,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.928071,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.932816,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.93756,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.942305,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.951794,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.956539,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.961284,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.980262,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.985007,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.989752,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.994496,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 98.999241,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 99.003986,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 99.00873,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 99.013475,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 99.01822,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 99.022964,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 99.027709,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.767955,
+    "lng": 99.032454,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.932816,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.93756,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.942305,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.951794,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.956539,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.961284,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.980262,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.985007,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.989752,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.994496,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 98.999241,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 99.003986,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 99.00873,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 99.013475,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 99.01822,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 99.022964,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 99.027709,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.772446,
+    "lng": 99.032454,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.93756,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.942305,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.951794,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.956539,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.961284,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.980262,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.985007,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.989752,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.994496,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 98.999241,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 99.003986,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 99.00873,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 99.013475,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 99.01822,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 99.022964,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 99.027709,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.776938,
+    "lng": 99.032454,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.78143,
+    "lng": 98.942305,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.78143,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.78143,
+    "lng": 98.951794,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.78143,
     "lng": 98.956539,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 88.429752,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.78143,
     "lng": 98.961284,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 42.975207,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.78143,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.78143,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.78143,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.78143,
     "lng": 98.980262,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 58.677686,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.78143,
     "lng": 98.985007,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 91.735537,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.78143,
     "lng": 98.989752,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 99.173554,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.78143,
     "lng": 98.994496,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 85.123967,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.78143,
+    "lng": 98.999241,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.78143,
+    "lng": 99.003986,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.78143,
+    "lng": 99.00873,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.78143,
     "lng": 99.013475,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 75.757576,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.78143,
+    "lng": 99.01822,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.78143,
     "lng": 99.022964,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 67.424242,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.783675,
-    "lng": 98.954167,
+    "lat": 18.78143,
+    "lng": 99.027709,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 58.333333,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.783675,
-    "lng": 98.958911,
+    "lat": 18.785921,
+    "lng": 98.918582,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 72.5,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.783675,
-    "lng": 98.963656,
+    "lat": 18.785921,
+    "lng": 98.923326,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 66.666667,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.783675,
-    "lng": 98.968401,
+    "lat": 18.785921,
+    "lng": 98.928071,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 51.666667,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.783675,
-    "lng": 98.97789,
+    "lat": 18.785921,
+    "lng": 98.94705,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 79.090909,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.783675,
-    "lng": 98.982635,
+    "lat": 18.785921,
+    "lng": 98.951794,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.783675,
-    "lng": 98.987379,
+    "lat": 18.785921,
+    "lng": 98.956539,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 77.272727,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.783675,
-    "lng": 98.992124,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.783675,
-    "lng": 98.996869,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 93.636364,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.783675,
-    "lng": 99.001613,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 93.636364,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.783675,
-    "lng": 99.006358,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 86.363636,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.783675,
-    "lng": 99.015847,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 79.166667,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.783675,
-    "lng": 99.020592,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 55.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.783675,
-    "lng": 99.025337,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 92.5,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.785921,
     "lng": 98.961284,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.785921,
     "lng": 98.966028,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 79.338843,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.785921,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.785921,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.785921,
     "lng": 98.980262,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.785921,
     "lng": 98.985007,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.785921,
     "lng": 98.989752,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 93.38843,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.785921,
     "lng": 98.994496,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 94.214876,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.785921,
+    "lng": 98.999241,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.785921,
+    "lng": 99.003986,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.785921,
+    "lng": 99.00873,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.785921,
     "lng": 99.013475,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.785921,
+    "lng": 99.01822,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.785921,
     "lng": 99.022964,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 95.454545,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.785921,
-    "lng": 99.025337,
+    "lng": 99.027709,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 99.242424,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.787044,
-    "lng": 98.972908,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 98.946575,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 98.952269,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 74.545455,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 98.954167,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 62.5,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 98.958911,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 66.666667,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 98.963656,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 98.968401,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 82.5,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 98.973145,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 78.181818,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 98.982635,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 99.090909,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 98.987379,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 98.992124,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 97.272727,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 98.996869,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 99.001613,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 99.090909,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 99.006358,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 87.272727,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 99.011103,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 41.818182,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 99.020592,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 72.5,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.788167,
-    "lng": 99.025337,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.789963,
-    "lng": 98.896282,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.789963,
-    "lng": 98.968401,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 93.939394,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.790413,
-    "lng": 98.899603,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
   },
   {
     "lat": 18.790413,
     "lng": 98.918582,
-    "radius": 2000,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
+  },
+  {
+    "lat": 18.790413,
+    "lng": 98.923326,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.790413,
     "lng": 98.928071,
-    "radius": 2000,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
+  },
+  {
+    "lat": 18.790413,
+    "lng": 98.932816,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.790413,
+    "lng": 98.93756,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.790413,
+    "lng": 98.942305,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.790413,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.790413,
+    "lng": 98.951794,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.790413,
     "lng": 98.956539,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 78.512397,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.790413,
     "lng": 98.961284,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.790413,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.790413,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.790413,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.790413,
     "lng": 98.980262,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 90.082645,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.790413,
     "lng": 98.985007,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 67.768595,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.790413,
     "lng": 98.989752,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 98.347107,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.790413,
     "lng": 98.994496,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.790413,
-    "lng": 99.006358,
+    "lng": 98.999241,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 62.809917,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.790413,
-    "lng": 99.011103,
+    "lng": 99.003986,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 57.024793,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.790413,
+    "lng": 99.00873,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.790413,
     "lng": 99.013475,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 84.848485,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.790413,
+    "lng": 99.01822,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.790413,
     "lng": 99.022964,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 73.484848,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.792434,
-    "lng": 99.018931,
+    "lat": 18.790413,
+    "lng": 99.027709,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 89.090909,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.792658,
-    "lng": 98.949422,
+    "lat": 18.794904,
+    "lng": 98.918582,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 98.333333,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.792658,
-    "lng": 98.954167,
+    "lat": 18.794904,
+    "lng": 98.923326,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 81.666667,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.792658,
-    "lng": 98.973145,
+    "lat": 18.794904,
+    "lng": 98.928071,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 68.181818,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.792658,
-    "lng": 98.97789,
+    "lat": 18.794904,
+    "lng": 98.932816,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 94.545455,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.792658,
-    "lng": 98.982635,
+    "lat": 18.794904,
+    "lng": 98.942305,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.792658,
-    "lng": 98.987379,
+    "lat": 18.794904,
+    "lng": 98.94705,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 91.818182,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.792658,
-    "lng": 98.992124,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.792658,
-    "lng": 98.996869,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 90.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.792658,
-    "lng": 99.001613,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 69.090909,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.792658,
-    "lng": 99.015847,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 95.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.79423,
-    "lng": 99.006121,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 57.024793,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.794904,
     "lng": 98.951794,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 92.424242,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.794904,
+    "lng": 98.956539,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.794904,
     "lng": 98.961284,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 92.561983,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.794904,
     "lng": 98.966028,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.794904,
-    "lng": 98.968401,
+    "lng": 98.970773,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 78.030303,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.794904,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.794904,
     "lng": 98.980262,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 88.429752,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.794904,
     "lng": 98.985007,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 72.727273,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.794904,
     "lng": 98.989752,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 89.256198,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.794904,
     "lng": 98.994496,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 90.909091,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.79715,
-    "lng": 98.954167,
+    "lat": 18.794904,
+    "lng": 98.999241,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 66.666667,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.79715,
-    "lng": 98.958911,
+    "lat": 18.794904,
+    "lng": 99.003986,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 68.939394,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.79715,
-    "lng": 98.963656,
+    "lat": 18.794904,
+    "lng": 99.00873,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.79715,
-    "lng": 98.968401,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.79715,
-    "lng": 98.973145,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 98.347107,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.79715,
-    "lng": 98.97789,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 71.900826,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.79715,
-    "lng": 98.982635,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 53.719008,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.79715,
-    "lng": 98.987379,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.79715,
-    "lng": 98.992124,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.79715,
-    "lng": 98.996869,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.79715,
-    "lng": 99.011103,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 73.553719,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.79715,
+    "lat": 18.794904,
     "lng": 99.013475,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 65.151515,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.79715,
-    "lng": 99.015847,
+    "lat": 18.794904,
+    "lng": 99.01822,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 89.393939,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.79715,
-    "lng": 99.020592,
+    "lat": 18.794904,
+    "lng": 99.022964,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 72.727273,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.797375,
-    "lng": 99.0028,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 65.289256,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.799396,
+    "lng": 98.899603,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.904348,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.918582,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.923326,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.942305,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.951794,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.956539,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.961284,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.980262,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.985007,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.989752,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.994496,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 98.999241,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 99.003986,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 99.00873,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 99.013475,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 99.01822,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.799396,
+    "lng": 99.022964,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
     "lng": 98.890114,
-    "radius": 2000,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
   },
   {
-    "lat": 18.799396,
-    "lng": 98.928071,
-    "radius": 2000,
+    "lat": 18.803887,
+    "lng": 98.894858,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
   },
   {
-    "lat": 18.799396,
+    "lat": 18.803887,
+    "lng": 98.899603,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
+    "lng": 98.904348,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
+    "lng": 98.909092,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
+    "lng": 98.913837,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
+    "lng": 98.918582,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
+    "lng": 98.923326,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
+    "lng": 98.932816,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
+    "lng": 98.93756,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
+    "lng": 98.942305,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
     "lng": 98.951794,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 56.818182,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.799396,
+    "lat": 18.803887,
     "lng": 98.956539,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 61.983471,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.799396,
+    "lat": 18.803887,
     "lng": 98.961284,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 97.520661,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.799396,
+    "lat": 18.803887,
     "lng": 98.966028,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.799396,
+    "lat": 18.803887,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.803887,
     "lng": 98.980262,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 95.867769,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.799396,
+    "lat": 18.803887,
     "lng": 98.985007,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.799396,
+    "lat": 18.803887,
     "lng": 98.989752,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 82.644628,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.799396,
+    "lat": 18.803887,
     "lng": 98.994496,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.799396,
-    "lng": 99.01822,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.800743,
-    "lng": 98.948473,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 56.363636,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.800743,
-    "lng": 99.006358,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 16.363636,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.801417,
-    "lng": 98.918819,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 58.677686,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 98.919056,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 58.677686,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 98.954167,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 72.727273,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 98.963656,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 54.545455,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 98.968401,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 62.878788,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 98.973145,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 47.933884,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 98.97789,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 98.982635,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 98.987379,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 98.992124,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 99.001613,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 69.421488,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 99.006358,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 85.123967,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 99.011103,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 73.553719,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 99.015847,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.801642,
-    "lng": 99.01822,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 95.454545,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.803438,
-    "lng": 98.899128,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 50.413223,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.803438,
-    "lng": 98.949422,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 51.515152,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.803887,
-    "lng": 98.897231,
+    "lng": 98.999241,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 58.181818,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.803887,
-    "lng": 98.949422,
+    "lng": 99.003986,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 52.5,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.803887,
-    "lng": 98.961284,
+    "lng": 99.00873,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 70.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.803887,
-    "lng": 98.968401,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 94.166667,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.803887,
-    "lng": 98.980262,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.803887,
-    "lng": 98.985007,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.803887,
-    "lng": 98.989752,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.803887,
-    "lng": 98.996869,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 92.727273,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.803887,
     "lng": 99.013475,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 89.166667,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.803887,
     "lng": 99.01822,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 69.747899,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.80501,
-    "lng": 98.943491,
+    "lat": 18.803887,
+    "lng": 99.022964,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 65.289256,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.805235,
-    "lng": 98.943728,
+    "lat": 18.808379,
+    "lng": 98.894858,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 65.289256,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 98.889639,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 98.958911,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 98.963656,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 99.242424,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 98.973145,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 98.97789,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 88.429752,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 98.982635,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 80.991736,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 98.987379,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 98.992124,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 98.996869,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 64.46281,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 99.001613,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 90.909091,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 99.006358,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 61.157025,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 99.011103,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 80.165289,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.806133,
-    "lng": 99.015847,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 82.575758,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.80793,
-    "lng": 98.876354,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.80793,
-    "lng": 99.006358,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 61.983471,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.808379,
     "lng": 98.899603,
-    "radius": 2000,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 98.904348,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 98.909092,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 98.913837,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.808379,
     "lng": 98.918582,
-    "radius": 2000,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 98.923326,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 98.93756,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 98.942305,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 98.951794,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.808379,
     "lng": 98.956539,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.808379,
     "lng": 98.961284,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.808379,
     "lng": 98.966028,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 74.545455,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.808379,
     "lng": 98.980262,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 89.090909,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.808379,
     "lng": 98.985007,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 99.090909,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.808379,
     "lng": 98.989752,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 95.454545,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 98.994496,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 98.999241,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 99.003986,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.808379,
+    "lng": 99.00873,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.808379,
     "lng": 99.013475,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.809726,
-    "lng": 98.869712,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.809726,
-    "lng": 98.87066,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.809726,
-    "lng": 98.871609,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.809726,
-    "lng": 98.872558,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.809726,
-    "lng": 98.947524,
+    "lat": 18.808379,
+    "lng": 99.01822,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 61.157025,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.8104,
-    "lng": 99.0028,
+    "lat": 18.81287,
+    "lng": 98.86639,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 76.033058,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.810625,
-    "lng": 98.949422,
+    "lat": 18.81287,
+    "lng": 98.871135,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 65.909091,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.810625,
+    "lat": 18.81287,
+    "lng": 98.880624,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.81287,
+    "lng": 98.885369,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.81287,
+    "lng": 98.890114,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.81287,
+    "lng": 98.894858,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.81287,
+    "lng": 98.899603,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.81287,
+    "lng": 98.913837,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.81287,
+    "lng": 98.93756,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.81287,
+    "lng": 98.942305,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.81287,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.81287,
+    "lng": 98.951794,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.81287,
     "lng": 98.956539,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 82.644628,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.810625,
-    "lng": 98.958911,
+    "lat": 18.81287,
+    "lng": 98.961284,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 75.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.810625,
-    "lng": 98.963656,
+    "lat": 18.81287,
+    "lng": 98.966028,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 74.242424,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.810625,
-    "lng": 98.968401,
+    "lat": 18.81287,
+    "lng": 98.970773,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 68.939394,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.810625,
-    "lng": 98.973145,
+    "lat": 18.81287,
+    "lng": 98.975518,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 90.082645,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.810625,
-    "lng": 98.97789,
+    "lat": 18.81287,
+    "lng": 98.980262,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 80.991736,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.810625,
-    "lng": 98.987379,
+    "lat": 18.81287,
+    "lng": 98.985007,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 97.520661,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.810625,
-    "lng": 98.994022,
+    "lat": 18.81287,
+    "lng": 98.989752,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 80.165289,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.810625,
-    "lng": 98.996869,
+    "lat": 18.81287,
+    "lng": 98.994496,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 96.694215,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.810625,
-    "lng": 99.001613,
+    "lat": 18.81287,
+    "lng": 98.999241,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 96.694215,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.813544,
-    "lng": 98.978127,
+    "lat": 18.81287,
+    "lng": 99.003986,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 50.413223,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.813993,
-    "lng": 98.945389,
+    "lat": 18.81287,
+    "lng": 99.00873,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 55.371901,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.814218,
-    "lng": 98.945626,
+    "lat": 18.81287,
+    "lng": 99.013475,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 55.371901,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.814218,
-    "lng": 98.957962,
+    "lat": 18.817362,
+    "lng": 98.86639,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 96.694215,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.815116,
-    "lng": 98.958911,
+    "lat": 18.817362,
+    "lng": 98.871135,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 69.69697,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.815116,
-    "lng": 98.963656,
+    "lat": 18.817362,
+    "lng": 98.880624,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 78.787879,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.815116,
-    "lng": 98.968401,
+    "lat": 18.817362,
+    "lng": 98.885369,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 53.030303,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.815116,
-    "lng": 98.973145,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 80.991736,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.815116,
-    "lng": 98.982635,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.815116,
-    "lng": 98.987379,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 84.297521,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.815116,
-    "lng": 98.992124,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 37.190083,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.815116,
-    "lng": 98.996869,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 80.991736,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.815116,
-    "lng": 98.998767,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 76.033058,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.816015,
-    "lng": 98.882048,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 56.198347,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.816913,
-    "lng": 98.884894,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 69.090909,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.817362,
     "lng": 98.890114,
-    "radius": 2000,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
   },
   {
     "lat": 18.817362,
-    "lng": 98.928071,
-    "radius": 2000,
+    "lng": 98.942305,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
+  },
+  {
+    "lat": 18.817362,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.817362,
+    "lng": 98.951794,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.817362,
     "lng": 98.956539,
-    "radius": 2000,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 20.661157,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
+  },
+  {
+    "lat": 18.817362,
+    "lng": 98.961284,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.817362,
     "lng": 98.966028,
-    "radius": 2000,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
   },
   {
     "lat": 18.817362,
-    "lng": 98.968401,
+    "lng": 98.970773,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 70.454545,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.817362,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.817362,
     "lng": 98.980262,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 50.413223,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.817362,
     "lng": 98.985007,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 44.628099,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.817362,
     "lng": 98.989752,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 84.297521,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.817362,
     "lng": 98.994496,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 86.77686,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.818709,
-    "lng": 98.97789,
+    "lat": 18.817362,
+    "lng": 98.999241,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 61.983471,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.818709,
-    "lng": 98.987379,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.819608,
-    "lng": 98.963656,
+    "lat": 18.817362,
+    "lng": 99.003986,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 46.969697,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.819608,
-    "lng": 98.973145,
+    "lat": 18.821854,
+    "lng": 98.880624,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 50.413223,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.819608,
-    "lng": 98.982635,
+    "lat": 18.821854,
+    "lng": 98.885369,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 95.867769,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.819608,
-    "lng": 98.989277,
+    "lat": 18.821854,
+    "lng": 98.894858,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 56.198347,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.820281,
-    "lng": 98.953929,
+    "lat": 18.821854,
+    "lng": 98.94705,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 67.5,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.820506,
-    "lng": 98.954167,
+    "lat": 18.821854,
+    "lng": 98.951794,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 67.5,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.821854,
+    "lng": 98.956539,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.821854,
+    "lng": 98.961284,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.821854,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.821854,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.821854,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.821854,
+    "lng": 98.980262,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.821854,
+    "lng": 98.985007,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.821854,
+    "lng": 98.989752,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.821854,
     "lng": 98.994496,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 72.727273,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.823201,
-    "lng": 98.973145,
+    "lat": 18.821854,
+    "lng": 98.999241,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 53.719008,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.824099,
-    "lng": 98.889639,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.824099,
-    "lng": 98.946575,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.824099,
-    "lng": 98.963656,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 78.030303,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.824099,
-    "lng": 98.982635,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 83.471074,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.824099,
-    "lng": 98.987379,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 63.636364,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.824099,
-    "lng": 98.992124,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 67.768595,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.824324,
-    "lng": 98.965317,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 51.239669,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.825896,
-    "lng": 98.934239,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.826121,
-    "lng": 98.978602,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 68.939394,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.826345,
-    "lng": 98.899603,
-    "radius": 2000,
+    "lng": 98.890114,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
   },
   {
     "lat": 18.826345,
-    "lng": 98.918582,
-    "radius": 2000,
+    "lng": 98.894858,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
+  },
+  {
+    "lat": 18.826345,
+    "lng": 98.94705,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.826345,
+    "lng": 98.951794,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.826345,
     "lng": 98.956539,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 71.07438,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.826345,
     "lng": 98.961284,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.826345,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.826345,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.826345,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.826345,
+    "lng": 98.980262,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.826345,
+    "lng": 98.985007,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.826345,
+    "lng": 98.989752,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.826345,
     "lng": 98.994496,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 40.495868,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.826794,
-    "lng": 98.97789,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 61.983471,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.826794,
-    "lng": 98.993073,
+    "lat": 18.826345,
+    "lng": 98.999241,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 55.30303,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.827693,
-    "lng": 98.87066,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.827693,
-    "lng": 98.871609,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.827693,
-    "lng": 98.928545,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.827693,
-    "lng": 98.929494,
-    "radius": 2000,
-    "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
-  },
-  {
-    "lat": 18.828591,
-    "lng": 98.958911,
+    "lat": 18.830837,
+    "lng": 98.94705,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 66.666667,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.828591,
-    "lng": 98.963656,
+    "lat": 18.830837,
+    "lng": 98.951794,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 51.666667,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.828591,
-    "lng": 98.987379,
+    "lat": 18.830837,
+    "lng": 98.956539,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 51.818182,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.830388,
-    "lng": 98.983584,
+    "lat": 18.830837,
+    "lng": 98.961284,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 53.030303,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.830837,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.830837,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.830837,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.830837,
+    "lng": 98.980262,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.830837,
+    "lng": 98.985007,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.830837,
     "lng": 98.989752,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 55.371901,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.83196,
-    "lng": 98.954878,
+    "lat": 18.830837,
+    "lng": 98.994496,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 51.239669,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.832184,
-    "lng": 98.955116,
+    "lat": 18.830837,
+    "lng": 98.999241,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 51.239669,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.833082,
-    "lng": 98.963656,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 50.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.833082,
-    "lng": 98.968401,
-    "radius": 1500,
-    "collected": false,
-    "land_cover_label": "Cropland",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "open_non_builtup"
-  },
-  {
-    "lat": 18.833082,
-    "lng": 98.97789,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 88.181818,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.833082,
-    "lng": 98.982635,
-    "radius": 1500,
-    "collected": false,
-    "land_cover_label": "Cropland",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "open_non_builtup"
-  },
-  {
-    "lat": 18.833082,
-    "lng": 98.987379,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 59.090909,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.833981,
-    "lng": 98.963656,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 40.298507,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.834879,
-    "lng": 98.973145,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 73.553719,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.835328,
-    "lng": 98.928071,
-    "radius": 2000,
+    "lng": 98.951794,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 0.0,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
   },
   {
     "lat": 18.835328,
     "lng": 98.956539,
-    "radius": 2000,
+    "radius": 500,
     "collected": false,
-    "land_cover_label": "Tree cover",
-    "built_up_share_pct": 4.958678,
-    "radius_rule": "sparse_non_builtup"
+    "population_density": null
+  },
+  {
+    "lat": 18.835328,
+    "lng": 98.961284,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.835328,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.835328,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.835328,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.835328,
     "lng": 98.980262,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 72.727273,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.835328,
     "lng": 98.985007,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 57.85124,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.835328,
     "lng": 98.989752,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 91.735537,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.836676,
-    "lng": 98.990226,
+    "lat": 18.835328,
+    "lng": 98.994496,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 38.181818,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.837574,
-    "lng": 98.97789,
+    "lat": 18.83982,
+    "lng": 98.951794,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 65.289256,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.837574,
-    "lng": 98.982635,
+    "lat": 18.83982,
+    "lng": 98.956539,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 69.421488,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.838248,
-    "lng": 98.964842,
+    "lat": 18.83982,
+    "lng": 98.961284,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.838472,
-    "lng": 98.971248,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 71.212121,
-    "radius_rule": "built_up_dominant"
-  },
-  {
-    "lat": 18.839146,
-    "lng": 98.97101,
-    "radius": 500,
-    "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 97.727273,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
     "lat": 18.83982,
     "lng": 98.966028,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 100.0,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.83982,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.83982,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   },
   {
     "lat": 18.83982,
     "lng": 98.980262,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 63.636364,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.841167,
-    "lng": 98.98643,
+    "lat": 18.83982,
+    "lng": 98.985007,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 60.833333,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
   },
   {
-    "lat": 18.842066,
-    "lng": 98.984533,
+    "lat": 18.83982,
+    "lng": 98.989752,
     "radius": 500,
     "collected": false,
-    "land_cover_label": "Built-up",
-    "built_up_share_pct": 82.644628,
-    "radius_rule": "built_up_dominant"
+    "population_density": null
+  },
+  {
+    "lat": 18.844311,
+    "lng": 98.966028,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.844311,
+    "lng": 98.970773,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.844311,
+    "lng": 98.975518,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.844311,
+    "lng": 98.980262,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.844311,
+    "lng": 98.985007,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
+  },
+  {
+    "lat": 18.844311,
+    "lng": 98.989752,
+    "radius": 500,
+    "collected": false,
+    "population_density": null
   }
 ]

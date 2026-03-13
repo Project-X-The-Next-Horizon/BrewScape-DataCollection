@@ -1,19 +1,9 @@
 #!/usr/bin/env python3
 """
-Generate an interactive map from Terascope adaptive lat_lng_radius.json.
-
-Circle color follows collected status:
-    - collected = false -> blue
-    - collected = true  -> green
+Render 500 m collection circles from lat_lng_radius.json onto a local map.
 
 Dependency:
     pip install folium
-
-Pipeline:
-1) Load adaptive circle records from JSON.
-2) Validate border GeoJSON.
-3) Draw circles and center markers colored by collected status.
-4) Add a visual legend and fit map bounds.
 """
 
 from __future__ import annotations
@@ -35,10 +25,9 @@ except ImportError:  # pragma: no cover
 
 
 REPO_ROOT = Path(__file__).resolve().parent
-# Local artifacts for this visualization.
 INPUT_PATH = REPO_ROOT / "lat_lng_radius.json"
 OUTPUT_PATH = REPO_ROOT / "collection_radius_map.html"
-BORDER_PATH = REPO_ROOT.parent / "population_density" / "chiang_mai_main_area_merged_border.geojson"
+BORDER_PATH = REPO_ROOT / "chiang_mai_main_area_merged_border.geojson"
 
 NOT_COLLECTED_COLOR = "#1f77b4"
 COLLECTED_COLOR = "#2ca02c"
@@ -46,7 +35,6 @@ CHIANG_MAI_BORDER_COLOR = "#ff4d4d"
 
 
 def _to_float(value: Any) -> float | None:
-    """Best-effort conversion helper for numeric JSON fields."""
     if isinstance(value, bool):
         return None
     if isinstance(value, (int, float)):
@@ -63,14 +51,10 @@ def _to_float(value: Any) -> float | None:
 
 
 def _to_bool(value: Any) -> bool | None:
-    """Return value only when it is an actual boolean."""
-    if isinstance(value, bool):
-        return value
-    return None
+    return value if isinstance(value, bool) else None
 
 
 def _load_json(path: Path) -> Any:
-    """Load JSON file with strict error reporting."""
     if not path.exists():
         print(f"Error: file not found: {path}", file=sys.stderr)
         raise SystemExit(1)
@@ -82,22 +66,19 @@ def _load_json(path: Path) -> Any:
 
 
 def _validate_border_geojson(data: Any) -> dict[str, Any]:
-    """Validate that border data is a non-empty FeatureCollection."""
-    if not isinstance(data, dict):
-        print("Error: border GeoJSON must be an object.", file=sys.stderr)
-        raise SystemExit(1)
-    if data.get("type") != "FeatureCollection":
+    if not isinstance(data, dict) or data.get("type") != "FeatureCollection":
         print("Error: border GeoJSON must be a FeatureCollection.", file=sys.stderr)
         raise SystemExit(1)
+
     features = data.get("features")
     if not isinstance(features, list) or not features:
         print("Error: border GeoJSON has no features.", file=sys.stderr)
         raise SystemExit(1)
+
     return data
 
 
 def _iter_lng_lat_pairs(value: Any):
-    """Flatten nested coordinate arrays into (lng, lat) tuples."""
     if isinstance(value, (list, tuple)):
         if len(value) == 2 and all(isinstance(v, (int, float)) for v in value):
             yield float(value[0]), float(value[1])
@@ -107,11 +88,10 @@ def _iter_lng_lat_pairs(value: Any):
 
 
 def _iter_geojson_lng_lat_pairs(geojson: Any):
-    """Traverse GeoJSON containers and emit all coordinate pairs."""
     if not isinstance(geojson, dict):
         return
-    geo_type = geojson.get("type")
 
+    geo_type = geojson.get("type")
     if geo_type == "FeatureCollection":
         for feature in geojson.get("features", []):
             yield from _iter_geojson_lng_lat_pairs(feature)
@@ -128,36 +108,25 @@ def _iter_geojson_lng_lat_pairs(geojson: Any):
 
 
 def _geojson_bounds(geojson: Any) -> list[list[float]] | None:
-    """Compute map bounds from geojson coordinates in folium format."""
     pairs = list(_iter_geojson_lng_lat_pairs(geojson))
     if not pairs:
         return None
 
-    lats: list[float] = []
-    lngs: list[float] = []
+    lats = []
+    lngs = []
     for lng, lat in pairs:
         if -90 <= lat <= 90 and -180 <= lng <= 180:
             lats.append(lat)
             lngs.append(lng)
 
-    if not lats or not lngs:
+    if not lats:
         return None
+
     return [[min(lats), min(lngs)], [max(lats), max(lngs)]]
 
 
-def _build_popup_html(
-    lat: float,
-    lng: float,
-    radius: float,
-    collected: bool,
-    land_cover_label: str,
-    built_up_share_pct: float | None,
-    radius_rule: str | None,
-) -> str:
-    """Render popup details for one Terascope-driven adaptive-radius circle."""
+def _build_popup_html(lat: float, lng: float, radius: float, collected: bool) -> str:
     collection_status = "Collected" if collected else "Not collected"
-    built_up_text = "N/A" if built_up_share_pct is None else f"{built_up_share_pct:.2f}%"
-    radius_rule_text = radius_rule or "Unknown"
     return (
         "<div style='font-family:Arial,sans-serif; font-size:12px; line-height:1.35;'>"
         "<table>"
@@ -165,12 +134,6 @@ def _build_popup_html(
         f"<td style='padding:2px 0;'>{escape(collection_status)}</td></tr>"
         "<tr><th style='text-align:left; padding:2px 8px 2px 0;'>Radius (m)</th>"
         f"<td style='padding:2px 0;'>{radius:.0f}</td></tr>"
-        "<tr><th style='text-align:left; padding:2px 8px 2px 0;'>Land cover</th>"
-        f"<td style='padding:2px 0;'>{escape(land_cover_label)}</td></tr>"
-        "<tr><th style='text-align:left; padding:2px 8px 2px 0;'>Built-up share</th>"
-        f"<td style='padding:2px 0;'>{escape(built_up_text)}</td></tr>"
-        "<tr><th style='text-align:left; padding:2px 8px 2px 0;'>Radius rule</th>"
-        f"<td style='padding:2px 0;'>{escape(radius_rule_text)}</td></tr>"
         "<tr><th style='text-align:left; padding:2px 8px 2px 0;'>Center</th>"
         f"<td style='padding:2px 0;'>{lat:.6f}, {lng:.6f}</td></tr>"
         "</table>"
@@ -179,7 +142,6 @@ def _build_popup_html(
 
 
 def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
-    """Normalize valid records into map-ready point dictionaries."""
     points: list[dict[str, Any]] = []
     skipped = 0
 
@@ -192,9 +154,6 @@ def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
         lng = _to_float(record.get("lng"))
         radius = _to_float(record.get("radius"))
         collected = _to_bool(record.get("collected"))
-        land_cover_label = record.get("land_cover_label")
-        built_up_share_pct = _to_float(record.get("built_up_share_pct"))
-        radius_rule = record.get("radius_rule")
 
         if (
             lat is None
@@ -208,7 +167,6 @@ def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
             skipped += 1
             continue
 
-        # Reuse shared color semantics from the project map scripts.
         color = COLLECTED_COLOR if collected else NOT_COLLECTED_COLOR
         points.append(
             {
@@ -216,20 +174,15 @@ def _extract_points(records: list[Any]) -> tuple[list[dict[str, Any]], int]:
                 "lng": lng,
                 "radius": radius,
                 "collected": collected,
-                "land_cover_label": (
-                    str(land_cover_label).strip() if isinstance(land_cover_label, str) else "Unknown"
-                ),
-                "built_up_share_pct": built_up_share_pct,
-                "radius_rule": str(radius_rule).strip() if isinstance(radius_rule, str) else None,
                 "color": color,
+                "popup_html": _build_popup_html(lat, lng, radius, collected),
             }
         )
 
     return points, skipped
 
 
-def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) -> folium.Map:
-    """Draw circles, border overlays, and legend into a Folium map."""
+def _build_map(points: list[dict[str, Any]], border_geojson: dict[str, Any]) -> folium.Map:
     lats = [point["lat"] for point in points]
     lngs = [point["lng"] for point in points]
     center = [sum(lats) / len(lats), sum(lngs) / len(lngs)]
@@ -237,16 +190,6 @@ def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) 
     point_map = folium.Map(location=center, tiles="OpenStreetMap", zoom_start=12)
 
     for point in points:
-        popup_html = _build_popup_html(
-            lat=point["lat"],
-            lng=point["lng"],
-            radius=point["radius"],
-            collected=point["collected"],
-            land_cover_label=point["land_cover_label"],
-            built_up_share_pct=point["built_up_share_pct"],
-            radius_rule=point["radius_rule"],
-        )
-
         folium.Circle(
             location=[point["lat"], point["lng"]],
             radius=point["radius"],
@@ -255,7 +198,7 @@ def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) 
             fill=True,
             fill_color=point["color"],
             fill_opacity=0.25,
-            popup=folium.Popup(popup_html, max_width=360),
+            popup=folium.Popup(point["popup_html"], max_width=360),
         ).add_to(point_map)
 
         folium.CircleMarker(
@@ -269,7 +212,7 @@ def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) 
         ).add_to(point_map)
 
     folium.GeoJson(
-        chiang_mai_border,
+        border_geojson,
         name="Chiang Mai Border Halo",
         style_function=lambda _feature: {
             "color": "#ffffff",
@@ -280,7 +223,7 @@ def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) 
     ).add_to(point_map)
 
     folium.GeoJson(
-        chiang_mai_border,
+        border_geojson,
         name="Chiang Mai Border",
         style_function=lambda _feature: {
             "color": CHIANG_MAI_BORDER_COLOR,
@@ -292,47 +235,33 @@ def _build_map(points: list[dict[str, Any]], chiang_mai_border: dict[str, Any]) 
         tooltip="Chiang Mai Border",
     ).add_to(point_map)
 
-    # Prefer fitting to border when available to keep framing consistent.
-    bounds = _geojson_bounds(chiang_mai_border)
+    bounds = _geojson_bounds(border_geojson)
     if bounds is not None:
         point_map.fit_bounds(bounds)
     else:
         point_map.fit_bounds([[min(lats), min(lngs)], [max(lats), max(lngs)]])
 
-    # Static legend explains the meaning of marker colors.
-    legend_html = (
-        "<div style='"
-        "position: fixed; bottom: 24px; left: 24px; z-index: 9999; "
-        "background: white; border: 1px solid #bbb; border-radius: 6px; "
-        "padding: 8px 10px; font-family: Arial, sans-serif; font-size: 12px;'>"
-        "<div style='font-weight:600; margin-bottom:6px;'>Collection Status</div>"
-        f"<div><span style='color:{NOT_COLLECTED_COLOR};'>&#9632;</span> Not collected</div>"
-        f"<div><span style='color:{COLLECTED_COLOR};'>&#9632;</span> Collected</div>"
-        "</div>"
-    )
-    point_map.get_root().html.add_child(folium.Element(legend_html))
     return point_map
 
 
 def main() -> int:
-    """Entrypoint for producing collection_radius_map.html."""
     records = _load_json(INPUT_PATH)
     if not isinstance(records, list):
         print(f"Error: expected a JSON array in {INPUT_PATH}.", file=sys.stderr)
         return 1
 
     points, skipped = _extract_points(records)
-    chiang_mai_border = _validate_border_geojson(_load_json(BORDER_PATH))
+    border_geojson = _validate_border_geojson(_load_json(BORDER_PATH))
 
     if not points:
         print(
             "Error: found zero valid entries in lat_lng_radius.json. "
-            "Expected lat, lng, radius (> 0), collected (boolean), and optional Terascope metadata.",
+            "Expected lat, lng, radius (> 0), and collected (boolean).",
             file=sys.stderr,
         )
         return 1
 
-    point_map = _build_map(points, chiang_mai_border)
+    point_map = _build_map(points, border_geojson)
     point_map.save(str(OUTPUT_PATH))
 
     print(
