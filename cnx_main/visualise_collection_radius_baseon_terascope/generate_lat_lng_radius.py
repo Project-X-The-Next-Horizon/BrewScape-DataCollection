@@ -677,6 +677,28 @@ def _adaptive_rows(
     return rows
 
 
+def _with_circle_ids(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    numbered_rows: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+
+    for row in rows:
+        lat = _to_float(row.get("lat"))
+        lng = _to_float(row.get("lng"))
+        radius = _to_float(row.get("radius"))
+        if lat is None or lng is None or radius is None:
+            _fatal("circle rows must contain numeric lat/lng/radius values before assigning circle_id")
+
+        circle_id = f"circle_r{int(radius)}_lat{lat:.9f}_lng{lng:.9f}"
+        if circle_id in seen_ids:
+            _fatal(f"duplicate circle_id generated: {circle_id}")
+        seen_ids.add(circle_id)
+
+        row_without_id = {key: value for key, value in row.items() if key != "circle_id"}
+        numbered_rows.append({"circle_id": circle_id, **row_without_id})
+
+    return numbered_rows
+
+
 def _radius_counts(rows: list[dict[str, Any]]) -> dict[int, int]:
     counts: dict[int, int] = {}
     for row in rows:
@@ -763,7 +785,7 @@ def main() -> int:
         )
 
     adaptive_rows = _adaptive_rows(pruned, projection)
-    merged_rows = [*frozen_rows, *adaptive_rows]
+    merged_rows = _with_circle_ids([*frozen_rows, *adaptive_rows])
     OUTPUT_PATH.write_text(
         json.dumps(merged_rows, ensure_ascii=True, indent=2) + "\n",
         encoding="utf-8",
