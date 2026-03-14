@@ -223,9 +223,6 @@ class Stats:
     total_candidate_place_ids: int = 0
     duplicate_place_ids_filtered: int = 0
     api_errors: int = 0
-    retry_attempts_performed: int = 0
-    requests_succeeded_on_retry: int = 0
-    requests_exhausted_all_attempts: int = 0
     rows_appended_this_run: int = 0
     circles_left_pending_api_errors: int = 0
     json_checkpoint_writes: int = 0
@@ -487,7 +484,7 @@ def _request_json(
     context: str,
     payload: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
-    """Perform one API request and retry failures up to the configured limit."""
+    """Perform one API request and decode JSON safely."""
     headers = {
         "X-Goog-Api-Key": API_KEY,
         "X-Goog-FieldMask": field_mask,
@@ -497,59 +494,40 @@ def _request_json(
         headers["Content-Type"] = "application/json"
         data = json.dumps(payload, separators=(",", ":")).encode("utf-8")
 
-    for attempt in range(1, MAX_REQUEST_ATTEMPTS + 1):
-        req = request.Request(url=url, data=data, method=method, headers=headers)
-        try:
-            with request.urlopen(req, timeout=40) as response:
-                raw = response.read()
-                if not raw:
-                    if attempt > 1:
-                        stats.requests_succeeded_on_retry += 1
-                    return {}
-                try:
-                    decoded = raw.decode("utf-8")
-                except UnicodeDecodeError:
-                    decoded = raw.decode("utf-8", errors="replace")
-                parsed = json.loads(decoded)
-                if attempt > 1:
-                    stats.requests_succeeded_on_retry += 1
-                return parsed
-        except error.HTTPError as exc:
+    req = request.Request(url=url, data=data, method=method, headers=headers)
+    try:
+        with request.urlopen(req, timeout=40) as response:
+            raw = response.read()
+            if not raw:
+                return {}
             try:
-                body = exc.read().decode("utf-8", errors="replace")
-            except Exception:
-                body = ""
-            if len(body) > 500:
-                body = body[:500] + "...(truncated)"
-            print(
-                f"[API ERROR] {context} -> HTTP {exc.code}: {body or exc.reason}",
-                file=sys.stderr,
-            )
-            stats.api_errors += 1
-        except error.URLError as exc:
-            print(f"[API ERROR] {context} -> URL error: {exc.reason}", file=sys.stderr)
-            stats.api_errors += 1
-        except TimeoutError:
-            print(f"[API ERROR] {context} -> request timed out.", file=sys.stderr)
-            stats.api_errors += 1
-        except json.JSONDecodeError as exc:
-            print(f"[API ERROR] {context} -> invalid JSON response: {exc}", file=sys.stderr)
-            stats.api_errors += 1
-        finally:
-            time.sleep(SLEEP_SECONDS)
-
-        if attempt >= MAX_REQUEST_ATTEMPTS:
-            stats.requests_exhausted_all_attempts += 1
-            return None
-
-        retry_delay = RETRY_BACKOFF_SECONDS[min(attempt - 1, len(RETRY_BACKOFF_SECONDS) - 1)]
-        stats.retry_attempts_performed += 1
+                decoded = raw.decode("utf-8")
+            except UnicodeDecodeError:
+                decoded = raw.decode("utf-8", errors="replace")
+            return json.loads(decoded)
+    except error.HTTPError as exc:
+        try:
+            body = exc.read().decode("utf-8", errors="replace")
+        except Exception:
+            body = ""
+        if len(body) > 500:
+            body = body[:500] + "...(truncated)"
         print(
-            f"[WARN] Retrying {context} in {retry_delay:.1f}s "
-            f"(attempt {attempt + 1}/{MAX_REQUEST_ATTEMPTS}).",
+            f"[API ERROR] {context} -> HTTP {exc.code}: {body or exc.reason}",
             file=sys.stderr,
         )
-        time.sleep(retry_delay)
+        stats.api_errors += 1
+    except error.URLError as exc:
+        print(f"[API ERROR] {context} -> URL error: {exc.reason}", file=sys.stderr)
+        stats.api_errors += 1
+    except TimeoutError:
+        print(f"[API ERROR] {context} -> request timed out.", file=sys.stderr)
+        stats.api_errors += 1
+    except json.JSONDecodeError as exc:
+        print(f"[API ERROR] {context} -> invalid JSON response: {exc}", file=sys.stderr)
+        stats.api_errors += 1
+    finally:
+        time.sleep(SLEEP_SECONDS)
 
     return None
 
@@ -1078,7 +1056,6 @@ def main() -> int:
                 location.raw_row["collected"] = True
                 _write_location_checkpoint(INPUT_PATH, payload, stats)
             else:
-                location.raw_row["collected"] = False
                 stats.circles_left_pending_api_errors += 1
 
             status_text = "completed" if completed_without_error else "left pending"
@@ -1111,12 +1088,6 @@ def main() -> int:
     print(f"Candidate place rows processed: {stats.total_candidate_place_ids}")
     print(f"Rows appended this run: {stats.rows_appended_this_run}")
     print(f"Duplicate place IDs filtered: {stats.duplicate_place_ids_filtered}")
-    print(f"Retry attempts performed: {stats.retry_attempts_performed}")
-    print(f"Requests succeeded on retry: {stats.requests_succeeded_on_retry}")
-    print(
-        "Requests that exhausted all attempts: "
-        f"{stats.requests_exhausted_all_attempts}"
-    )
     print(
         "Circles left pending because of API errors: "
         f"{stats.circles_left_pending_api_errors}"

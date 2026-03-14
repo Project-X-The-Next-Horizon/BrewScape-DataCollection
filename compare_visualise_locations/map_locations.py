@@ -46,8 +46,7 @@ DEFAULT_INPUT_PATHS = (
     / "coffee_shops_with_reviews3.csv",
     REPO_ROOT.parent
     / "collect_location_data"
-    / "prev_data"
-    / "coffee_shops_with_reviews4.csv",
+    / "coffee_shops_with_reviews.csv",
 )
 REQUIRED_COLUMNS = {"place_id", "lat", "lon"}
 STATUS_STYLES = {
